@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دليلك بودمدني</title>
+<title>دليلك بود مدني</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#c98a2b">
 <link rel="icon" href="favicon.ico">
@@ -11,7 +11,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="دليلك بودمدني">
+<meta name="apple-mobile-web-app-title" content="دليلك بود مدني">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Lalezar&display=swap" rel="stylesheet">
 <style>
@@ -267,6 +267,10 @@ img{max-width:100%;display:block}
 </style>
 </head>
 <body>
+<div id="initial-splash" style="position:fixed;inset:0;background:#faf6ed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9999">
+  <img src="icon-192.png" alt="دليلك بود مدني" style="width:88px;height:88px;border-radius:22px;box-shadow:0 6px 18px rgba(0,0,0,.15)">
+  <div style="font-size:15px;color:#0d4f4f;font-weight:600">الرجاء الانتظار... دليلك بود مدني</div>
+</div>
 <div id="app"></div>
 <div class="toast" id="toast"></div>
 
@@ -394,7 +398,7 @@ function waLink(p){
   return 'https://wa.me/' + d;
 }
 function telLink(p){ return 'tel:' + phoneDigits(p); }
-const WA_BUSINESS_LINK = 'https://wa.me/249991970907?text=' + encodeURIComponent('مرحباً، أرغب في إضافة نشاطي/خدمتي في دليل ود مدني');
+const WA_BUSINESS_LINK = 'https://wa.me/249991970907?text=' + encodeURIComponent('مرحباً، أرغب في إضافة نشاطي/خدمتي في دليلك بود مدني');
 
 /* ============ SEED DATA ============ */
 const DEFAULT_SECTIONS = [
@@ -493,7 +497,10 @@ function resizeImage(file, maxDim=640, quality=0.55){
 /* ============ ROUTER ============ */
 window.addEventListener('hashchange', render);
 window.addEventListener('DOMContentLoaded', async () => {
-  document.getElementById('app').innerHTML = `<div class="empty" style="padding-top:80px"><span class="emoji">⏳</span>جارٍ تحميل دليل ود مدني...</div>`;
+  // إزالة شاشة الترحيب الثابتة بمجرد أن يبدأ التطبيق بالعمل
+  const splash = document.getElementById('initial-splash');
+  if(splash) splash.remove();
+  document.getElementById('app').innerHTML = `<div class="empty" style="padding-top:80px"><span class="emoji">⏳</span>الرجاء الانتظار... دليلك بود مدني</div>`;
   try{
     await ensureSeed();
     await loadState();
@@ -558,11 +565,62 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredInstallPrompt = e;
   const btn = document.getElementById('installAppBtn');
   if(btn) btn.style.display = 'inline-flex';
+  maybeShowAutoInstallPopup();
 });
 window.addEventListener('appinstalled', () => {
   window.deferredInstallPrompt = null;
   const btn = document.getElementById('installAppBtn');
   if(btn) btn.style.display = 'none';
+  sessionStorage.setItem('installPopupShown', '1');
+  const overlay = document.getElementById('autoInstallOverlay');
+  if(overlay) overlay.remove();
+});
+
+/* ============ نافذة تثبيت تظهر تلقائياً عند دخول الموقع ============ */
+function isAppStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function maybeShowAutoInstallPopup(){
+  if(isAppStandalone()) return; // مثبّت بالفعل، لا داعي للنافذة
+  if(sessionStorage.getItem('installPopupShown')) return; // ظهرت مسبقاً في هذه الجلسة
+  if(document.getElementById('autoInstallOverlay')) return; // ظاهرة بالفعل
+  sessionStorage.setItem('installPopupShown', '1');
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const overlay = document.createElement('div');
+  overlay.id = 'autoInstallOverlay';
+  overlay.className = 'ios-install-overlay';
+  overlay.innerHTML = `
+    <div class="ios-install-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <img src="icon-192.png" alt="دليلك بود مدني" style="width:44px;height:44px;border-radius:12px">
+        <h3 style="margin:0">ثبّت تطبيق دليلك بود مدني</h3>
+      </div>
+      <p style="margin:0 0 16px;line-height:1.8;color:#444">ثبّت التطبيق على شاشتك الرئيسية للوصول السريع بدون فتح المتصفح في كل مرة.</p>
+      <div style="display:flex;gap:10px">
+        <button class="btn" id="autoInstallLater" style="flex:1;background:#eee;color:#333">لاحقاً</button>
+        <button class="btn" id="autoInstallNow" style="flex:1">📲 تثبيت الآن</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  document.getElementById('autoInstallLater').addEventListener('click', ()=> overlay.remove());
+  overlay.addEventListener('click', e=>{ if(e.target === overlay) overlay.remove(); });
+  document.getElementById('autoInstallNow').addEventListener('click', async ()=>{
+    if(isIOS){ overlay.remove(); showIOSInstallHelp(); return; }
+    if(!window.deferredInstallPrompt){ overlay.remove(); toast('التثبيت غير متاح حالياً في هذا المتصفح'); return; }
+    window.deferredInstallPrompt.prompt();
+    const choice = await window.deferredInstallPrompt.userChoice;
+    if(choice.outcome === 'accepted') toast('تم تثبيت التطبيق بنجاح 🎉');
+    window.deferredInstallPrompt = null;
+    overlay.remove();
+  });
+}
+// على آيفون/سفاري لا يوجد حدث beforeinstallprompt، لذلك نعرض النافذة (بتعليمات الإضافة اليدوية) مباشرة بعد فتح الموقع
+window.addEventListener('DOMContentLoaded', () => {
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    setTimeout(maybeShowAutoInstallPopup, 1200);
+  }
 });
 function setupInstallButton(btn){
   if(!btn || btn.dataset.bound) return;
@@ -735,7 +793,7 @@ function renderSectionPage(app, sectionId){
     ${header(false)}
     <div class="container">
       <div class="crumbs"><a href="#/">الرئيسية</a> / ${esc(sec.name)}</div>
-      <div class="section-title"><h2>${sec.icon} ${esc(sec.name)}</h2><div class="rule"></div></div>
+      <div class="section-title"><h2>${esc(sec.icon)} ${esc(sec.name)}</h2><div class="rule"></div></div>
       ${cats.length ? `<div class="filter-row" id="filterRow">
         <button class="chip active" data-cat="">الكل</button>
         ${cats.map(c=>`<button class="chip" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
@@ -800,7 +858,7 @@ async function renderBizPage(app, id){
       <div class="crumbs"><a href="#/">الرئيسية</a> / <a href="#/section/${sec.id||biz.sectionId}">${esc(sec.name)}</a> / ${esc(biz.name)}</div>
 
       <div class="gallery">
-        <div class="main" id="mainImg" style="${primary?`background-image:url('${primary}')`:''}">${primary?'':sec.icon}</div>
+        <div class="main" id="mainImg" style="${primary?`background-image:url('${primary}')`:''}">${primary?'':esc(sec.icon)}</div>
       </div>
       ${images.length>1?`<div class="gallery-thumbs">
         ${images.map((im,i)=>`<img src="${im}" class="${im===primary?'active':''}" data-i="${i}">`).join('')}
@@ -865,7 +923,7 @@ async function renderAdminLogin(app){
   app.innerHTML = `
     ${header(true)}
     <div class="admin-login">
-      <h2>🔐 لوحة تحكم دليل ود مدني</h2>
+      <h2>🔐 لوحة تحكم دليلك بود مدني</h2>
       <p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">لا يمكنك الدخول، محمي خاص للإدارة فقط.</p>
       <div class="field"><label>البريد الإلكتروني</label><input type="text" id="loginEmail" placeholder="admin@example.com"></div>
       <div class="field"><label>كلمة المرور</label><input type="password" id="loginPass" placeholder="كلمة المرور"></div>
@@ -1044,7 +1102,7 @@ function renderAdminBusinesses(app, sectionId){
       ${adminTopbar('sections')}
       <div class="crumbs"><a href="#/admin/sections" id="backLink">الأقسام</a> / ${esc(sec.name)}</div>
       <div class="admin-topbar" style="margin-bottom:10px">
-        <h2 style="margin:0;color:var(--nile)">${sec.icon} ${esc(sec.name)} (${items.length})</h2>
+        <h2 style="margin:0;color:var(--nile)">${esc(sec.icon)} ${esc(sec.name)} (${items.length})</h2>
         <button class="btn" id="addBizBtn">+ إضافة منشأة</button>
       </div>
       <div class="field"><input type="text" id="adminSearch" placeholder="ابحث داخل هذا القسم..."></div>
