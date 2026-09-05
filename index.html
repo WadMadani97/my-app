@@ -455,9 +455,19 @@ async function loadState(){
 }
 async function saveSections(){ await sSet('sections', state.sections); }
 async function saveIndex(){ await sSet('businesses-index', state.index); }
-async function loadBiz(id){ return await sGet('biz:'+id); }
+async function loadBiz(id){
+  // تخزين مؤقت في الذاكرة: إن فُتحت نفس المنشأة سابقاً في هذه الجلسة، لا داعي
+  // لطلب Firestore مرة أخرى (يُحدَّث تلقائياً عند أي تعديل عبر saveBiz/deleteBiz)
+  if(state.bizCache && state.bizCache[id]) return state.bizCache[id];
+  const biz = await sGet('biz:'+id);
+  if(!state.bizCache) state.bizCache = {};
+  if(biz) state.bizCache[id] = biz;
+  return biz;
+}
 async function saveBiz(biz){
   await sSet('biz:'+biz.id, biz);
+  if(!state.bizCache) state.bizCache = {};
+  state.bizCache[biz.id] = biz; // تحديث التخزين المؤقت فوراً بعد الحفظ
   const i = state.index.findIndex(b=>b.id===biz.id);
   const light = {id:biz.id, sectionId:biz.sectionId, name:biz.name, category:biz.category||'',
     image: (biz.images&&biz.images[biz.primaryImageIndex||0]) || '', active:biz.active!==false, featured:!!biz.featured,
@@ -467,6 +477,7 @@ async function saveBiz(biz){
 }
 async function deleteBiz(id){
   await sDelete('biz:'+id);
+  if(state.bizCache) delete state.bizCache[id]; // إزالة من التخزين المؤقت بعد الحذف
   state.index = state.index.filter(b=>b.id!==id);
   await saveIndex();
 }
@@ -549,7 +560,10 @@ function nav(hash){
 async function render(){
   const app = document.getElementById('app');
   const hash = location.hash || '#/';
-  await loadState();
+  // ملاحظة أداء: state.sections و state.index تم تحميلها مرة واحدة فقط عند فتح
+  // الموقع (loadState في DOMContentLoaded) وتُحدَّث محلياً تلقائياً عند أي حفظ
+  // من لوحة التحكم (saveSections/saveIndex) — لذلك لا داعي لإعادة قراءتها من
+  // Firestore مع كل تنقل، وهذا كان سبب بطء الحركة الداخلية بالموقع.
   if(hash === '#/' ) return renderHome(app);
   if(hash.startsWith('#/section/')) return renderSectionPage(app, hash.split('/')[2]);
   if(hash.startsWith('#/biz/')) return renderBizPage(app, hash.split('/')[2]);
