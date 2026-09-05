@@ -279,6 +279,15 @@ img{max-width:100%;display:block}
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 
+<!-- EmailJS: تنبيه بالإيميل عند محاولة تسجيل دخول فاشلة للوحة التحكم -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){
+    try{ emailjs.init({ publicKey: "QVSMj_-bmtD4SDMVs" }); }
+    catch(e){ console.error('emailjs init failed', e); }
+  })();
+</script>
+
 <script>
 /* ============ STORAGE HELPERS ============
    ترتيب الأولوية تلقائياً:
@@ -389,6 +398,14 @@ function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toast._h); toast._h = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+// إرسال تنبيه إيميل عند محاولة دخول فاشلة للوحة التحكم (لا علاقة له بـ Firebase نفسه)
+function sendFailedLoginAlert(attemptedEmail){
+  if(typeof emailjs === 'undefined') return;
+  emailjs.send('service_bj0zfkp', 'template_5iy1kf9', {
+    attempted_email: attemptedEmail || '(فارغ)',
+    attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
+  }).catch(err => console.error('emailjs send failed', err));
 }
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
@@ -957,7 +974,9 @@ async function renderAdminLogin(app){
       nav('#/admin');
     }catch(e){
       console.error(e);
-      toast(e && e.message === 'timeout' ? 'انتهت المهلة، تحقق من الإنترنت وحاول مجدداً' : 'البريد أو كلمة المرور غير صحيحة');
+      const isTimeout = e && e.message === 'timeout';
+      if(!isTimeout) sendFailedLoginAlert(email); // تنبيه فقط عند بيانات دخول خاطئة، وليس عند مشاكل الإنترنت
+      toast(isTimeout ? 'انتهت المهلة، تحقق من الإنترنت وحاول مجدداً' : 'البريد أو كلمة المرور غير صحيحة');
     }
   };
   document.getElementById('loginBtn').addEventListener('click', doLogin);
