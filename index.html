@@ -727,7 +727,7 @@ function renderHome(app){
       <div class="cat-grid">
         ${sections.map(s=>`
           <a class="cat-card" href="#/section/${s.id}">
-            <span class="emoji">${s.icon}</span>
+            <span class="emoji">${esc(s.icon)}</span>
             <div class="name">${esc(s.name)}</div>
             <div class="count">${state.index.filter(b=>b.sectionId===s.id && b.active).length} منشأة</div>
           </a>`).join('') || `<div class="empty">لا توجد أقسام بعد. أضفها من لوحة التحكم.</div>`}
@@ -1001,7 +1001,7 @@ function renderAdminSections(app){
           <div class="admin-list-row">
             <div class="row-info">
               <span class="status-dot ${s.active?'on':''}"></span>
-              <span style="font-size:20px">${s.icon}</span>
+              <span style="font-size:20px">${esc(s.icon)}</span>
               <div>
                 <div style="font-weight:700">${esc(s.name)}</div>
                 <div class="hint">${state.index.filter(b=>b.sectionId===s.id).length} منشأة</div>
