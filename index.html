@@ -401,11 +401,16 @@ function toast(msg){
 }
 // إرسال تنبيه إيميل عند محاولة دخول فاشلة للوحة التحكم (لا علاقة له بـ Firebase نفسه)
 function sendFailedLoginAlert(attemptedEmail){
-  if(typeof emailjs === 'undefined') return;
+  if(typeof emailjs === 'undefined'){ alert('⚠️ تشخيص مؤقت: مكتبة EmailJS لم تُحمّل بالمتصفح إطلاقاً'); return; }
   emailjs.send('service_bj0zfkp', 'template_5iy1kf9', {
     attempted_email: attemptedEmail || '(فارغ)',
     attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
-  }).catch(err => console.error('emailjs send failed', err));
+  }).then(()=>{
+    alert('✅ تشخيص مؤقت: تم إرسال طلب التنبيه بنجاح لخوادم EmailJS');
+  }).catch(err => {
+    console.error('emailjs send failed', err);
+    alert('❌ تشخيص مؤقت - فشل الإرسال:\n' + (err && (err.text || err.message || JSON.stringify(err))));
+  });
 }
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
