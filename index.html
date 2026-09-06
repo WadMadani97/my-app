@@ -283,7 +283,7 @@ img{max-width:100%;display:block}
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   (function(){
-    try{ emailjs.init({ publicKey: "QVSMj_-bmtD4SDMVs" }); }
+    try{ emailjs.init({ publicKey: "AVLPvCfiftClMvF7Y" }); }
     catch(e){ console.error('emailjs init failed', e); }
   })();
 </script>
@@ -401,16 +401,11 @@ function toast(msg){
 }
 // إرسال تنبيه إيميل عند محاولة دخول فاشلة للوحة التحكم (لا علاقة له بـ Firebase نفسه)
 function sendFailedLoginAlert(attemptedEmail){
-  if(typeof emailjs === 'undefined'){ alert('⚠️ تشخيص مؤقت: مكتبة EmailJS لم تُحمّل بالمتصفح إطلاقاً'); return; }
+  if(typeof emailjs === 'undefined') return;
   emailjs.send('service_bj0zfkp', 'template_5iy1kf9', {
     attempted_email: attemptedEmail || '(فارغ)',
     attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
-  }).then(()=>{
-    alert('✅ تشخيص مؤقت: تم إرسال طلب التنبيه بنجاح لخوادم EmailJS');
-  }).catch(err => {
-    console.error('emailjs send failed', err);
-    alert('❌ تشخيص مؤقت - فشل الإرسال:\n' + (err && (err.text || err.message || JSON.stringify(err))));
-  });
+  }).catch(err => console.error('emailjs send failed', err));
 }
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
