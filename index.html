@@ -68,6 +68,13 @@ img{max-width:100%;display:block}
   display:inline-flex;align-items:center;gap:6px;transition:.2s;font-family:inherit;
 }
 .install-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.back-btn{
+  padding:10px 16px;border-radius:24px;font-weight:700;font-size:14px;cursor:pointer;
+  background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);
+  display:inline-flex;align-items:center;gap:6px;transition:.2s;font-family:inherit;
+}
+.back-btn:hover{background:rgba(255,255,255,.24)}
+html.lang-en .back-btn .back-arrow{display:inline-block;transform:scaleX(-1)}
 .ios-install-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;
   z-index:9999;padding:20px;
@@ -683,7 +690,7 @@ async function render(){
 
 /* ============ LANGUAGE SYSTEM ============ */
 const UI_TRANSLATIONS = {
-  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','تواصل معنا':'Contact us','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
+  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','رجوع':'Back','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','تواصل معنا':'Contact us','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
   'دليلك المحلي الشامل بود مدني، كل ما تحتاجه في مكان واحد: متاجر ومحلات وخدمات... مع معلومات التواصل والتفاصيل بكل سهولة.':'Your complete local guide to Wad Madani. Everything you need in one place: shops, stores and services, with contact details and information.',
   'دليلك المحلي الشامل':'Your complete local guide','في ود مدني':'in Wad Madani','كل ما تحتاجه في مكان واحد':'Everything you need in one place','مطاعم':'restaurants','فنادق':'hotels','أطباء':'doctors','محلات وخدمات':'shops and services','مع معلومات التواصل والتفاصيل بكل سهولة':'with contact details and information','أضف نشاطك أو خدمتك معنا':'Add your business or service','أضف عملك أو خدمتك في الدليل':'Add your business or service to the guide','تثبيت التطبيق':'Install app','التثبيت غير متاح حالياً في هذا المتصفح':'Installation is not available in this browser','تم تثبيت التطبيق بنجاح 🎉':'App installed successfully 🎉','منشأة':'businesses','المطاعم':'Restaurants','الفنادق والشقق الفندقية':'Hotels & furnished apartments','الأطباء والأخصائيون':'Doctors & specialists','الصيدليات':'Pharmacies','المستشفيات والمستوصفات':'Hospitals & clinics','الدلفري والتوصيل':'Delivery & courier','المميز':'Featured','مميزة':'Featured','لا توجد نتائج':'No results','لا توجد منشآت':'No businesses found','لا توجد أقسام بعد. أضفها من لوحة التحكم.':'No sections yet. Add them from the admin panel.','القسم غير موجود':'Section not found','المنشأة غير موجودة':'Business not found','ابحث...':'Search...','ابحث داخل هذا القسم...':'Search this section...','الرجاء الانتظار... دليلك بود مدني':'Please wait... Wad Madani Guide','جميع الحقوق محفوظة':'All rights reserved','لوحة التحكم':'Admin panel','إضافة منشأة':'Add business','إضافة':'Add','تعديل':'Edit','حذف':'Delete','حفظ':'Save','إلغاء':'Cancel','اسم المنشأة':'Business name','التصنيف / الوسم':'Category / tag','وصف مختصر':'Short description','أرقام الهاتف':'Phone numbers','العنوان':'Address','ساعات العمل':'Working hours','الصور':'Photos','مفعّلة وظاهرة للزوار':'Active and visible to visitors','منشأة مميزة':'Featured business','كلمة المرور':'Password','البريد الإلكتروني':'Email','تسجيل الدخول':'Log in','تسجيل الخروج':'Log out','تم الحفظ':'Saved','تم الحذف':'Deleted','تم التفعيل':'Activated','تم الإخفاء':'Hidden','الموقع':'Location','الهاتف':'Phone','الوصف':'Description','الخدمات':'Services','معلومات التواصل':'Contact information','مشاركة':'Share','نسخ الرابط':'Copy link','فتح في خرائط جوجل':'Open in Google Maps'
 };
@@ -746,7 +753,7 @@ City: Wad Madani – Al Jazirah State 🇸🇩
 
 © 2026 Wad Madani Guide
 Your guide to services and businesses in Wad Madani`;
-const PRIVACY_AR = `سياسة الخصوصية
+const PRIVACY_AR = `⭕ سياسة الخصوصية
 
 نحن في دليلك ودمدني نحترم خصوصية المستخدمين ونحرص على حماية معلوماتهم.
 
@@ -754,11 +761,9 @@ const PRIVACY_AR = `سياسة الخصوصية
 
 قد يستخدم الموقع خدمات تقنية مثل الاستضافة أو التحليلات أو ملفات تعريف الارتباط لتحسين أداء الموقع وتجربة المستخدم، وفقاً لسياسات مزودي هذه الخدمات.
 
-لا نقوم ببيع أو تأجير أو مشاركة أي بيانات شخصية مع أطراف أخرى.
-
 قد يتم تحديث سياسة الخصوصية من وقت لآخر، وسيتم نشر أي تغييرات على هذه الصفحة.
 
-آخر تحديث: سبتمبر 2026`;
+(كل الحقوق محفوظه لدينا 2026م ®️)`;
 const PRIVACY_EN = `Privacy Policy
 
 At Wad Madani Guide, we respect our users' privacy and are committed to protecting their information.
@@ -918,12 +923,18 @@ const installBtnObserver = new MutationObserver(()=>{
   else window.addEventListener('DOMContentLoaded', initInstallObserver, {once:true});
 })();
 
-function header(activeIsAdmin){
+// يرجع المستخدم لخطوة التصفح السابقة، وإن لم توجد خطوة سابقة (فتح مباشر للصفحة) يعود للرئيسية
+function goBack(){
+  if(window.history.length > 1) window.history.back();
+  else nav('#/');
+}
+function header(activeIsAdmin, showBack){
   return `
   <header class="site-header">
     <div class="header-row">
       <a href="#/" class="logo"><span class="badge"><img src="logo-icon.png" alt="دليلك بود مدني" loading="lazy"></span><span class="display">دليلك بود مدني</span></a>
       <div class="header-links">
+        ${showBack ? `<button class="back-btn" type="button" onclick="goBack()"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button>` : ''}
         <button id="installAppBtn" class="install-btn" style="display:none" type="button">⬇️ تثبيت التطبيق</button>
       </div>
     </div>
@@ -988,7 +999,7 @@ function renderSearchPage(app){
   const q = params.get('q') || '';
   const results = q ? searchIndex(q) : [];
   app.innerHTML = `
-    ${header(false)}
+    ${header(false, true)}
     <div class="container">
       <div class="crumbs"><a href="#/">الرئيسية</a> / نتائج البحث</div>
       <div class="search-wrap" style="margin:0 0 20px">
@@ -1015,11 +1026,11 @@ function renderSearchPage(app){
 /* ============ SECTION PAGE ============ */
 function renderSectionPage(app, sectionId){
   const sec = sectionOf(sectionId);
-  if(!sec){ app.innerHTML = header(false) + `<div class="container"><div class="empty">القسم غير موجود</div></div>` + footer(); return; }
+  if(!sec){ app.innerHTML = header(false, true) + `<div class="container"><div class="empty">القسم غير موجود</div></div>` + footer(); return; }
   let items = state.index.filter(b=>b.sectionId===sectionId && b.active);
   const cats = [...new Set(items.map(b=>b.category).filter(Boolean))];
   app.innerHTML = `
-    ${header(false)}
+    ${header(false, true)}
     <div class="container">
       <div class="crumbs"><a href="#/">الرئيسية</a> / ${esc(sec.name)}</div>
       <div class="section-title"><h2>${esc(sec.icon)} ${esc(sec.name)}</h2><div class="rule"></div></div>
@@ -1068,7 +1079,7 @@ function bindBizGridButtons(){ /* links are native anchors, nothing extra needed
 /* ============ BUSINESS DETAIL PAGE ============ */
 async function renderBizPage(app, id){
   const biz = await loadBiz(id);
-  if(!biz){ app.innerHTML = header(false) + `<div class="container"><div class="empty">المنشأة غير موجودة</div></div>` + footer(); return; }
+  if(!biz){ app.innerHTML = header(false, true) + `<div class="container"><div class="empty">المنشأة غير موجودة</div></div>` + footer(); return; }
   const sec = sectionOf(biz.sectionId) || {name:'', type:'custom', icon:'🏷️'};
   const images = biz.images && biz.images.length ? biz.images : [];
   const primary = images[biz.primaryImageIndex||0] || images[0] || '';
@@ -1082,7 +1093,7 @@ async function renderBizPage(app, id){
   const is24h = sec.type==='pharmacy' && biz.extra && biz.extra.is24h;
 
   app.innerHTML = `
-    ${header(false)}
+    ${header(false, true)}
     <div class="container">
       <div class="crumbs"><a href="#/">الرئيسية</a> / <a href="#/section/${sec.id||biz.sectionId}">${esc(sec.name)}</a> / ${esc(biz.name)}</div>
 
@@ -1150,7 +1161,7 @@ async function renderAdmin(app, hash){
 
 async function renderAdminLogin(app){
   app.innerHTML = `
-    ${header(true)}
+    ${header(true, true)}
     <div class="admin-login">
       <h2>🔐 لوحة تحكم دليلك بود مدني</h2>
       <p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">لا يمكنك الدخول، محمي خاص للإدارة فقط.</p>
@@ -1205,7 +1216,7 @@ function bindTopbar(){
 function renderAdminSections(app){
   const secs = [...state.sections].sort((a,b)=>a.order-b.order);
   app.innerHTML = `
-    ${header(true)}
+    ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
       <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت). التخزين حالياً محلي في هذا المتصفح فقط كحل مؤقت.')}</div>
@@ -1273,7 +1284,7 @@ function renderAdminSectionForm(app, id){
     {v:'pharmacy',l:'صيدلية'},{v:'hospital',l:'مستشفى/مستوصف'},{v:'custom',l:'عام / مخصص'}
   ];
   app.innerHTML = `
-    ${header(true)}
+    ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
       <div class="crumbs"><a href="#/admin/sections" id="backLink">الأقسام</a> / ${isNew?'قسم جديد':'تعديل القسم'}</div>
@@ -1328,7 +1339,7 @@ function renderAdminBusinesses(app, sectionId){
   if(!sec){ nav('#/admin/sections'); return; }
   let items = state.index.filter(b=>b.sectionId===sectionId);
   app.innerHTML = `
-    ${header(true)}
+    ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
       <div class="crumbs"><a href="#/admin/sections" id="backLink">الأقسام</a> / ${esc(sec.name)}</div>
@@ -1404,7 +1415,7 @@ async function renderAdminBusinessForm(app, sectionId, bizId){
   const fields = TYPE_FIELDS[sec.type] || [];
 
   app.innerHTML = `
-    ${header(true)}
+    ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
       <div class="crumbs"><a href="#/admin/sections" id="backLink1">الأقسام</a> / <a href="#/admin/businesses/${sectionId}" id="backLink2">${esc(sec.name)}</a> / ${isNew?'إضافة':'تعديل'}</div>
