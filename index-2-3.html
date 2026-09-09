@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>دليلك بود مدني</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c98a2b">
+<link rel="icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="دليلك بود مدني">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Lalezar&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nile:#0d4f4f;
+  --nile-dark:#082f2f;
+  --nile-tint:#e4f0ee;
+  --ochre:#c98a2b;
+  --ochre-dark:#a06e1f;
+  --brick:#a6402b;
+  --cream:#faf6ed;
+  --ink:#20302c;
+  --ink-soft:#4b5a55;
+  --line:#e4ddc9;
+  --card:#ffffff;
+  --radius:16px;
+  --shadow:0 6px 20px rgba(13,79,79,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--ink);
+  min-height:100vh;padding-bottom:96px;
+}
+h1,h2,h3,.display{font-family:'Lalezar',sans-serif;font-weight:400;letter-spacing:.5px}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+::selection{background:var(--ochre);color:#fff}
+
+/* header */
+.site-header{
+  background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);
+  color:#fff;padding:18px 16px 0;position:sticky;top:0;z-index:50;
+}
+.header-row{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;gap:10px}
+.logo{display:flex;align-items:center;gap:14px;font-size:26px;transition:.2s}
+.logo:hover{opacity:.9}
+.logo .badge{
+  width:60px;height:60px;border-radius:50%;background:var(--ochre);display:flex;align-items:center;justify-content:center;
+  font-family:'Lalezar',sans-serif;color:var(--nile-dark);font-size:30px;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);overflow:hidden;border:2px solid rgba(255,255,255,.35);
+}
+.logo .badge img{width:100%;height:100%;object-fit:cover;display:block}
+.logo .display{font-size:clamp(24px,4.4vw,34px);letter-spacing:.5px}
+.header-links{display:flex;gap:6px;font-size:15px}
+.header-links a{padding:10px 20px;border-radius:24px;opacity:.9;transition:.2s;font-weight:700;border:1px solid rgba(255,255,255,.25)}
+.header-links a:hover,.header-links a.active{background:rgba(255,255,255,.18);opacity:1;border-color:rgba(255,255,255,.4)}
+.install-btn{
+  padding:10px 18px;border-radius:24px;font-weight:700;font-size:14px;cursor:pointer;
+  background:var(--ochre);color:var(--nile-dark);border:1px solid rgba(255,255,255,.4);
+  display:inline-flex;align-items:center;gap:6px;transition:.2s;font-family:inherit;
+}
+.install-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.ios-install-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;
+  z-index:9999;padding:20px;
+}
+.ios-install-card{
+  background:#fff;border-radius:16px;padding:24px;max-width:360px;width:100%;text-align:right;
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+}
+.ios-install-card h3{margin:0 0 14px;color:var(--nile)}
+.ios-install-card ol{margin:0 0 18px;padding-inline-start:20px;line-height:2}
+.river{height:14px;max-width:960px;margin:12px auto 0;opacity:.55}
+
+/* hero + search */
+.hero{max-width:960px;margin:0 auto;padding:0}
+.hero-banner{display:block;width:100%;height:auto}
+.hero p{color:var(--ink-soft);margin:0 0 18px;font-size:15px}
+.hero-tagline{
+  font-family:'Tajawal',sans-serif;font-weight:600;font-size:clamp(15px,2.4vw,18px);
+  color:var(--ink);
+  max-width:620px;margin:0 auto 22px;line-height:1.9;letter-spacing:.15px;
+  background:linear-gradient(180deg,#ffffff 0%,var(--nile-tint) 100%);
+  border:1.5px solid var(--nile);border-radius:16px;
+  padding:20px 26px;box-shadow:0 8px 22px rgba(13,79,79,.12);
+  position:relative;
+}
+.hero-tagline::before{
+  content:'';position:absolute;top:-1.5px;right:24px;width:46px;height:4px;border-radius:0 0 4px 4px;
+  background:var(--ochre);
+}
+.hero-wa-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:#25D366;color:#fff;
+  padding:12px 22px;border-radius:30px;font-weight:800;font-size:14.5px;box-shadow:0 6px 16px rgba(37,211,102,.35);
+}
+.wa-header-btn{background:#25D366;color:#fff!important;padding:7px 12px;border-radius:20px;font-weight:700;opacity:1!important}
+.search-wrap{position:relative;max-width:520px;margin:0 auto}
+.search-wrap input{
+  width:100%;padding:14px 46px 14px 16px;border-radius:30px;border:1px solid var(--line);
+  font-size:15px;font-family:inherit;background:#fff;box-shadow:var(--shadow);
+}
+.search-wrap input:focus{outline:2px solid var(--ochre);outline-offset:1px}
+.search-wrap .icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);opacity:.5}
+.search-results{max-width:520px;margin:8px auto 0;background:#fff;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;text-align:right}
+.search-results .sr-item{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.search-results .sr-item:last-child{border:0}
+.search-results .sr-item:hover{background:var(--nile-tint)}
+.sr-empty{padding:14px;color:var(--ink-soft);font-size:14px}
+
+/* container */
+.container{max-width:960px;margin:0 auto;padding:0 16px 60px}
+
+/* category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
+.cat-card{
+  background:var(--card);border-radius:10px;padding:8px 6px;text-align:center;box-shadow:var(--shadow);
+  border:1.5px solid var(--nile);transition:.2s;
+}
+.cat-card:hover{transform:translateY(-3px);border-color:var(--ochre)}
+.cat-card .emoji{font-size:22px;display:block;margin-bottom:2px}
+.cat-card .name{font-weight:700;font-size:12.5px}
+.cat-card .count{color:var(--ink-soft);font-weight:600;font-size:10.5px;margin-top:1px}
+
+.section-title{display:flex;align-items:center;gap:10px;margin:36px 0 14px}
+.section-title h2{font-size:22px;margin:0;color:var(--nile)}
+.section-title .rule{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--ochre) 0 8px, transparent 8px 14px)}
+
+/* featured */
+.feat-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
+.feat-card{
+  flex:0 0 220px;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+  border:1px solid var(--line);scroll-snap-align:start;
+}
+.feat-card .thumb{height:120px;background:var(--nile-tint) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--nile)}
+.feat-card .body{padding:12px}
+.feat-card .tag{display:inline-block;background:var(--ochre);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-bottom:6px}
+.feat-card .name{font-weight:700;font-size:15px}
+
+/* biz grid */
+.biz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:6px}
+.biz-card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);display:flex;flex-direction:column}
+.biz-card .thumb{height:140px;background:var(--nile-tint) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:38px;color:var(--nile);position:relative}
+.biz-card .thumb .star{position:absolute;top:8px;left:8px;background:var(--ochre);color:#fff;font-size:11px;padding:3px 8px;border-radius:10px}
+.biz-card .body{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.biz-card .name{font-weight:700;font-size:16px}
+.biz-card .tag{color:var(--ochre-dark);font-size:12.5px;font-weight:700}
+.biz-card .desc{color:var(--ink);font-weight:500;font-size:13px;line-height:1.6;flex:1}
+.biz-card .foot{display:flex;gap:8px;margin-top:6px}
+.pill-btn{
+  flex:1;text-align:center;padding:8px 6px;border-radius:10px;font-size:13px;font-weight:700;border:none;
+  background:var(--nile);color:#fff;
+}
+.pill-btn.ghost{background:var(--nile-tint);color:var(--nile)}
+
+/* empty state */
+.empty{text-align:center;padding:50px 20px;color:var(--ink-soft)}
+.empty .emoji{font-size:44px;display:block;margin-bottom:10px}
+
+/* breadcrumb */
+.crumbs{font-size:13px;color:var(--ink-soft);margin:16px 0}
+.crumbs a{color:var(--nile);font-weight:700}
+
+/* filters row */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.chip{padding:7px 14px;border-radius:20px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink-soft)}
+.chip.active{background:var(--nile);color:#fff;border-color:var(--nile)}
+
+/* business detail */
+.gallery{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:10px}
+.gallery .main{height:260px;background:var(--nile-tint) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--nile)}
+.gallery-thumbs{display:flex;gap:8px;margin-top:8px;overflow-x:auto}
+.gallery-thumbs img{width:70px;height:56px;object-fit:cover;border-radius:8px;border:2px solid transparent;cursor:pointer}
+.gallery-thumbs img.active{border-color:var(--ochre)}
+
+.biz-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-top:18px;gap:10px}
+.biz-title-row h1{margin:0;font-size:26px;color:var(--ink)}
+.badge-24{background:var(--brick);color:#fff;font-size:12px;padding:4px 10px;border-radius:10px;white-space:nowrap}
+.biz-meta{color:var(--ink);font-weight:500;font-size:14px;margin:6px 0 14px;line-height:1.8}
+.info-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.info-card h3{margin:0 0 8px;font-size:16px;color:var(--nile)}
+.info-card p{margin:0;line-height:1.9;font-size:14.5px;color:var(--ink)}
+.phones-list{display:flex;flex-direction:column;gap:8px}
+.phone-row{display:flex;align-items:center;justify-content:space-between;background:var(--nile-tint);border-radius:10px;padding:9px 12px}
+.action-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:sticky;bottom:96px;background:var(--cream);padding:10px 0;border-top:1px solid var(--line);margin-top:20px}
+.action-bar a{
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border-radius:12px;font-size:12px;font-weight:700;
+  background:#fff;border:1px solid var(--line);color:var(--ink);
+}
+.action-bar a span.ic{font-size:18px}
+.action-bar a.whatsapp{background:#25D366;color:#fff;border-color:#25D366}
+.action-bar a.call{background:var(--nile);color:#fff;border-color:var(--nile)}
+.map-embed{width:100%;height:220px;border:0;border-radius:14px;margin-top:6px}
+
+/* footer */
+.site-footer{background:var(--nile-dark);color:#cfe4e0;text-align:center;padding:26px 16px;margin-top:40px;font-size:13px}
+.site-footer a{color:#fff;font-weight:700}
+
+/* admin */
+.admin-shell{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+.admin-login{max-width:360px;margin:60px auto;background:#fff;border-radius:16px;padding:26px;box-shadow:var(--shadow);text-align:center}
+.admin-login h2{color:var(--nile);margin-top:0}
+.field{margin-bottom:14px;text-align:right}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:5px}
+.field input[type=text],.field input[type=password],.field input[type=number],.field input[type=url],.field textarea,.field select{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;background:#fff;
+}
+.field textarea{min-height:80px;resize:vertical}
+.btn{background:var(--nile);color:#fff;border:none;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14px}
+.btn.secondary{background:#fff;color:var(--nile);border:1px solid var(--nile)}
+.btn.danger{background:var(--brick);color:#fff}
+.btn.small{padding:6px 12px;font-size:12.5px}
+.btn:disabled{opacity:.5}
+.admin-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.admin-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.admin-tabs button{padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13.5px;color:var(--ink-soft)}
+.admin-tabs button.active{background:var(--nile);color:#fff;border-color:var(--nile)}
+.admin-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+.admin-list-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.admin-list-row:last-child{border:0}
+.row-info{display:flex;align-items:center;gap:10px}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#999;display:inline-block}
+.status-dot.on{background:#2ea56b}
+.tag-mini{background:var(--nile-tint);color:var(--nile);font-size:11px;padding:2px 8px;border-radius:8px;font-weight:700}
+.tag-mini.featured{background:#fff2dd;color:var(--ochre-dark)}
+.phone-input-row{display:flex;gap:6px;margin-bottom:8px}
+.phone-input-row input{flex:1}
+.icon-btn{background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:34px;font-size:16px;color:var(--brick)}
+.img-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.img-thumb{position:relative;width:80px;height:64px}
+.img-thumb img{width:100%;height:100%;object-fit:cover;border-radius:8px;border:2px solid var(--line)}
+.img-thumb.primary img{border-color:var(--ochre)}
+.img-thumb .del{position:absolute;top:-6px;left:-6px;background:var(--brick);color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;border:none;line-height:20px}
+.img-thumb .mk{position:absolute;bottom:-6px;right:-6px;background:var(--ochre);color:#fff;border-radius:8px;width:20px;height:20px;font-size:11px;border:none;line-height:20px}
+.upload-box{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--ink-soft);font-size:13px;cursor:pointer}
+.toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:13.5px;z-index:200;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1}
+.hint{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.emoji-picker{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.emoji-picker button{font-size:20px;background:#fff;border:1px solid var(--line);border-radius:8px;width:38px;height:38px}
+.emoji-picker button.active{border-color:var(--ochre);background:var(--nile-tint)}
+.security-note{background:#fff2dd;border:1px solid #eecf9a;color:#7a5715;font-size:12.5px;padding:10px 12px;border-radius:10px;margin-bottom:16px}
+@media (min-width:900px){
+  .container, .admin-shell, .header-row, .hero, .action-bar.container{max-width:1080px}
+  .cat-grid{grid-template-columns:repeat(5,1fr)}
+  .biz-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:1200px){
+  .container, .admin-shell, .header-row, .hero{max-width:1180px}
+  .biz-grid{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:600px){
+  .biz-title-row h1{font-size:21px}
+  .action-bar{grid-template-columns:repeat(4,1fr)}
+  .header-links{font-size:12.5px;gap:4px}
+  .wa-header-btn{padding:6px 9px;font-size:12px}
+  .install-btn{padding:6px 10px;font-size:11.5px;gap:4px}
+  .logo .badge{width:48px;height:48px;font-size:22px}
+  .logo .display{font-size:20px}
+  .hero-tagline{padding:16px 18px;border-radius:14px}
+}
+
+/* bottom nav bar */
+.bottom-nav{
+  position:fixed;right:0;left:0;bottom:0;z-index:70;
+  display:flex;justify-content:space-around;align-items:stretch;
+  background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);border-top:1px solid rgba(255,255,255,.18);
+  box-shadow:0 -6px 18px rgba(13,79,79,.10);
+  min-height:88px;padding-bottom:env(safe-area-inset-bottom,0);
+}
+.bottom-nav a{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  min-height:88px;padding:12px 4px 11px;font-size:13px;font-weight:700;color:rgba(255,255,255,.82);transition:.15s;
+}
+.bottom-nav a .bn-ic{font-size:25px;line-height:1;margin-bottom:3px}
+.bottom-nav a.active{color:#fff}
+.bottom-nav a.contact{color:#7ff0aa}
+.bottom-nav a.more{color:#fff}
+.more-menu-backdrop{position:fixed;inset:0;background:var(--cream);z-index:90;display:flex;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.more-menu-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
+.more-menu{position:relative;width:100%;min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.more-menu-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 680px)/2));background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);color:#fff;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(8,47,47,.16)}
+.more-menu-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px}
+.more-menu-close.mm-back{border-radius:50%;font-size:20px;line-height:1}
+html.lang-en .more-menu-close.mm-back{transform:scaleX(-1)}
+.more-menu-item{display:flex;align-items:center;gap:16px;width:min(680px,calc(100% - 28px));margin:12px auto;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font:700 16px/1.4 inherit;text-align:inherit;box-shadow:0 5px 16px rgba(13,79,79,.07)}
+.more-menu-item:hover{background:var(--nile-tint)}
+.more-menu-item .mi-icon{width:34px;text-align:center;font-size:25px;color:var(--nile)}
+.more-menu-item .mi-copy{display:flex;flex-direction:column;gap:2px}
+.more-menu-item small{color:var(--ink-soft);font-size:11px;font-weight:500}
+.about-screen{width:min(760px,100%);min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.about-content{width:min(680px,calc(100% - 28px));margin:22px auto 40px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 6px 20px rgba(13,79,79,.08);white-space:pre-line;line-height:2;font-size:15px;color:var(--ink)}
+.about-content h2{margin:0 0 14px;color:var(--nile);font-size:25px}
+.about-content .about-copy{margin:0}
+body.more-open{overflow:hidden}
+body.more-open .bottom-nav{display:flex;z-index:100}
+html.lang-en body{direction:ltr}
+html.lang-en .more-menu-item{text-align:left}
+@media (min-width:900px){
+  .bottom-nav{max-width:1080px;width:100%;left:50%;right:auto;transform:translateX(-50%);border-radius:16px 16px 0 0}
+}
+</style>
+</head>
+<body>
+<div id="initial-splash" style="position:fixed;inset:0;background:#faf6ed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9999">
+  <img src="icon-192.png" alt="دليلك بود مدني" style="width:88px;height:88px;border-radius:22px;box-shadow:0 6px 18px rgba(0,0,0,.15)">
+  <div style="font-size:15px;color:#0d4f4f;font-weight:600">الرجاء الانتظار... دليلك بود مدني</div>
+</div>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+
+<!-- شريط تنقل سفلي ثابت — إضافة عرض فقط، لا يغيّر أي كود أو أوامر شغّالة بالموقع -->
+<nav class="bottom-nav" id="bottomNav">
+  <a href="#/" data-tab="home"><span class="bn-ic">🏠</span><span data-i18n="الرئيسية">الرئيسية</span></a>
+  <a href="https://wa.me/249991970907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" class="contact" target="_blank" rel="noopener noreferrer"><span class="bn-ic">🛍️</span><span data-i18n="أضف نشاطك">أضف نشاطك</span></a>
+  <a href="#/search" data-tab="search"><span class="bn-ic">🔍</span><span data-i18n="البحث">البحث</span></a>
+  <a href="#" id="bnMore" class="more"><span class="bn-ic">☰</span><span data-i18n="المزيد">المزيد</span></a>
+</nav>
+<div class="more-menu-backdrop" id="moreMenuBackdrop" aria-hidden="true">
+  <section class="more-menu" role="dialog" aria-label="المزيد">
+    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="more-menu-close" id="moreMenuClose" aria-label="إغلاق">×</button></div>
+    <button class="more-menu-item" id="languageMenuItem"><span class="mi-icon">🌐</span><span class="mi-copy"><span data-i18n="تغيير اللغة">تغيير اللغة</span><small data-i18n="English / العربية">English / العربية</small></span></button>
+    <button class="more-menu-item" id="shareMenuItem"><span class="mi-icon">↗</span><span data-i18n="مشاركة التطبيق">مشاركة التطبيق</span></button>
+    <a class="more-menu-item" href="https://wa.me/249991970907" target="_blank" rel="noopener noreferrer"><span class="mi-icon">💬</span><span data-i18n="تواصل معنا">تواصل معنا</span></a>
+    <a class="more-menu-item" href="https://wa.me/249991970907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D8%A3%D9%88%20%D9%86%D8%B4%D8%A7%D8%B7%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" target="_blank" rel="noopener noreferrer"><span class="mi-icon">🛍️</span><span data-i18n="أضف منتجك أو نشاطك">أضف منتجك أو نشاطك</span></a>
+    <a class="more-menu-item" href="#/admin" id="moreAdminLink"><span class="mi-icon">⚙️</span><span data-i18n="لوحة التحكم">لوحة التحكم</span></a>
+    <button class="more-menu-item" id="aboutMenuItem"><span class="mi-icon">ⓘ</span><span data-i18n="عن التطبيق">عن التطبيق</span></button>
+    <button class="more-menu-item" id="privacyMenuItem"><span class="mi-icon">🛡️</span><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span></button>
+  </section>
+</div>
+<div class="more-menu-backdrop" id="aboutBackdrop" aria-hidden="true">
+  <section class="about-screen" role="dialog" aria-label="عن التطبيق">
+    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="more-menu-close mm-back" id="aboutClose" aria-label="رجوع">→</button></div>
+    <article class="about-content" id="aboutContent"></article>
+  </section>
+</div>
+<div class="more-menu-backdrop" id="privacyBackdrop" aria-hidden="true">
+  <section class="about-screen" role="dialog" aria-label="سياسة الخصوصية">
+    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="more-menu-close mm-back" id="privacyClose" aria-label="رجوع">→</button></div>
+    <article class="about-content" id="privacyContent"></article>
+  </section>
+</div>
+
+<!-- Firebase (قاعدة بيانات سحابية مجانية - بدون بطاقة ائتمانية) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+<!-- EmailJS: تنبيه بالإيميل عند محاولة تسجيل دخول فاشلة للوحة التحكم -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){
+    try{ emailjs.init({ publicKey: "AVLPvCfiftClMvF7Y" }); }
+    catch(e){ console.error('emailjs init failed', e); }
+  })();
+</script>
+
+<script>
+/* ============ STORAGE HELPERS ============
+   ترتيب الأولوية تلقائياً:
+   1) Firestore (Firebase): إن نجح الاتصال، تُحفظ كل البيانات سحابياً ويراها
+      كل زائر من أي جهاز أو متصفح - هذا هو المطلوب لموقع حقيقي.
+   2) window.storage: يعمل فقط داخل معاينة Claude.
+   3) localStorage: كحل احتياطي أخير على نفس الجهاز فقط، لو تعذر الاتصال بالإنترنت.
+*/
+const firebaseConfig = {
+  apiKey: "AIzaSyAk_pzydWm4kgtMXh0vtyJaNgVAKzMfTZE",
+  authDomain: "wad-madani-guide.firebaseapp.com",
+  projectId: "wad-madani-guide",
+  storageBucket: "wad-madani-guide.firebasestorage.app",
+  messagingSenderId: "277806653493",
+  appId: "1:277806653493:web:4298488d7056b35f80517c"
+};
+
+let HAS_FIRESTORE = false;
+let HAS_AUTH = false;
+let db = null;
+let auth = null;
+try{
+  if(typeof firebase !== 'undefined'){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    HAS_FIRESTORE = true;
+    auth = firebase.auth();
+    HAS_AUTH = true;
+  }
+}catch(e){ console.error('Firebase init failed', e); }
+
+const HAS_CLAUDE_STORAGE = (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function');
+const LS_PREFIX = 'wadmadani:';
+
+function withTimeout(promise, ms){
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(()=> reject(new Error('timeout')), ms))
+  ]);
+}
+
+async function sGet(key){
+  if(HAS_FIRESTORE){
+    try{
+      const doc = await withTimeout(db.collection('kv').doc(key).get(), 6000);
+      return doc.exists ? JSON.parse(doc.data().value) : null;
+    }catch(e){ console.error('firestore get failed/timeout', e); /* fall through to backups below */ }
+  }
+  if(HAS_CLAUDE_STORAGE){
+    try{ const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : null; }
+    catch(e){ return null; }
+  }
+  try{
+    const raw = localStorage.getItem(LS_PREFIX + key);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+async function sSet(key, value){
+  if(HAS_FIRESTORE){
+    try{
+      await withTimeout(db.collection('kv').doc(key).set({value: JSON.stringify(value), updatedAt: Date.now()}), 8000);
+      return true;
+    }catch(e){
+      console.error('firestore set failed/timeout', e);
+      toast('تعذر الحفظ سحابياً، تحقق من الإنترنت أو حجم الصور');
+      return false;
+    }
+  }
+  if(HAS_CLAUDE_STORAGE){
+    try{ await window.storage.set(key, JSON.stringify(value), true); return true; }
+    catch(e){ console.error('storage set failed', e); return false; }
+  }
+  try{
+    localStorage.setItem(LS_PREFIX + key, JSON.stringify(value));
+    return true;
+  }catch(e){ console.error('localStorage set failed', e); return false; }
+}
+async function sDelete(key){
+  if(HAS_FIRESTORE){
+    try{ await withTimeout(db.collection('kv').doc(key).delete(), 6000); }catch(e){ console.error(e); }
+    return;
+  }
+  if(HAS_CLAUDE_STORAGE){
+    try{ await window.storage.delete(key, true); }catch(e){}
+    return;
+  }
+  try{ localStorage.removeItem(LS_PREFIX + key); }catch(e){}
+}
+
+function uid(){ return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function esc(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// يسمح فقط بروابط http/https الآمنة، ويمنع روابط javascript:/data: التي قد تُستخدم لهجمات XSS
+function safeUrl(u){
+  const s = (u||'').toString().trim();
+  if(!s) return '';
+  try{
+    const parsed = new URL(s, location.href);
+    if(parsed.protocol === 'http:' || parsed.protocol === 'https:') return esc(s);
+  }catch(e){}
+  return '';
+}
+// يسمح فقط بأرقام عشرية (لخطوط الطول/العرض) لمنع الحقن داخل src الخاص بالخريطة
+function safeCoord(v){
+  const s = (v||'').toString().trim();
+  return /^-?\d{1,3}(\.\d+)?$/.test(s) ? s : '';
+}
+// يسمح فقط بصور Base64 (data:image/...) أو روابط https الآمنة، ويمنع أي حقن عبر style/src
+// (data:text/html أو javascript: تُرفض، حتى لو وصلت من مصدر غير متوقع كـ Firestore)
+function safeImageUrl(u){
+  const s = (u||'').toString().trim();
+  if(!s) return '';
+  if(/^data:image\/(png|jpe?g|webp|gif);base64,[a-zA-Z0-9+/=]+$/.test(s)) return s;
+  try{
+    const parsed = new URL(s, location.href);
+    if(parsed.protocol === 'https:') return esc(s);
+  }catch(e){}
+  return '';
+}
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._h); toast._h = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+// إرسال تنبيه إيميل عند محاولة دخول فاشلة للوحة التحكم (لا علاقة له بـ Firebase نفسه)
+function sendFailedLoginAlert(attemptedEmail){
+  if(typeof emailjs === 'undefined') return;
+  emailjs.send('service_bj0zfkp', 'template_5iy1kf9', {
+    attempted_email: attemptedEmail || '(فارغ)',
+    attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
+  }).catch(err => console.error('emailjs send failed', err));
+}
+function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
+function waLink(p){
+  let d = phoneDigits(p);
+  if(d.startsWith('0')) d = '249' + d.slice(1);
+  else if(!d.startsWith('249')) d = '249' + d;
+  return 'https://wa.me/' + d;
+}
+function telLink(p){ return 'tel:' + phoneDigits(p); }
+const WA_BUSINESS_LINK = 'https://wa.me/249991970907?text=' + encodeURIComponent('مرحباً، أرغب في إضافة نشاطي/خدمتي في دليلك بود مدني');
+
+/* ============ SEED DATA ============ */
+const DEFAULT_SECTIONS = [
+  {id:'sec-rest', name:'المطاعم', icon:'🍽️', type:'restaurant', order:1, active:true},
+  {id:'sec-hotel', name:'الفنادق والشقق الفندقية', icon:'🏨', type:'hotel', order:2, active:true},
+  {id:'sec-doctor', name:'الأطباء والأخصائيون', icon:'👨‍⚕️', type:'doctor', order:3, active:true},
+  {id:'sec-pharm', name:'الصيدليات', icon:'💊', type:'pharmacy', order:4, active:true},
+  {id:'sec-hosp', name:'المستشفيات والمستوصفات', icon:'🏥', type:'hospital', order:5, active:true},
+];
+
+const TYPE_FIELDS = {
+  restaurant: [
+    {key:'priceRange', label:'الفئة السعرية (اختياري)', type:'text', ph:'مثال: اقتصادي / متوسط / راقي'},
+    {key:'menu', label:'قائمة الأسعار / المنيو', type:'textarea', ph:'اكتب الأصناف والأسعار، صنف في كل سطر'},
+  ],
+  hotel: [
+    {key:'roomTypes', label:'أنواع الغرف', type:'textarea', ph:'مفردة، مزدوجة، جناح...'},
+    {key:'prices', label:'الأسعار (اختياري)', type:'textarea', ph:'سعر كل نوع غرفة لليلة'},
+    {key:'amenities', label:'الخدمات والمميزات', type:'textarea', ph:'واي فاي، مواقف، إفطار، مسبح...'},
+  ],
+  doctor: [
+    {key:'specialty', label:'التخصص', type:'text', ph:'مثال: باطنية، أطفال، أسنان'},
+    {key:'clinicTitle', label:'اسم/عنوان العيادة', type:'text', ph:''},
+    {key:'license', label:'رقم التسجيل المهني (اختياري)', type:'text', ph:''},
+  ],
+  pharmacy: [
+    {key:'is24h', label:'تعمل 24 ساعة', type:'checkbox'},
+  ],
+  hospital: [
+    {key:'departments', label:'الأقسام والخدمات', type:'textarea', ph:'الطوارئ، الباطنية، الأشعة...'},
+  ],
+  custom: [],
+};
+
+async function ensureSeed(){
+  let sections = await sGet('sections');
+  if(!sections){
+    sections = DEFAULT_SECTIONS;
+    await sSet('sections', sections);
+  }
+  let index = await sGet('businesses-index');
+  if(!index){
+    index = [];
+    await sSet('businesses-index', index);
+  }
+}
+
+/* ============ STATE ============ */
+const state = { sections: [], index: [], isAdmin: false };
+
+async function loadState(){
+  state.sections = (await sGet('sections')) || [];
+  state.index = (await sGet('businesses-index')) || [];
+}
+async function saveSections(){ await sSet('sections', state.sections); }
+async function saveIndex(){ await sSet('businesses-index', state.index); }
+async function loadBiz(id){
+  // تخزين مؤقت في الذاكرة: إن فُتحت نفس المنشأة سابقاً في هذه الجلسة، لا داعي
+  // لطلب Firestore مرة أخرى (يُحدَّث تلقائياً عند أي تعديل عبر saveBiz/deleteBiz)
+  if(state.bizCache && state.bizCache[id]) return state.bizCache[id];
+  const biz = await sGet('biz:'+id);
+  if(!state.bizCache) state.bizCache = {};
+  if(biz) state.bizCache[id] = biz;
+  return biz;
+}
+async function saveBiz(biz){
+  await sSet('biz:'+biz.id, biz);
+  if(!state.bizCache) state.bizCache = {};
+  state.bizCache[biz.id] = biz; // تحديث التخزين المؤقت فوراً بعد الحفظ
+  const i = state.index.findIndex(b=>b.id===biz.id);
+  const light = {id:biz.id, sectionId:biz.sectionId, name:biz.name, category:biz.category||'',
+    image: (biz.images&&biz.images[biz.primaryImageIndex||0]) || '', active:biz.active!==false, featured:!!biz.featured,
+    phone: (biz.phones&&biz.phones[0])||'', desc:biz.description||''};
+  if(i>=0) state.index[i] = light; else state.index.push(light);
+  await saveIndex();
+}
+async function deleteBiz(id){
+  await sDelete('biz:'+id);
+  if(state.bizCache) delete state.bizCache[id]; // إزالة من التخزين المؤقت بعد الحذف
+  state.index = state.index.filter(b=>b.id!==id);
+  await saveIndex();
+}
+
+/* ============ IMAGE RESIZE ============ */
+function resizeImage(file, maxDim=640, quality=0.55){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = h*maxDim/w; w = maxDim; }
+        else if(h > maxDim){ w = w*maxDim/h; h = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ============ ROUTER ============ */
+window.addEventListener('hashchange', render);
+window.addEventListener('DOMContentLoaded', () => {
+  // إزالة شاشة الترحيب الثابتة بمجرد أن يبدأ التطبيق بالعمل
+  const splash = document.getElementById('initial-splash');
+  if(splash) splash.remove();
+  // عرض الصفحة الرئيسية فوراً بالبيانات الافتراضية، ثم تحديثها بعد اكتمال التحميل.
+  // هذا يمنع شاشة الانتظار الطويلة عند الدخول أو الضغط على زر الرئيسية.
+  state.sections = DEFAULT_SECTIONS.slice();
+  state.index = [];
+  state.isAdmin = false;
+  render();
+  (async function bootstrapInBackground(){
+    try{
+      await ensureSeed();
+      await loadState();
+      render();
+    }catch(e){ console.error('bootstrap failed', e); }
+    try{
+      if(HAS_AUTH){
+        try{ await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); }
+        catch(e){ console.error('setPersistence failed', e); }
+        let resolved = false;
+        auth.onAuthStateChanged(user => {
+          resolved = true;
+          state.isAdmin = !!user;
+          render();
+        });
+        setTimeout(() => {
+          if(!resolved){ console.warn('auth state timed out, showing site as guest'); render(); }
+        }, 4000);
+      } else {
+        state.isAdmin = false;
+        render();
+      }
+    }catch(e){ console.error('render failed', e); render(); }
+  })();
+});
+
+// Route all internal links (href="#/...") through nav() so the page always
+// re-renders immediately, instead of depending only on the browser's
+// hashchange event (which can be unreliable inside a sandboxed preview).
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#/"]');
+  if(!a) return;
+  e.preventDefault();
+  nav(a.getAttribute('href'));
+});
+
+function nav(hash){
+  if(location.hash === hash){ render(); return; }
+  location.hash = hash;
+  // Fallback in case hashchange doesn't fire for any reason
+  setTimeout(() => { if(location.hash === hash) render(); }, 0);
+}
+
+async function render(){
+  const app = document.getElementById('app');
+  const hash = location.hash || '#/';
+  setTimeout(applyLanguage, 0);
+  // ملاحظة أداء: state.sections و state.index تم تحميلها مرة واحدة فقط عند فتح
+  // الموقع (loadState في DOMContentLoaded) وتُحدَّث محلياً تلقائياً عند أي حفظ
+  // من لوحة التحكم (saveSections/saveIndex) — لذلك لا داعي لإعادة قراءتها من
+  // Firestore مع كل تنقل، وهذا كان سبب بطء الحركة الداخلية بالموقع.
+  if(hash === '#/' ) return renderHome(app);
+  if(hash.startsWith('#/section/')) return renderSectionPage(app, hash.split('/')[2]);
+  if(hash.startsWith('#/biz/')) return renderBizPage(app, hash.split('/')[2]);
+  if(hash.startsWith('#/search')) return renderSearchPage(app);
+  if(hash.startsWith('#/admin')) return renderAdmin(app, hash);
+  renderHome(app);
+}
+
+/* ============ LANGUAGE SYSTEM ============ */
+const UI_TRANSLATIONS = {
+  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','تواصل معنا':'Contact us','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
+  'دليلك المحلي الشامل بود مدني، كل ما تحتاجه في مكان واحد: متاجر ومحلات وخدمات... مع معلومات التواصل والتفاصيل بكل سهولة.':'Your complete local guide to Wad Madani. Everything you need in one place: shops, stores and services, with contact details and information.',
+  'دليلك المحلي الشامل':'Your complete local guide','في ود مدني':'in Wad Madani','كل ما تحتاجه في مكان واحد':'Everything you need in one place','مطاعم':'restaurants','فنادق':'hotels','أطباء':'doctors','محلات وخدمات':'shops and services','مع معلومات التواصل والتفاصيل بكل سهولة':'with contact details and information','أضف نشاطك أو خدمتك معنا':'Add your business or service','أضف عملك أو خدمتك في الدليل':'Add your business or service to the guide','تثبيت التطبيق':'Install app','التثبيت غير متاح حالياً في هذا المتصفح':'Installation is not available in this browser','تم تثبيت التطبيق بنجاح 🎉':'App installed successfully 🎉','منشأة':'businesses','المطاعم':'Restaurants','الفنادق والشقق الفندقية':'Hotels & furnished apartments','الأطباء والأخصائيون':'Doctors & specialists','الصيدليات':'Pharmacies','المستشفيات والمستوصفات':'Hospitals & clinics','الدلفري والتوصيل':'Delivery & courier','المميز':'Featured','مميزة':'Featured','لا توجد نتائج':'No results','لا توجد منشآت':'No businesses found','لا توجد أقسام بعد. أضفها من لوحة التحكم.':'No sections yet. Add them from the admin panel.','القسم غير موجود':'Section not found','المنشأة غير موجودة':'Business not found','ابحث...':'Search...','ابحث داخل هذا القسم...':'Search this section...','الرجاء الانتظار... دليلك بود مدني':'Please wait... Wad Madani Guide','جميع الحقوق محفوظة':'All rights reserved','لوحة التحكم':'Admin panel','إضافة منشأة':'Add business','إضافة':'Add','تعديل':'Edit','حذف':'Delete','حفظ':'Save','إلغاء':'Cancel','اسم المنشأة':'Business name','التصنيف / الوسم':'Category / tag','وصف مختصر':'Short description','أرقام الهاتف':'Phone numbers','العنوان':'Address','ساعات العمل':'Working hours','الصور':'Photos','مفعّلة وظاهرة للزوار':'Active and visible to visitors','منشأة مميزة':'Featured business','كلمة المرور':'Password','البريد الإلكتروني':'Email','تسجيل الدخول':'Log in','تسجيل الخروج':'Log out','تم الحفظ':'Saved','تم الحذف':'Deleted','تم التفعيل':'Activated','تم الإخفاء':'Hidden','الموقع':'Location','الهاتف':'Phone','الوصف':'Description','الخدمات':'Services','معلومات التواصل':'Contact information','مشاركة':'Share','نسخ الرابط':'Copy link','فتح في خرائط جوجل':'Open in Google Maps'
+};
+let currentLanguage = localStorage.getItem('wadmadani:language') || 'ar';
+const ABOUT_AR = `📍 عن تطبيق دليلك بودمدني
+
+دليلك بودمدني هو تطبيق محلي يساعدك على الوصول بسهولة إلى أهم الخدمات والأنشطة في مدينة ودمدني.
+
+ماذا يقدم التطبيق؟
+
+🔹 المطاعم والكافيهات
+🔹 الفنادق والشقق الفندقية
+🔹 الأطباء والعيادات
+🔹 الصيدليات
+🔹 المستشفيات والمراكز الصحية
+🔹 المحلات والأنشطة التجارية
+🔹 الخدمات المختلفة داخل ودمدني
+
+هدفنا هو جمع الخدمات والأماكن المهمة في مكان واحد، لتسهيل البحث والوصول إليها بسرعة.
+
+🚀 لماذا دليلك بودمدني؟
+
+لأننا نريد أن يكون الوصول إلى ما تحتاجه في ودمدني أسهل وأسرع، سواء كنت من سكان المدينة أو زائراً لها.
+
+📱 التطبيق
+
+تطبيق دليلك بودمدني مصمم ليكون بسيطاً وسهل الاستخدام ومتوافقاً مع الهواتف الذكية.
+
+الإصدار: 1.0
+المدينة: ودمدني – ولاية الجزيرة 🇸🇩
+
+© 2026 دليلك بودمدني
+دليلك للخدمات والأعمال في ودمدني`;
+const ABOUT_EN = `📍 About Wad Madani Guide
+
+Wad Madani Guide is a local app that helps you easily find the most important services and businesses in Wad Madani.
+
+What does the app offer?
+
+🔹 Restaurants and cafés
+🔹 Hotels and furnished apartments
+🔹 Doctors and clinics
+🔹 Pharmacies
+🔹 Hospitals and health centers
+🔹 Shops and businesses
+🔹 Different services across Wad Madani
+
+Our goal is to bring important services and places together in one location, making them faster and easier to find.
+
+🚀 Why Wad Madani Guide?
+
+We want finding what you need in Wad Madani to be easier and faster, whether you live in the city or are visiting.
+
+📱 The app
+
+Wad Madani Guide is designed to be simple, easy to use, and compatible with smartphones.
+
+Version: 1.0
+City: Wad Madani – Al Jazirah State 🇸🇩
+
+© 2026 Wad Madani Guide
+Your guide to services and businesses in Wad Madani`;
+const PRIVACY_AR = `سياسة الخصوصية
+
+نحن في دليلك ودمدني نحترم خصوصية المستخدمين ونحرص على حماية معلوماتهم.
+
+يتيح الموقع للمستخدم تصفح الأدلة والخدمات والمعلومات المحلية في ود مدني، ولا نطلب من المستخدم إدخال أو إنشاء حساب أو تقديم بيانات شخصية لاستخدام الموقع.
+
+قد يستخدم الموقع خدمات تقنية مثل الاستضافة أو التحليلات أو ملفات تعريف الارتباط لتحسين أداء الموقع وتجربة المستخدم، وفقاً لسياسات مزودي هذه الخدمات.
+
+لا نقوم ببيع أو تأجير أو مشاركة أي بيانات شخصية مع أطراف أخرى.
+
+قد يتم تحديث سياسة الخصوصية من وقت لآخر، وسيتم نشر أي تغييرات على هذه الصفحة.
+
+آخر تحديث: سبتمبر 2026`;
+const PRIVACY_EN = `Privacy Policy
+
+At Wad Madani Guide, we respect our users' privacy and are committed to protecting their information.
+
+The website allows users to browse local directories, services, and information in Wad Madani. We do not require users to create an account, sign in, or provide personal data to use the website.
+
+The website may use technical services such as hosting, analytics, or cookies to improve performance and the user experience, in accordance with the policies of those service providers.
+
+We do not sell, rent, or share personal data with other parties.
+
+This privacy policy may be updated from time to time. Any changes will be published on this page.
+
+Last updated: September 2026`;
+function translateText(value){
+  if(currentLanguage === 'ar' || !value) return value;
+  let out = value;
+  Object.keys(UI_TRANSLATIONS).sort((a,b)=>b.length-a.length).forEach(ar => { out = out.split(ar).join(UI_TRANSLATIONS[ar]); });
+  out = out.replace(/(\d+)\s*منشأة/g,'$1 businesses').replace(/(\d+)\s*نتيجة/g,'$1 results');
+  return out;
+}
+function applyLanguage(){
+  document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'ar';
+  document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
+  document.documentElement.classList.toggle('lang-en', currentLanguage === 'en');
+  document.title = currentLanguage === 'en' ? 'Wad Madani Guide' : 'دليلك بود مدني';
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = translateText(el.getAttribute('data-i18n')); });
+  const aboutContent = document.getElementById('aboutContent');
+  if(aboutContent && document.getElementById('aboutBackdrop')?.classList.contains('open')) aboutContent.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
+  const privacyContent = document.getElementById('privacyContent');
+  if(privacyContent && document.getElementById('privacyBackdrop')?.classList.contains('open')) privacyContent.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
+  const root = document.getElementById('app');
+  if(!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => { if(node.parentElement && !/^(SCRIPT|STYLE|INPUT|TEXTAREA)$/i.test(node.parentElement.tagName)) node.nodeValue = translateText(node.nodeValue); });
+  root.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el => { el.placeholder = translateText(el.placeholder); });
+}
+function setLanguage(lang){
+  currentLanguage = lang === 'en' ? 'en' : 'ar';
+  localStorage.setItem('wadmadani:language', currentLanguage);
+  applyLanguage();
+  render();
+}
+window.addEventListener('DOMContentLoaded', applyLanguage);
+
+/* ============ PWA INSTALL BUTTON ============ */
+window.deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredInstallPrompt = e;
+  const btn = document.getElementById('installAppBtn');
+  if(btn) btn.style.display = 'inline-flex';
+  maybeShowAutoInstallPopup();
+});
+window.addEventListener('appinstalled', () => {
+  window.deferredInstallPrompt = null;
+  const btn = document.getElementById('installAppBtn');
+  if(btn) btn.style.display = 'none';
+  sessionStorage.setItem('installPopupShown', '1');
+  const overlay = document.getElementById('autoInstallOverlay');
+  if(overlay) overlay.remove();
+});
+
+/* ============ نافذة تثبيت تظهر تلقائياً عند دخول الموقع ============ */
+function isAppStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function maybeShowAutoInstallPopup(){
+  if(isAppStandalone()) return; // مثبّت بالفعل، لا داعي للنافذة
+  if(sessionStorage.getItem('installPopupShown')) return; // ظهرت مسبقاً في هذه الجلسة
+  if(document.getElementById('autoInstallOverlay')) return; // ظاهرة بالفعل
+  sessionStorage.setItem('installPopupShown', '1');
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const overlay = document.createElement('div');
+  overlay.id = 'autoInstallOverlay';
+  overlay.className = 'ios-install-overlay';
+  overlay.innerHTML = `
+    <div class="ios-install-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <img src="icon-192.png" alt="دليلك بود مدني" style="width:44px;height:44px;border-radius:12px">
+        <h3 style="margin:0">ثبّت تطبيق دليلك بود مدني</h3>
+      </div>
+      <p style="margin:0 0 16px;line-height:1.8;color:#444">ثبّت التطبيق على شاشتك الرئيسية للوصول السريع بدون فتح المتصفح في كل مرة.</p>
+      <div style="display:flex;gap:10px">
+        <button class="btn" id="autoInstallLater" style="flex:1;background:#eee;color:#333">لاحقاً</button>
+        <button class="btn" id="autoInstallNow" style="flex:1">📲 تثبيت الآن</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  document.getElementById('autoInstallLater').addEventListener('click', ()=> overlay.remove());
+  overlay.addEventListener('click', e=>{ if(e.target === overlay) overlay.remove(); });
+  document.getElementById('autoInstallNow').addEventListener('click', async ()=>{
+    if(isIOS){ overlay.remove(); showIOSInstallHelp(); return; }
+    if(!window.deferredInstallPrompt){ overlay.remove(); toast('التثبيت غير متاح حالياً في هذا المتصفح'); return; }
+    window.deferredInstallPrompt.prompt();
+    const choice = await window.deferredInstallPrompt.userChoice;
+    if(choice.outcome === 'accepted') toast('تم تثبيت التطبيق بنجاح 🎉');
+    window.deferredInstallPrompt = null;
+    overlay.remove();
+  });
+}
+// على آيفون/سفاري لا يوجد حدث beforeinstallprompt، لذلك نعرض النافذة (بتعليمات الإضافة اليدوية) مباشرة بعد فتح الموقع
+window.addEventListener('DOMContentLoaded', () => {
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    setTimeout(maybeShowAutoInstallPopup, 1200);
+  }
+});
+function setupInstallButton(btn){
+  if(!btn || btn.dataset.bound) return;
+  btn.dataset.bound = '1';
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(isStandalone) return; // مثبّت بالفعل
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS){
+    btn.style.display = 'inline-flex';
+    btn.addEventListener('click', showIOSInstallHelp);
+    return;
+  }
+  if(window.deferredInstallPrompt) btn.style.display = 'inline-flex';
+  btn.addEventListener('click', async ()=>{
+    if(!window.deferredInstallPrompt){ toast('التثبيت غير متاح حالياً في هذا المتصفح'); return; }
+    window.deferredInstallPrompt.prompt();
+    const choice = await window.deferredInstallPrompt.userChoice;
+    if(choice.outcome === 'accepted') toast('تم تثبيت التطبيق بنجاح 🎉');
+    window.deferredInstallPrompt = null;
+    btn.style.display = 'none';
+  });
+}
+function showIOSInstallHelp(){
+  const overlay = document.createElement('div');
+  overlay.className = 'ios-install-overlay';
+  overlay.innerHTML = `
+    <div class="ios-install-card">
+      <h3>📲 تثبيت التطبيق على آيفون</h3>
+      <ol>
+        <li>افتح الموقع من متصفح <b>Safari</b></li>
+        <li>اضغط زر <b>المشاركة</b> (المربع والسهم للأعلى) أسفل الشاشة</li>
+        <li>اختر <b>"إضافة إلى الشاشة الرئيسية"</b></li>
+        <li>اضغط <b>إضافة</b></li>
+      </ol>
+      <button class="btn" id="closeIosHelp" style="width:100%">حسناً</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('closeIosHelp').addEventListener('click', ()=> overlay.remove());
+  overlay.addEventListener('click', e=>{ if(e.target === overlay) overlay.remove(); });
+}
+// يراقب ظهور زر التثبيت في الصفحة تلقائياً (يُعاد إنشاؤه مع كل تنقل بين الصفحات) ويهيّئه فوراً
+// يبدأ المراقبة فوراً (وليس بانتظار DOMContentLoaded) حتى يلتقط أول عرض للصفحة أيضاً، لأن سكربت الموقع يعمل أصلاً بعد ظهور <div id="app"> في الصفحة
+const installBtnObserver = new MutationObserver(()=>{
+  setupInstallButton(document.getElementById('installAppBtn'));
+});
+(function initInstallObserver(){
+  const appEl = document.getElementById('app');
+  if(appEl) installBtnObserver.observe(appEl, {childList:true, subtree:true});
+  else window.addEventListener('DOMContentLoaded', initInstallObserver, {once:true});
+})();
+
+function header(activeIsAdmin){
+  return `
+  <header class="site-header">
+    <div class="header-row">
+      <a href="#/" class="logo"><span class="badge"><img src="logo-icon.png" alt="دليلك بود مدني" loading="lazy"></span><span class="display">دليلك بود مدني</span></a>
+      <div class="header-links">
+        <button id="installAppBtn" class="install-btn" style="display:none" type="button">⬇️ تثبيت التطبيق</button>
+      </div>
+    </div>
+    <svg class="river" viewBox="0 0 400 20" preserveAspectRatio="none"><path d="M0,10 Q50,0 100,10 T200,10 T300,10 T400,10" stroke="#fff" stroke-width="2" fill="none"/></svg>
+  </header>`;
+}
+function footer(){
+  return '';
+}
+
+/* ============ HOME ============ */
+function renderHome(app){
+  const sections = state.sections.filter(s=>s.active).sort((a,b)=>a.order-b.order);
+  const featured = state.index.filter(b=>b.active && b.featured).slice(0,10);
+  app.innerHTML = `
+    ${header(false)}
+    <div class="hero">
+      <img class="hero-banner" src="hero-banner.webp" alt="دليلك بود مدني" loading="eager" fetchpriority="high">
+    </div>
+    <div class="container">
+      <div class="section-title"><h2>الأقسام</h2><div class="rule"></div></div>
+      <div class="cat-grid">
+        ${sections.map(s=>`
+          <a class="cat-card" href="#/section/${s.id}">
+            <span class="emoji">${esc(s.icon)}</span>
+            <div class="name">${esc(s.name)}</div>
+            <div class="count">${state.index.filter(b=>b.sectionId===s.id && b.active).length} منشأة</div>
+          </a>`).join('') || `<div class="empty">لا توجد أقسام بعد. أضفها من لوحة التحكم.</div>`}
+      </div>
+
+      ${featured.length ? `
+      <div class="section-title"><h2>⭐ مميزة</h2><div class="rule"></div></div>
+      <div class="feat-scroll">
+        ${featured.map(b=>`
+          <a class="feat-card" href="#/biz/${b.id}">
+            <div class="thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'✨'}</div>
+            <div class="body">
+              <span class="tag">${esc(b.category||'')}</span>
+              <div class="name">${esc(b.name)}</div>
+            </div>
+          </a>`).join('')}
+      </div>` : ''}
+    </div>
+    ${footer()}
+  `;
+}
+
+function searchIndex(q){
+  q = q.toLowerCase();
+  return state.index.filter(b => b.active && (
+    b.name.toLowerCase().includes(q) ||
+    (b.category||'').toLowerCase().includes(q) ||
+    sectionNameOf(b.sectionId).toLowerCase().includes(q)
+  ));
+}
+function sectionNameOf(id){ const s = state.sections.find(x=>x.id===id); return s? s.name : ''; }
+function sectionOf(id){ return state.sections.find(x=>x.id===id); }
+
+/* ============ SEARCH PAGE ============ */
+function renderSearchPage(app){
+  const params = new URLSearchParams(location.hash.split('?')[1]||'');
+  const q = params.get('q') || '';
+  const results = q ? searchIndex(q) : [];
+  app.innerHTML = `
+    ${header(false)}
+    <div class="container">
+      <div class="crumbs"><a href="#/">الرئيسية</a> / نتائج البحث</div>
+      <div class="search-wrap" style="margin:0 0 20px">
+        <input id="pageSearch" type="text" value="${esc(q)}" placeholder="ابحث...">
+        <span class="icon">🔍</span>
+      </div>
+      <div class="section-title"><h2 id="searchResultsTitle">نتائج "${esc(q)}" (${results.length})</h2><div class="rule"></div></div>
+      <div id="searchResultsWrap">${results.length ? bizGridHtml(results) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`}</div>
+    </div>
+    ${footer()}
+  `;
+  bindBizGridButtons();
+  const input = document.getElementById('pageSearch');
+  input.addEventListener('input', ()=>{
+    const val = input.value.trim();
+    const res = val ? searchIndex(val) : [];
+    document.getElementById('searchResultsTitle').textContent = `نتائج "${val}" (${res.length})`;
+    document.getElementById('searchResultsWrap').innerHTML = res.length ? bizGridHtml(res) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`;
+    bindBizGridButtons();
+  });
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') nav('#/search?q='+encodeURIComponent(input.value.trim())); });
+}
+
+/* ============ SECTION PAGE ============ */
+function renderSectionPage(app, sectionId){
+  const sec = sectionOf(sectionId);
+  if(!sec){ app.innerHTML = header(false) + `<div class="container"><div class="empty">القسم غير موجود</div></div>` + footer(); return; }
+  let items = state.index.filter(b=>b.sectionId===sectionId && b.active);
+  const cats = [...new Set(items.map(b=>b.category).filter(Boolean))];
+  app.innerHTML = `
+    ${header(false)}
+    <div class="container">
+      <div class="crumbs"><a href="#/">الرئيسية</a> / ${esc(sec.name)}</div>
+      <div class="section-title"><h2>${esc(sec.icon)} ${esc(sec.name)}</h2><div class="rule"></div></div>
+      ${cats.length ? `<div class="filter-row" id="filterRow">
+        <button class="chip active" data-cat="">الكل</button>
+        ${cats.map(c=>`<button class="chip" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+      </div>` : ''}
+      <div id="bizGridWrap">${items.length ? bizGridHtml(items) : `<div class="empty"><span class="emoji">📭</span>لا توجد منشآت في هذا القسم بعد</div>`}</div>
+    </div>
+    ${footer()}
+  `;
+  bindBizGridButtons();
+  const filterRow = document.getElementById('filterRow');
+  if(filterRow){
+    filterRow.addEventListener('click', e=>{
+      const btn = e.target.closest('.chip'); if(!btn) return;
+      filterRow.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      const filtered = cat ? items.filter(b=>b.category===cat) : items;
+      document.getElementById('bizGridWrap').innerHTML = filtered.length ? bizGridHtml(filtered) : `<div class="empty">لا توجد نتائج</div>`;
+      bindBizGridButtons();
+    });
+  }
+}
+
+function bizGridHtml(items){
+  return `<div class="biz-grid">
+    ${items.map(b=>`
+      <div class="biz-card">
+        <a href="#/biz/${b.id}" class="thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'🏷️'}</a>
+        <div class="body">
+          ${b.category?`<span class="tag">${esc(b.category)}</span>`:''}
+          <a href="#/biz/${b.id}" class="name">${esc(b.name)}</a>
+          <div class="desc">${esc((b.desc||'').slice(0,70))}${(b.desc||'').length>70?'…':''}</div>
+          <div class="foot">
+            ${b.phone?`<a class="pill-btn" href="${telLink(b.phone)}">📞 اتصال</a>`:''}
+            <a class="pill-btn ghost" href="#/biz/${b.id}">التفاصيل</a>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+function bindBizGridButtons(){ /* links are native anchors, nothing extra needed */ }
+
+/* ============ BUSINESS DETAIL PAGE ============ */
+async function renderBizPage(app, id){
+  const biz = await loadBiz(id);
+  if(!biz){ app.innerHTML = header(false) + `<div class="container"><div class="empty">المنشأة غير موجودة</div></div>` + footer(); return; }
+  const sec = sectionOf(biz.sectionId) || {name:'', type:'custom', icon:'🏷️'};
+  const images = biz.images && biz.images.length ? biz.images : [];
+  const primary = images[biz.primaryImageIndex||0] || images[0] || '';
+  const fields = TYPE_FIELDS[sec.type] || [];
+  const extraHtml = fields.map(f=>{
+    const v = (biz.extra||{})[f.key];
+    if(f.type==='checkbox') return '';
+    if(!v) return '';
+    return `<div class="info-card"><h3>${esc(f.label)}</h3><p>${esc(v).replace(/\n/g,'<br>')}</p></div>`;
+  }).join('');
+  const is24h = sec.type==='pharmacy' && biz.extra && biz.extra.is24h;
+
+  app.innerHTML = `
+    ${header(false)}
+    <div class="container">
+      <div class="crumbs"><a href="#/">الرئيسية</a> / <a href="#/section/${sec.id||biz.sectionId}">${esc(sec.name)}</a> / ${esc(biz.name)}</div>
+
+      <div class="gallery">
+        <div class="main" id="mainImg" style="${primary?`background-image:url('${safeImageUrl(primary)}')`:''}">${primary?'':esc(sec.icon)}</div>
+      </div>
+      ${images.length>1?`<div class="gallery-thumbs">
+        ${images.map((im,i)=>`<img src="${safeImageUrl(im)}" class="${im===primary?'active':''}" data-i="${i}">`).join('')}
+      </div>`:''}
+
+      <div class="biz-title-row">
+        <h1>${esc(biz.name)}</h1>
+        ${is24h?'<span class="badge-24">🕐 يعمل 24 ساعة</span>':''}
+      </div>
+      <div class="biz-meta">
+        ${biz.category?`${esc(biz.category)} · `:''}${esc(sec.name)}
+        ${biz.address?`<br>📍 ${esc(biz.address)}`:''}
+        ${biz.workingHours?`<br>🕐 ${esc(biz.workingHours)}`:''}
+      </div>
+
+      ${biz.description?`<div class="info-card"><h3>نبذة</h3><p>${esc(biz.description).replace(/\n/g,'<br>')}</p></div>`:''}
+      ${extraHtml}
+
+      ${biz.phones && biz.phones.length ? `<div class="info-card"><h3>أرقام التواصل</h3>
+        <div class="phones-list">
+          ${biz.phones.map(p=>`<div class="phone-row"><span>${esc(p)}</span><a href="${telLink(p)}" style="color:var(--nile);font-weight:700">اتصال</a></div>`).join('')}
+        </div></div>`:''}
+
+      ${(safeCoord(biz.lat) && safeCoord(biz.lng)) ? `<iframe class="map-embed" loading="lazy" src="https://www.google.com/maps?q=${safeCoord(biz.lat)},${safeCoord(biz.lng)}&output=embed"></iframe>` : ''}
+    </div>
+
+    <div class="container action-bar">
+      ${biz.phones&&biz.phones[0]?`<a class="call" href="${telLink(biz.phones[0])}"><span class="ic">📞</span>اتصال</a>`:''}
+      ${biz.phones&&biz.phones[0]?`<a class="whatsapp" href="${waLink(biz.phones[0])}" target="_blank" rel="noopener noreferrer"><span class="ic">💬</span>واتساب</a>`:''}
+      ${biz.mapUrl?`<a href="${safeUrl(biz.mapUrl)}" target="_blank" rel="noopener noreferrer"><span class="ic">📍</span>الاتجاهات</a>`:''}
+      ${biz.mapUrl?`<a href="${safeUrl(biz.mapUrl)}" target="_blank" rel="noopener noreferrer"><span class="ic">🗺️</span>الموقع</a>`:''}
+    </div>
+    ${footer()}
+  `;
+  const mainImg = document.getElementById('mainImg');
+  document.querySelectorAll('.gallery-thumbs img').forEach(t=>{
+    t.addEventListener('click', ()=>{
+      document.querySelectorAll('.gallery-thumbs img').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      mainImg.style.backgroundImage = `url('${t.src}')`;
+      mainImg.textContent = '';
+    });
+  });
+}
+
+/* ================================================================
+   ADMIN
+   ================================================================ */
+async function renderAdmin(app, hash){
+  const logged = state.isAdmin;
+  if(!logged){ return renderAdminLogin(app); }
+  const parts = hash.split('/'); // #,admin,tab,arg
+  const tab = parts[2] || 'sections';
+  if(tab === 'sections') return renderAdminSections(app);
+  if(tab === 'section-edit') return renderAdminSectionForm(app, parts[3]);
+  if(tab === 'businesses') return renderAdminBusinesses(app, parts[3]);
+  if(tab === 'biz-edit') return renderAdminBusinessForm(app, parts[3], parts[4]);
+  renderAdminSections(app);
+}
+
+async function renderAdminLogin(app){
+  app.innerHTML = `
+    ${header(true)}
+    <div class="admin-login">
+      <h2>🔐 لوحة تحكم دليلك بود مدني</h2>
+      <p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">لا يمكنك الدخول، محمي خاص للإدارة فقط.</p>
+      <div class="field"><label>البريد الإلكتروني</label><input type="text" id="loginEmail" placeholder="admin@example.com"></div>
+      <div class="field"><label>كلمة المرور</label><input type="password" id="loginPass" placeholder="كلمة المرور"></div>
+      <button class="btn" id="loginBtn" style="width:100%">دخول</button>
+      ${!HAS_AUTH ? `<p class="hint" style="color:var(--brick);margin-top:14px">⚠️ تعذّر الاتصال بنظام الدخول الآمن حالياً. تحقق من الإنترنت وحاول مجدداً.</p>` : ''}
+    </div>
+    ${footer()}
+  `;
+  const doLogin = async () => {
+    if(!HAS_AUTH) return toast('تعذّر الاتصال بنظام الدخول، تحقق من الإنترنت');
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if(!email || !pass) return toast('أدخل البريد وكلمة المرور');
+    try{
+      await withTimeout(auth.signInWithEmailAndPassword(email, pass), 10000);
+      toast('تم تسجيل الدخول بنجاح');
+      nav('#/admin');
+    }catch(e){
+      console.error(e);
+      const isTimeout = e && e.message === 'timeout';
+      if(!isTimeout) sendFailedLoginAlert(email); // تنبيه فقط عند بيانات دخول خاطئة، وليس عند مشاكل الإنترنت
+      toast(isTimeout ? 'انتهت المهلة، تحقق من الإنترنت وحاول مجدداً' : 'البريد أو كلمة المرور غير صحيحة');
+    }
+  };
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+}
+
+function adminTopbar(active){
+  return `
+  <div class="admin-topbar">
+    <div class="admin-tabs">
+      <button data-go="#/admin/sections" class="${active==='sections'?'active':''}">الأقسام</button>
+      <button data-go="#/" class="">عرض الموقع</button>
+    </div>
+    <button class="btn secondary small" id="logoutBtn">تسجيل الخروج</button>
+  </div>`;
+}
+function bindTopbar(){
+  document.querySelectorAll('.admin-tabs [data-go]').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.go)));
+  const lb = document.getElementById('logoutBtn');
+  if(lb) lb.addEventListener('click', async ()=>{
+    if(HAS_AUTH){ await auth.signOut(); }
+    state.isAdmin=false;
+    nav('#/');
+  });
+}
+
+/* ---- sections list ---- */
+function renderAdminSections(app){
+  const secs = [...state.sections].sort((a,b)=>a.order-b.order);
+  app.innerHTML = `
+    ${header(true)}
+    <div class="admin-shell">
+      ${adminTopbar('sections')}
+      <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت). التخزين حالياً محلي في هذا المتصفح فقط كحل مؤقت.')}</div>
+      <div class="admin-topbar" style="margin-bottom:10px">
+        <h2 style="margin:0;color:var(--nile)">الأقسام (${secs.length})</h2>
+        <button class="btn" id="addSecBtn">+ إضافة قسم جديد</button>
+      </div>
+      <div class="admin-card">
+        ${secs.map((s,i)=>`
+          <div class="admin-list-row">
+            <div class="row-info">
+              <span class="status-dot ${s.active?'on':''}"></span>
+              <span style="font-size:20px">${esc(s.icon)}</span>
+              <div>
+                <div style="font-weight:700">${esc(s.name)}</div>
+                <div class="hint">${state.index.filter(b=>b.sectionId===s.id).length} منشأة</div>
+              </div>
+            </div>
+            <div class="row-actions">
+              <button class="btn small secondary" data-manage="${s.id}">إدارة المنشآت</button>
+              <button class="btn small secondary" data-edit="${s.id}">تعديل</button>
+              <button class="icon-btn" data-up="${s.id}" title="تحريك لأعلى">↑</button>
+              <button class="icon-btn" data-down="${s.id}" title="تحريك لأسفل">↓</button>
+              <button class="icon-btn" data-del="${s.id}" title="حذف">🗑</button>
+            </div>
+          </div>`).join('') || `<div class="empty">لا توجد أقسام. أضف أول قسم.</div>`}
+      </div>
+    </div>
+  `;
+  bindTopbar();
+  document.getElementById('addSecBtn').addEventListener('click', ()=> nav('#/admin/section-edit/new'));
+  app.querySelectorAll('[data-manage]').forEach(b=>b.addEventListener('click',()=>nav('#/admin/businesses/'+b.dataset.manage)));
+  app.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>nav('#/admin/section-edit/'+b.dataset.edit)));
+  app.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click', async ()=>{ moveSection(b.dataset.up,-1); }));
+  app.querySelectorAll('[data-down]').forEach(b=>b.addEventListener('click', async ()=>{ moveSection(b.dataset.down,1); }));
+  app.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('حذف هذا القسم سيؤدي أيضاً لحذف كل المنشآت بداخله. هل أنت متأكد؟')) return;
+    const secId = b.dataset.del;
+    const toDelete = state.index.filter(x=>x.sectionId===secId);
+    for(const biz of toDelete) await deleteBiz(biz.id);
+    state.sections = state.sections.filter(s=>s.id!==secId);
+    await saveSections();
+    toast('تم حذف القسم'); renderAdminSections(app);
+  }));
+}
+async function moveSection(id, dir){
+  const secs = [...state.sections].sort((a,b)=>a.order-b.order);
+  const idx = secs.findIndex(s=>s.id===id);
+  const swapIdx = idx+dir;
+  if(swapIdx<0 || swapIdx>=secs.length) return;
+  const tmp = secs[idx].order; secs[idx].order = secs[swapIdx].order; secs[swapIdx].order = tmp;
+  state.sections = secs;
+  await saveSections();
+  renderAdminSections(document.getElementById('app'));
+}
+
+/* ---- section add/edit form ---- */
+function renderAdminSectionForm(app, id){
+  const isNew = id === 'new';
+  const sec = isNew ? {id:uid(), name:'', icon:'🏷️', type:'custom', order:(state.sections.length+1), active:true} : state.sections.find(s=>s.id===id);
+  if(!sec){ nav('#/admin/sections'); return; }
+  const emojis = ['🍽️','🏨','👨‍⚕️','💊','🏥','🛒','🚗','✂️','📚','🕌','⚽','🎓','🏦','🧰','🏷️'];
+  const types = [
+    {v:'restaurant',l:'مطعم'},{v:'hotel',l:'فندق'},{v:'doctor',l:'طبيب/عيادة'},
+    {v:'pharmacy',l:'صيدلية'},{v:'hospital',l:'مستشفى/مستوصف'},{v:'custom',l:'عام / مخصص'}
+  ];
+  app.innerHTML = `
+    ${header(true)}
+    <div class="admin-shell">
+      ${adminTopbar('sections')}
+      <div class="crumbs"><a href="#/admin/sections" id="backLink">الأقسام</a> / ${isNew?'قسم جديد':'تعديل القسم'}</div>
+      <div class="admin-card">
+        <div class="field"><label>اسم القسم</label><input type="text" id="fName" value="${esc(sec.name)}" placeholder="مثال: المطاعم"></div>
+        <div class="field">
+          <label>الأيقونة (اختر أو الصق إيموجي)</label>
+          <input type="text" id="fIcon" value="${esc(sec.icon)}" style="width:70px;text-align:center;font-size:20px">
+          <div class="emoji-picker">
+            ${emojis.map(e=>`<button type="button" data-emoji="${e}" class="${e===sec.icon?'active':''}">${e}</button>`).join('')}
+          </div>
+        </div>
+        <div class="field">
+          <label>نوع القسم (يحدد الحقول الخاصة بالمنشآت)</label>
+          <select id="fType">${types.map(t=>`<option value="${t.v}" ${t.v===sec.type?'selected':''}>${t.l}</option>`).join('')}</select>
+        </div>
+        <div class="field">
+          <label><input type="checkbox" id="fActive" ${sec.active?'checked':''}> القسم مفعل وظاهر للزوار</label>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn" id="saveBtn">حفظ</button>
+          <button class="btn secondary" id="cancelBtn">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  `;
+  bindTopbar();
+  document.getElementById('backLink').addEventListener('click', e=>{e.preventDefault(); nav('#/admin/sections');});
+  document.getElementById('cancelBtn').addEventListener('click', ()=>nav('#/admin/sections'));
+  document.querySelectorAll('.emoji-picker button').forEach(b=>b.addEventListener('click',()=>{
+    document.getElementById('fIcon').value = b.dataset.emoji;
+    document.querySelectorAll('.emoji-picker button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+  document.getElementById('saveBtn').addEventListener('click', async ()=>{
+    const name = document.getElementById('fName').value.trim();
+    if(!name) return toast('اكتب اسم القسم');
+    sec.name = name;
+    sec.icon = document.getElementById('fIcon').value.trim() || '🏷️';
+    sec.type = document.getElementById('fType').value;
+    sec.active = document.getElementById('fActive').checked;
+    const idx = state.sections.findIndex(s=>s.id===sec.id);
+    if(idx>=0) state.sections[idx] = sec; else state.sections.push(sec);
+    await saveSections();
+    toast('تم الحفظ'); nav('#/admin/sections');
+  });
+}
+
+/* ---- businesses list per section ---- */
+function renderAdminBusinesses(app, sectionId){
+  const sec = sectionOf(sectionId);
+  if(!sec){ nav('#/admin/sections'); return; }
+  let items = state.index.filter(b=>b.sectionId===sectionId);
+  app.innerHTML = `
+    ${header(true)}
+    <div class="admin-shell">
+      ${adminTopbar('sections')}
+      <div class="crumbs"><a href="#/admin/sections" id="backLink">الأقسام</a> / ${esc(sec.name)}</div>
+      <div class="admin-topbar" style="margin-bottom:10px">
+        <h2 style="margin:0;color:var(--nile)">${esc(sec.icon)} ${esc(sec.name)} (${items.length})</h2>
+        <button class="btn" id="addBizBtn">+ إضافة منشأة</button>
+      </div>
+      <div class="field"><input type="text" id="adminSearch" placeholder="ابحث داخل هذا القسم..."></div>
+      <div class="admin-card" id="listWrap">${bizAdminRows(items)}</div>
+    </div>
+  `;
+  bindTopbar();
+  document.getElementById('backLink').addEventListener('click', e=>{e.preventDefault(); nav('#/admin/sections');});
+  document.getElementById('addBizBtn').addEventListener('click', ()=> nav('#/admin/biz-edit/'+sectionId+'/new'));
+  bindBizAdminRows(sectionId, items);
+  document.getElementById('adminSearch').addEventListener('input', e=>{
+    const q = e.target.value.toLowerCase();
+    const filtered = items.filter(b=>b.name.toLowerCase().includes(q) || (b.category||'').toLowerCase().includes(q));
+    document.getElementById('listWrap').innerHTML = bizAdminRows(filtered);
+    bindBizAdminRows(sectionId, filtered);
+  });
+}
+function bizAdminRows(items){
+  if(!items.length) return `<div class="empty">لا توجد منشآت. أضف أول منشأة في هذا القسم.</div>`;
+  return items.map(b=>`
+    <div class="admin-list-row">
+      <div class="row-info">
+        <span class="status-dot ${b.active?'on':''}"></span>
+        <div>
+          <div style="font-weight:700">${esc(b.name)} ${b.featured?'<span class=\"tag-mini featured\">مميز</span>':''}</div>
+          <div class="hint">${esc(b.category||'')}</div>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn small secondary" data-edit="${b.id}">تعديل</button>
+        <button class="btn small ${b.active?'secondary':''}" data-toggle="${b.id}">${b.active?'إخفاء':'تفعيل'}</button>
+        <button class="btn small ${b.featured?'secondary':''}" data-feature="${b.id}">${b.featured?'إلغاء التمييز':'تمييز'}</button>
+        <button class="icon-btn" data-del="${b.id}">🗑</button>
+      </div>
+    </div>`).join('');
+}
+function bindBizAdminRows(sectionId, items){
+  document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>nav('#/admin/biz-edit/'+sectionId+'/'+b.dataset.edit)));
+  document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click', async ()=>{
+    const biz = await loadBiz(b.dataset.toggle); biz.active = !biz.active; await saveBiz(biz);
+    toast(biz.active?'تم التفعيل':'تم الإخفاء'); renderAdminBusinesses(document.getElementById('app'), sectionId);
+  }));
+  document.querySelectorAll('[data-feature]').forEach(b=>b.addEventListener('click', async ()=>{
+    const biz = await loadBiz(b.dataset.feature); biz.featured = !biz.featured; await saveBiz(biz);
+    toast(biz.featured?'تم التمييز':'تم إلغاء التمييز'); renderAdminBusinesses(document.getElementById('app'), sectionId);
+  }));
+  document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
+    if(!confirm('هل تريد حذف هذه المنشأة نهائياً؟')) return;
+    await deleteBiz(b.dataset.del);
+    toast('تم الحذف'); renderAdminBusinesses(document.getElementById('app'), sectionId);
+  }));
+}
+
+/* ---- business add/edit form ---- */
+async function renderAdminBusinessForm(app, sectionId, bizId){
+  const sec = sectionOf(sectionId);
+  if(!sec){ nav('#/admin/sections'); return; }
+  const isNew = bizId === 'new';
+  const biz = isNew ? {
+    id:uid(), sectionId, name:'', phones:[''], images:[], primaryImageIndex:0, description:'',
+    address:'', mapUrl:'', lat:'', lng:'', workingHours:'', category:'', active:true, featured:false, extra:{}
+  } : await loadBiz(bizId);
+  if(!biz){ nav('#/admin/businesses/'+sectionId); return; }
+  biz.phones = biz.phones && biz.phones.length ? biz.phones : [''];
+  biz.images = biz.images || [];
+  biz.extra = biz.extra || {};
+
+  const fields = TYPE_FIELDS[sec.type] || [];
+
+  app.innerHTML = `
+    ${header(true)}
+    <div class="admin-shell">
+      ${adminTopbar('sections')}
+      <div class="crumbs"><a href="#/admin/sections" id="backLink1">الأقسام</a> / <a href="#/admin/businesses/${sectionId}" id="backLink2">${esc(sec.name)}</a> / ${isNew?'إضافة':'تعديل'}</div>
+
+      <div class="admin-card">
+        <div class="field"><label>اسم المنشأة</label><input type="text" id="fName" value="${esc(biz.name)}"></div>
+
+        <div class="field"><label>التصنيف / الوسم</label><input type="text" id="fCategory" value="${esc(biz.category)}" placeholder="مثال: شعبي، مشويات، وجبات سريعة"></div>
+
+        <div class="field"><label>وصف مختصر</label><textarea id="fDesc">${esc(biz.description)}</textarea></div>
+
+        <div class="field"><label>أرقام الهاتف</label>
+          <div id="phonesWrap">
+            ${biz.phones.map((p,i)=>`<div class="phone-input-row"><input type="text" class="phoneInput" value="${esc(p)}" placeholder="09xxxxxxxx"><button type="button" class="icon-btn removePhone">✕</button></div>`).join('')}
+          </div>
+          <button type="button" class="btn secondary small" id="addPhoneBtn">+ إضافة رقم آخر</button>
+        </div>
+
+        <div class="field"><label>العنوان</label><input type="text" id="fAddress" value="${esc(biz.address)}"></div>
+        <div class="field"><label>رابط الموقع على خرائط جوجل</label><input type="url" id="fMapUrl" value="${esc(biz.mapUrl)}" placeholder="https://maps.google.com/..."></div>
+        <div style="display:flex;gap:10px">
+          <div class="field" style="flex:1"><label>خط العرض Lat (اختياري - لعرض خريطة مصغرة)</label><input type="text" id="fLat" value="${esc(biz.lat)}"></div>
+          <div class="field" style="flex:1"><label>خط الطول Lng (اختياري)</label><input type="text" id="fLng" value="${esc(biz.lng)}"></div>
+        </div>
+        <div class="field"><label>ساعات العمل</label><input type="text" id="fHours" value="${esc(biz.workingHours)}" placeholder="مثال: يومياً 9ص - 12م"></div>
+
+        ${fields.map(f=>{
+          const v = biz.extra[f.key];
+          if(f.type==='checkbox') return `<div class="field"><label><input type="checkbox" id="extra_${f.key}" ${v?'checked':''}> ${esc(f.label)}</label></div>`;
+          if(f.type==='textarea') return `<div class="field"><label>${esc(f.label)}</label><textarea id="extra_${f.key}" placeholder="${esc(f.ph||'')}">${esc(v||'')}</textarea></div>`;
+          return `<div class="field"><label>${esc(f.label)}</label><input type="text" id="extra_${f.key}" value="${esc(v||'')}" placeholder="${esc(f.ph||'')}"></div>`;
+        }).join('')}
+
+        <div class="field"><label>الصور</label>
+          <div class="upload-box" id="uploadBox">📷 اضغط لاختيار صور أو أضف عدة صور دفعة واحدة</div>
+          <input type="file" id="fileInput" accept="image/*" multiple style="display:none">
+          <div class="img-thumbs" id="imgThumbs">${imgThumbsHtml(biz)}</div>
+          <div class="hint">الصورة المميزة بإطار برتقالي هي الصورة الرئيسية. اضغط "تعيين" لتغييرها. يُفضّل عدم تجاوز 5-6 صور لكل منشأة حتى لا يفشل الحفظ.</div>
+        </div>
+
+        <div class="field"><label><input type="checkbox" id="fActive" ${biz.active!==false?'checked':''}> مفعّلة وظاهرة للزوار</label></div>
+        <div class="field"><label><input type="checkbox" id="fFeatured" ${biz.featured?'checked':''}> منشأة مميزة (تظهر في قسم المميز بالصفحة الرئيسية)</label></div>
+
+        <div style="display:flex;gap:10px">
+          <button class="btn" id="saveBtn">حفظ</button>
+          <button class="btn secondary" id="cancelBtn">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  `;
+  bindTopbar();
+  document.getElementById('backLink1').addEventListener('click', e=>{e.preventDefault(); nav('#/admin/sections');});
+  document.getElementById('backLink2').addEventListener('click', e=>{e.preventDefault(); nav('#/admin/businesses/'+sectionId);});
+  document.getElementById('cancelBtn').addEventListener('click', ()=>nav('#/admin/businesses/'+sectionId));
+
+  document.getElementById('addPhoneBtn').addEventListener('click', ()=>{
+    const row = document.createElement('div'); row.className='phone-input-row';
+    row.innerHTML = `<input type="text" class="phoneInput" placeholder="09xxxxxxxx"><button type="button" class="icon-btn removePhone">✕</button>`;
+    document.getElementById('phonesWrap').appendChild(row);
+    row.querySelector('.removePhone').addEventListener('click', ()=>row.remove());
+  });
+  document.querySelectorAll('.removePhone').forEach(b=>b.addEventListener('click', e=>e.target.closest('.phone-input-row').remove()));
+
+  const uploadBox = document.getElementById('uploadBox');
+  const fileInput = document.getElementById('fileInput');
+  uploadBox.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', async ()=>{
+    uploadBox.textContent = '⏳ جارٍ رفع الصور...';
+    for(const file of fileInput.files){
+      try{
+        const dataUrl = await resizeImage(file);
+        biz.images.push(dataUrl);
+      }catch(e){ console.error(e); }
+    }
+    uploadBox.textContent = '📷 اضغط لاختيار صور أو أضف عدة صور دفعة واحدة';
+    document.getElementById('imgThumbs').innerHTML = imgThumbsHtml(biz);
+    bindImgThumbs(biz);
+    fileInput.value = '';
+  });
+  bindImgThumbs(biz);
+
+  document.getElementById('saveBtn').addEventListener('click', async ()=>{
+    const name = document.getElementById('fName').value.trim();
+    if(!name) return toast('اكتب اسم المنشأة');
+    biz.name = name;
+    biz.category = document.getElementById('fCategory').value.trim();
+    biz.description = document.getElementById('fDesc').value.trim();
+    biz.phones = [...document.querySelectorAll('.phoneInput')].map(i=>i.value.trim()).filter(Boolean);
+    biz.address = document.getElementById('fAddress').value.trim();
+    biz.mapUrl = document.getElementById('fMapUrl').value.trim();
+    biz.lat = document.getElementById('fLat').value.trim();
+    biz.lng = document.getElementById('fLng').value.trim();
+    biz.workingHours = document.getElementById('fHours').value.trim();
+    biz.active = document.getElementById('fActive').checked;
+    biz.featured = document.getElementById('fFeatured').checked;
+    biz.extra = biz.extra || {};
+    fields.forEach(f=>{
+      const el = document.getElementById('extra_'+f.key);
+      if(!el) return;
+      biz.extra[f.key] = f.type==='checkbox' ? el.checked : el.value.trim();
+    });
+    const savingToast = 'جارٍ الحفظ...';
+    toast(savingToast);
+    const ok = await sSet('biz:'+biz.id, biz);
+    if(!ok){ toast('حدث خطأ أثناء الحفظ، تحقق من حجم الصور'); return; }
+    await saveBiz(biz);
+    toast('تم الحفظ بنجاح');
+    nav('#/admin/businesses/'+sectionId);
+  });
+}
+function imgThumbsHtml(biz){
+  if(!biz.images.length) return '';
+  return biz.images.map((im,i)=>`
+    <div class="img-thumb ${i===(biz.primaryImageIndex||0)?'primary':''}" data-i="${i}">
+      <img src="${safeImageUrl(im)}">
+      <button type="button" class="del" data-deli="${i}">✕</button>
+      ${i!==(biz.primaryImageIndex||0)?`<button type="button" class="mk" data-mki="${i}">★</button>`:''}
+    </div>`).join('');
+}
+function bindImgThumbs(biz){
+  document.querySelectorAll('[data-deli]').forEach(b=>b.addEventListener('click', ()=>{
+    const i = +b.dataset.deli;
+    biz.images.splice(i,1);
+    if(biz.primaryImageIndex>=biz.images.length) biz.primaryImageIndex = 0;
+    document.getElementById('imgThumbs').innerHTML = imgThumbsHtml(biz);
+    bindImgThumbs(biz);
+  }));
+  document.querySelectorAll('[data-mki]').forEach(b=>b.addEventListener('click', ()=>{
+    biz.primaryImageIndex = +b.dataset.mki;
+    document.getElementById('imgThumbs').innerHTML = imgThumbsHtml(biz);
+    bindImgThumbs(biz);
+  }));
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('service-worker.js').catch(function(err){
+      console.log('فشل تسجيل service worker:', err);
+    });
+  });
+}
+</script>
+
+<!-- سكربت مستقل لتنبيه المستخدم عند انقطاع/عودة الاتصال بالإنترنت — لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع -->
+<script>
+(function(){
+  function onOffline(){
+    if(typeof toast === 'function'){
+      toast(currentLanguage === 'en' ? 'No internet connection' : 'لا يوجد اتصال بالإنترنت');
+    }
+  }
+  function onOnline(){
+    if(typeof toast === 'function'){
+      toast(currentLanguage === 'en' ? 'Back online' : 'تم استعادة الاتصال بالإنترنت');
+    }
+  }
+  window.addEventListener('offline', onOffline);
+  window.addEventListener('online', onOnline);
+  // تنبيه فوري إذا كان المستخدم بلا إنترنت عند فتح الصفحة أصلاً
+  window.addEventListener('load', function(){
+    if(navigator.onLine === false) onOffline();
+  });
+})();
+</script>
+
+<!-- سكربت مستقل لتفعيل الشريط السفلي فقط — لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع -->
+<script>
+(function(){
+  function activeTabFor(hash){
+    hash = hash || '#/';
+    if(hash.startsWith('#/search')) return 'search';
+    if(hash === '#/') return 'home';
+    return '';
+  }
+  function refreshBottomNav(){
+    var tab = activeTabFor(location.hash);
+    document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-tab') === tab);
+    });
+  }
+  window.addEventListener('hashchange', refreshBottomNav);
+  window.addEventListener('DOMContentLoaded', refreshBottomNav);
+  setTimeout(refreshBottomNav, 300);
+
+  var moreBtn = document.getElementById('bnMore');
+  var moreBackdrop = document.getElementById('moreMenuBackdrop');
+  var closeMore = document.getElementById('moreMenuClose');
+  function closeMoreMenu(){ if(moreBackdrop){ moreBackdrop.classList.remove('open'); moreBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openMoreMenu(e){
+    if(e) e.preventDefault();
+    if(moreBackdrop){ moreBackdrop.classList.add('open'); moreBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open'); applyLanguage(); }
+  }
+  if(moreBtn) moreBtn.addEventListener('click', function(e){
+    if(e) e.preventDefault();
+    if(moreBackdrop && moreBackdrop.classList.contains('open')) closeMoreMenu();
+    else openMoreMenu(e);
+  });
+  if(closeMore) closeMore.addEventListener('click', closeMoreMenu);
+  if(moreBackdrop) moreBackdrop.addEventListener('click', function(e){ if(e.target === moreBackdrop) closeMoreMenu(); });
+  document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){ a.addEventListener('click', closeMoreMenu); });
+  var moreAdminLink = document.getElementById('moreAdminLink');
+  if(moreAdminLink) moreAdminLink.addEventListener('click', closeMoreMenu);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMoreMenu(); });
+  var languageItem = document.getElementById('languageMenuItem');
+  if(languageItem) languageItem.addEventListener('click', function(){ closeMoreMenu(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
+  var shareItem = document.getElementById('shareMenuItem');
+  if(shareItem) shareItem.addEventListener('click', function(){
+    var pageUrl = location.href;
+    var appLinks = 'https://dalilak-wad-madani.vercel.app\nhttps://dalilak-wadmadani1.netlify.app';
+    var message = currentLanguage === 'en'
+      ? ('Check this page from Wad Madani Guide or download the app from one of these links:\n' + pageUrl + '\n' + appLinks)
+      : ('شاهد هذه الصفحة من دليلك بودمدني او نزل التطبيق من احد الروابط:\n' + pageUrl + '\n' + appLinks);
+    var whatsappShareUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
+    closeMoreMenu();
+    window.open(whatsappShareUrl, '_blank', 'noopener,noreferrer');
+  });
+  var privacyItem = document.getElementById('privacyMenuItem');
+  var privacyBackdrop = document.getElementById('privacyBackdrop');
+  var privacyClose = document.getElementById('privacyClose');
+  function closePrivacy(){ if(privacyBackdrop){ privacyBackdrop.classList.remove('open'); privacyBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openPrivacy(e){
+    if(e) e.preventDefault();
+    closeMoreMenu();
+    if(privacyBackdrop){
+      var content = document.getElementById('privacyContent');
+      if(content) content.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
+      privacyBackdrop.classList.add('open'); privacyBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+    }
+  }
+  if(privacyItem) privacyItem.addEventListener('click', openPrivacy);
+  if(privacyClose) privacyClose.addEventListener('click', function(){ closePrivacy(); openMoreMenu(); });
+  if(privacyBackdrop) privacyBackdrop.addEventListener('click', function(e){ if(e.target === privacyBackdrop) closePrivacy(); });
+  var aboutItem = document.getElementById('aboutMenuItem');
+  var aboutBackdrop = document.getElementById('aboutBackdrop');
+  var aboutClose = document.getElementById('aboutClose');
+  function closeAbout(){ if(aboutBackdrop){ aboutBackdrop.classList.remove('open'); aboutBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openAbout(e){
+    if(e) e.preventDefault();
+    closeMoreMenu();
+    if(aboutBackdrop){
+      var content = document.getElementById('aboutContent');
+      if(content) content.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
+      aboutBackdrop.classList.add('open'); aboutBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+    }
+  }
+  if(aboutItem) aboutItem.addEventListener('click', openAbout);
+  if(aboutClose) aboutClose.addEventListener('click', function(){ closeAbout(); openMoreMenu(); });
+  if(aboutBackdrop) aboutBackdrop.addEventListener('click', function(e){ if(e.target === aboutBackdrop) closeAbout(); });
+})();
+</script>
+</body>
+</html>
