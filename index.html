@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>دليلك بود مدني</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#c98a2b">
@@ -34,7 +36,7 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;font-family:'Tajawal',sans-serif;background:var(--cream);color:var(--ink);
-  min-height:100vh;
+  min-height:100vh;padding-bottom:96px;
 }
 h1,h2,h3,.display{font-family:'Lalezar',sans-serif;font-weight:400;letter-spacing:.5px}
 a{text-decoration:none;color:inherit}
@@ -48,15 +50,15 @@ img{max-width:100%;display:block}
   color:#fff;padding:18px 16px 0;position:sticky;top:0;z-index:50;
 }
 .header-row{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;gap:10px}
-.logo{display:flex;align-items:center;gap:12px;font-size:26px;transition:.2s}
+.logo{display:flex;align-items:center;gap:14px;font-size:26px;transition:.2s}
 .logo:hover{opacity:.9}
 .logo .badge{
-  width:46px;height:46px;border-radius:50%;background:var(--ochre);display:flex;align-items:center;justify-content:center;
-  font-family:'Lalezar',sans-serif;color:var(--nile-dark);font-size:24px;flex-shrink:0;
-  box-shadow:0 4px 12px rgba(0,0,0,.18);overflow:hidden;
+  width:60px;height:60px;border-radius:50%;background:var(--ochre);display:flex;align-items:center;justify-content:center;
+  font-family:'Lalezar',sans-serif;color:var(--nile-dark);font-size:30px;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(0,0,0,.22);overflow:hidden;border:2px solid rgba(255,255,255,.35);
 }
 .logo .badge img{width:100%;height:100%;object-fit:cover;display:block}
-.logo .display{font-size:clamp(20px,3.6vw,28px);letter-spacing:.5px}
+.logo .display{font-size:clamp(24px,4.4vw,34px);letter-spacing:.5px}
 .header-links{display:flex;gap:6px;font-size:15px}
 .header-links a{padding:10px 20px;border-radius:24px;opacity:.9;transition:.2s;font-weight:700;border:1px solid rgba(255,255,255,.25)}
 .header-links a:hover,.header-links a.active{background:rgba(255,255,255,.18);opacity:1;border-color:rgba(255,255,255,.4)}
@@ -79,7 +81,8 @@ img{max-width:100%;display:block}
 .river{height:14px;max-width:960px;margin:12px auto 0;opacity:.55}
 
 /* hero + search */
-.hero{max-width:960px;margin:0 auto;padding:34px 16px 30px;text-align:center}
+.hero{max-width:960px;margin:0 auto;padding:0}
+.hero-banner{display:block;width:100%;height:auto}
 .hero p{color:var(--ink-soft);margin:0 0 18px;font-size:15px}
 .hero-tagline{
   font-family:'Tajawal',sans-serif;font-weight:600;font-size:clamp(15px,2.4vw,18px);
@@ -116,15 +119,15 @@ img{max-width:100%;display:block}
 .container{max-width:960px;margin:0 auto;padding:0 16px 60px}
 
 /* category grid */
-.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:6px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
 .cat-card{
-  background:var(--card);border-radius:12px;padding:12px 10px;text-align:center;box-shadow:var(--shadow);
+  background:var(--card);border-radius:10px;padding:8px 6px;text-align:center;box-shadow:var(--shadow);
   border:1.5px solid var(--nile);transition:.2s;
 }
 .cat-card:hover{transform:translateY(-3px);border-color:var(--ochre)}
-.cat-card .emoji{font-size:34px;display:block;margin-bottom:4px}
-.cat-card .name{font-weight:700;font-size:15px}
-.cat-card .count{color:var(--ink-soft);font-weight:600;font-size:12px;margin-top:2px}
+.cat-card .emoji{font-size:22px;display:block;margin-bottom:2px}
+.cat-card .name{font-weight:700;font-size:12.5px}
+.cat-card .count{color:var(--ink-soft);font-weight:600;font-size:10.5px;margin-top:1px}
 
 .section-title{display:flex;align-items:center;gap:10px;margin:36px 0 14px}
 .section-title h2{font-size:22px;margin:0;color:var(--nile)}
@@ -186,7 +189,7 @@ img{max-width:100%;display:block}
 .info-card p{margin:0;line-height:1.9;font-size:14.5px;color:var(--ink)}
 .phones-list{display:flex;flex-direction:column;gap:8px}
 .phone-row{display:flex;align-items:center;justify-content:space-between;background:var(--nile-tint);border-radius:10px;padding:9px 12px}
-.action-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:sticky;bottom:0;background:var(--cream);padding:10px 0;border-top:1px solid var(--line);margin-top:20px}
+.action-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:sticky;bottom:96px;background:var(--cream);padding:10px 0;border-top:1px solid var(--line);margin-top:20px}
 .action-bar a{
   display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border-radius:12px;font-size:12px;font-weight:700;
   background:#fff;border:1px solid var(--line);color:var(--ink);
@@ -238,7 +241,7 @@ img{max-width:100%;display:block}
 .img-thumb .del{position:absolute;top:-6px;left:-6px;background:var(--brick);color:#fff;border-radius:50%;width:20px;height:20px;font-size:12px;border:none;line-height:20px}
 .img-thumb .mk{position:absolute;bottom:-6px;right:-6px;background:var(--ochre);color:#fff;border-radius:8px;width:20px;height:20px;font-size:11px;border:none;line-height:20px}
 .upload-box{border:2px dashed var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--ink-soft);font-size:13px;cursor:pointer}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:13.5px;z-index:200;opacity:0;transition:.3s;pointer-events:none}
+.toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:30px;font-size:13.5px;z-index:200;opacity:0;transition:.3s;pointer-events:none}
 .toast.show{opacity:1}
 .hint{font-size:12px;color:var(--ink-soft);margin-top:4px}
 .emoji-picker{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
@@ -260,9 +263,49 @@ img{max-width:100%;display:block}
   .header-links{font-size:12.5px;gap:4px}
   .wa-header-btn{padding:6px 9px;font-size:12px}
   .install-btn{padding:6px 10px;font-size:11.5px;gap:4px}
-  .logo .badge{width:36px;height:36px}
-  .logo .display{font-size:15px}
+  .logo .badge{width:48px;height:48px;font-size:22px}
+  .logo .display{font-size:20px}
   .hero-tagline{padding:16px 18px;border-radius:14px}
+}
+
+/* bottom nav bar */
+.bottom-nav{
+  position:fixed;right:0;left:0;bottom:0;z-index:70;
+  display:flex;justify-content:space-around;align-items:stretch;
+  background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);border-top:1px solid rgba(255,255,255,.18);
+  box-shadow:0 -6px 18px rgba(13,79,79,.10);
+  min-height:88px;padding-bottom:env(safe-area-inset-bottom,0);
+}
+.bottom-nav a{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  min-height:88px;padding:12px 4px 11px;font-size:13px;font-weight:700;color:rgba(255,255,255,.82);transition:.15s;
+}
+.bottom-nav a .bn-ic{font-size:25px;line-height:1;margin-bottom:3px}
+.bottom-nav a.active{color:#fff}
+.bottom-nav a.contact{color:#7ff0aa}
+.bottom-nav a.more{color:#fff}
+.more-menu-backdrop{position:fixed;inset:0;background:var(--cream);z-index:90;display:flex;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.more-menu-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
+.more-menu{position:relative;width:100%;min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.more-menu-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 680px)/2));background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);color:#fff;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(8,47,47,.16)}
+.more-menu-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px}
+.more-menu-close.mm-back{border-radius:50%;font-size:20px;line-height:1}
+html.lang-en .more-menu-close.mm-back{transform:scaleX(-1)}
+.more-menu-item{display:flex;align-items:center;gap:16px;width:min(680px,calc(100% - 28px));margin:12px auto;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font:700 16px/1.4 inherit;text-align:inherit;box-shadow:0 5px 16px rgba(13,79,79,.07)}
+.more-menu-item:hover{background:var(--nile-tint)}
+.more-menu-item .mi-icon{width:34px;text-align:center;font-size:25px;color:var(--nile)}
+.more-menu-item .mi-copy{display:flex;flex-direction:column;gap:2px}
+.more-menu-item small{color:var(--ink-soft);font-size:11px;font-weight:500}
+.about-screen{width:min(760px,100%);min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.about-content{width:min(680px,calc(100% - 28px));margin:22px auto 40px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 6px 20px rgba(13,79,79,.08);white-space:pre-line;line-height:2;font-size:15px;color:var(--ink)}
+.about-content h2{margin:0 0 14px;color:var(--nile);font-size:25px}
+.about-content .about-copy{margin:0}
+body.more-open{overflow:hidden}
+body.more-open .bottom-nav{display:flex;z-index:100}
+html.lang-en body{direction:ltr}
+html.lang-en .more-menu-item{text-align:left}
+@media (min-width:900px){
+  .bottom-nav{max-width:1080px;width:100%;left:50%;right:auto;transform:translateX(-50%);border-radius:16px 16px 0 0}
 }
 </style>
 </head>
@@ -273,6 +316,38 @@ img{max-width:100%;display:block}
 </div>
 <div id="app"></div>
 <div class="toast" id="toast"></div>
+
+<!-- شريط تنقل سفلي ثابت — إضافة عرض فقط، لا يغيّر أي كود أو أوامر شغّالة بالموقع -->
+<nav class="bottom-nav" id="bottomNav">
+  <a href="#/" data-tab="home"><span class="bn-ic">🏠</span><span data-i18n="الرئيسية">الرئيسية</span></a>
+  <a href="https://wa.me/249991970907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" class="contact" target="_blank" rel="noopener noreferrer"><span class="bn-ic">🛍️</span><span data-i18n="أضف نشاطك">أضف نشاطك</span></a>
+  <a href="#/search" data-tab="search"><span class="bn-ic">🔍</span><span data-i18n="البحث">البحث</span></a>
+  <a href="#" id="bnMore" class="more"><span class="bn-ic">☰</span><span data-i18n="المزيد">المزيد</span></a>
+</nav>
+<div class="more-menu-backdrop" id="moreMenuBackdrop" aria-hidden="true">
+  <section class="more-menu" role="dialog" aria-label="المزيد">
+    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="more-menu-close" id="moreMenuClose" aria-label="إغلاق">×</button></div>
+    <button class="more-menu-item" id="languageMenuItem"><span class="mi-icon">🌐</span><span class="mi-copy"><span data-i18n="تغيير اللغة">تغيير اللغة</span><small data-i18n="English / العربية">English / العربية</small></span></button>
+    <button class="more-menu-item" id="shareMenuItem"><span class="mi-icon">↗</span><span data-i18n="مشاركة التطبيق">مشاركة التطبيق</span></button>
+    <a class="more-menu-item" href="https://wa.me/249991970907" target="_blank" rel="noopener noreferrer"><span class="mi-icon">💬</span><span data-i18n="تواصل معنا">تواصل معنا</span></a>
+    <a class="more-menu-item" href="https://wa.me/249991970907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D8%A3%D9%88%20%D9%86%D8%B4%D8%A7%D8%B7%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" target="_blank" rel="noopener noreferrer"><span class="mi-icon">🛍️</span><span data-i18n="أضف منتجك أو نشاطك">أضف منتجك أو نشاطك</span></a>
+    <a class="more-menu-item" href="#/admin" id="moreAdminLink"><span class="mi-icon">⚙️</span><span data-i18n="لوحة التحكم">لوحة التحكم</span></a>
+    <button class="more-menu-item" id="aboutMenuItem"><span class="mi-icon">ⓘ</span><span data-i18n="عن التطبيق">عن التطبيق</span></button>
+    <button class="more-menu-item" id="privacyMenuItem"><span class="mi-icon">🛡️</span><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span></button>
+  </section>
+</div>
+<div class="more-menu-backdrop" id="aboutBackdrop" aria-hidden="true">
+  <section class="about-screen" role="dialog" aria-label="عن التطبيق">
+    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="more-menu-close mm-back" id="aboutClose" aria-label="رجوع">→</button></div>
+    <article class="about-content" id="aboutContent"></article>
+  </section>
+</div>
+<div class="more-menu-backdrop" id="privacyBackdrop" aria-hidden="true">
+  <section class="about-screen" role="dialog" aria-label="سياسة الخصوصية">
+    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="more-menu-close mm-back" id="privacyClose" aria-label="رجوع">→</button></div>
+    <article class="about-content" id="privacyContent"></article>
+  </section>
+</div>
 
 <!-- Firebase (قاعدة بيانات سحابية مجانية - بدون بطاقة ائتمانية) -->
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -393,6 +468,18 @@ function safeUrl(u){
 function safeCoord(v){
   const s = (v||'').toString().trim();
   return /^-?\d{1,3}(\.\d+)?$/.test(s) ? s : '';
+}
+// يسمح فقط بصور Base64 (data:image/...) أو روابط https الآمنة، ويمنع أي حقن عبر style/src
+// (data:text/html أو javascript: تُرفض، حتى لو وصلت من مصدر غير متوقع كـ Firestore)
+function safeImageUrl(u){
+  const s = (u||'').toString().trim();
+  if(!s) return '';
+  if(/^data:image\/(png|jpe?g|webp|gif);base64,[a-zA-Z0-9+/=]+$/.test(s)) return s;
+  try{
+    const parsed = new URL(s, location.href);
+    if(parsed.protocol === 'https:') return esc(s);
+  }catch(e){}
+  return '';
 }
 function toast(msg){
   const t = document.getElementById('toast');
@@ -524,37 +611,41 @@ function resizeImage(file, maxDim=640, quality=0.55){
 
 /* ============ ROUTER ============ */
 window.addEventListener('hashchange', render);
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', () => {
   // إزالة شاشة الترحيب الثابتة بمجرد أن يبدأ التطبيق بالعمل
   const splash = document.getElementById('initial-splash');
   if(splash) splash.remove();
-  document.getElementById('app').innerHTML = `<div class="empty" style="padding-top:80px"><span class="emoji">⏳</span>الرجاء الانتظار... دليلك بود مدني</div>`;
-  try{
-    await ensureSeed();
-    await loadState();
-  }catch(e){ console.error('bootstrap failed', e); }
-  try{
-    if(HAS_AUTH){
-      // file:// pages can have IndexedDB blocked in Chrome, which Firebase Auth's
-      // default persistence relies on. Use sessionStorage-based persistence instead,
-      // and never let the app hang waiting for the auth callback.
-      try{ await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); }
-      catch(e){ console.error('setPersistence failed', e); }
-
-      let resolved = false;
-      auth.onAuthStateChanged(user => {
-        resolved = true;
-        state.isAdmin = !!user;
-        render();
-      });
-      setTimeout(() => {
-        if(!resolved){ console.warn('auth state timed out, showing site as guest'); render(); }
-      }, 4000);
-    } else {
-      state.isAdmin = false;
+  // عرض الصفحة الرئيسية فوراً بالبيانات الافتراضية، ثم تحديثها بعد اكتمال التحميل.
+  // هذا يمنع شاشة الانتظار الطويلة عند الدخول أو الضغط على زر الرئيسية.
+  state.sections = DEFAULT_SECTIONS.slice();
+  state.index = [];
+  state.isAdmin = false;
+  render();
+  (async function bootstrapInBackground(){
+    try{
+      await ensureSeed();
+      await loadState();
       render();
-    }
-  }catch(e){ console.error('render failed', e); render(); }
+    }catch(e){ console.error('bootstrap failed', e); }
+    try{
+      if(HAS_AUTH){
+        try{ await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); }
+        catch(e){ console.error('setPersistence failed', e); }
+        let resolved = false;
+        auth.onAuthStateChanged(user => {
+          resolved = true;
+          state.isAdmin = !!user;
+          render();
+        });
+        setTimeout(() => {
+          if(!resolved){ console.warn('auth state timed out, showing site as guest'); render(); }
+        }, 4000);
+      } else {
+        state.isAdmin = false;
+        render();
+      }
+    }catch(e){ console.error('render failed', e); render(); }
+  })();
 });
 
 // Route all internal links (href="#/...") through nav() so the page always
@@ -577,6 +668,7 @@ function nav(hash){
 async function render(){
   const app = document.getElementById('app');
   const hash = location.hash || '#/';
+  setTimeout(applyLanguage, 0);
   // ملاحظة أداء: state.sections و state.index تم تحميلها مرة واحدة فقط عند فتح
   // الموقع (loadState في DOMContentLoaded) وتُحدَّث محلياً تلقائياً عند أي حفظ
   // من لوحة التحكم (saveSections/saveIndex) — لذلك لا داعي لإعادة قراءتها من
@@ -588,6 +680,129 @@ async function render(){
   if(hash.startsWith('#/admin')) return renderAdmin(app, hash);
   renderHome(app);
 }
+
+/* ============ LANGUAGE SYSTEM ============ */
+const UI_TRANSLATIONS = {
+  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','تواصل معنا':'Contact us','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
+  'دليلك المحلي الشامل بود مدني، كل ما تحتاجه في مكان واحد: متاجر ومحلات وخدمات... مع معلومات التواصل والتفاصيل بكل سهولة.':'Your complete local guide to Wad Madani. Everything you need in one place: shops, stores and services, with contact details and information.',
+  'دليلك المحلي الشامل':'Your complete local guide','في ود مدني':'in Wad Madani','كل ما تحتاجه في مكان واحد':'Everything you need in one place','مطاعم':'restaurants','فنادق':'hotels','أطباء':'doctors','محلات وخدمات':'shops and services','مع معلومات التواصل والتفاصيل بكل سهولة':'with contact details and information','أضف نشاطك أو خدمتك معنا':'Add your business or service','أضف عملك أو خدمتك في الدليل':'Add your business or service to the guide','تثبيت التطبيق':'Install app','التثبيت غير متاح حالياً في هذا المتصفح':'Installation is not available in this browser','تم تثبيت التطبيق بنجاح 🎉':'App installed successfully 🎉','منشأة':'businesses','المطاعم':'Restaurants','الفنادق والشقق الفندقية':'Hotels & furnished apartments','الأطباء والأخصائيون':'Doctors & specialists','الصيدليات':'Pharmacies','المستشفيات والمستوصفات':'Hospitals & clinics','الدلفري والتوصيل':'Delivery & courier','المميز':'Featured','مميزة':'Featured','لا توجد نتائج':'No results','لا توجد منشآت':'No businesses found','لا توجد أقسام بعد. أضفها من لوحة التحكم.':'No sections yet. Add them from the admin panel.','القسم غير موجود':'Section not found','المنشأة غير موجودة':'Business not found','ابحث...':'Search...','ابحث داخل هذا القسم...':'Search this section...','الرجاء الانتظار... دليلك بود مدني':'Please wait... Wad Madani Guide','جميع الحقوق محفوظة':'All rights reserved','لوحة التحكم':'Admin panel','إضافة منشأة':'Add business','إضافة':'Add','تعديل':'Edit','حذف':'Delete','حفظ':'Save','إلغاء':'Cancel','اسم المنشأة':'Business name','التصنيف / الوسم':'Category / tag','وصف مختصر':'Short description','أرقام الهاتف':'Phone numbers','العنوان':'Address','ساعات العمل':'Working hours','الصور':'Photos','مفعّلة وظاهرة للزوار':'Active and visible to visitors','منشأة مميزة':'Featured business','كلمة المرور':'Password','البريد الإلكتروني':'Email','تسجيل الدخول':'Log in','تسجيل الخروج':'Log out','تم الحفظ':'Saved','تم الحذف':'Deleted','تم التفعيل':'Activated','تم الإخفاء':'Hidden','الموقع':'Location','الهاتف':'Phone','الوصف':'Description','الخدمات':'Services','معلومات التواصل':'Contact information','مشاركة':'Share','نسخ الرابط':'Copy link','فتح في خرائط جوجل':'Open in Google Maps'
+};
+let currentLanguage = localStorage.getItem('wadmadani:language') || 'ar';
+const ABOUT_AR = `📍 عن تطبيق دليلك بودمدني
+
+دليلك بودمدني هو تطبيق محلي يساعدك على الوصول بسهولة إلى أهم الخدمات والأنشطة في مدينة ودمدني.
+
+ماذا يقدم التطبيق؟
+
+🔹 المطاعم والكافيهات
+🔹 الفنادق والشقق الفندقية
+🔹 الأطباء والعيادات
+🔹 الصيدليات
+🔹 المستشفيات والمراكز الصحية
+🔹 المحلات والأنشطة التجارية
+🔹 الخدمات المختلفة داخل ودمدني
+
+هدفنا هو جمع الخدمات والأماكن المهمة في مكان واحد، لتسهيل البحث والوصول إليها بسرعة.
+
+🚀 لماذا دليلك بودمدني؟
+
+لأننا نريد أن يكون الوصول إلى ما تحتاجه في ودمدني أسهل وأسرع، سواء كنت من سكان المدينة أو زائراً لها.
+
+📱 التطبيق
+
+تطبيق دليلك بودمدني مصمم ليكون بسيطاً وسهل الاستخدام ومتوافقاً مع الهواتف الذكية.
+
+الإصدار: 1.0
+المدينة: ودمدني – ولاية الجزيرة 🇸🇩
+
+© 2026 دليلك بودمدني
+دليلك للخدمات والأعمال في ودمدني`;
+const ABOUT_EN = `📍 About Wad Madani Guide
+
+Wad Madani Guide is a local app that helps you easily find the most important services and businesses in Wad Madani.
+
+What does the app offer?
+
+🔹 Restaurants and cafés
+🔹 Hotels and furnished apartments
+🔹 Doctors and clinics
+🔹 Pharmacies
+🔹 Hospitals and health centers
+🔹 Shops and businesses
+🔹 Different services across Wad Madani
+
+Our goal is to bring important services and places together in one location, making them faster and easier to find.
+
+🚀 Why Wad Madani Guide?
+
+We want finding what you need in Wad Madani to be easier and faster, whether you live in the city or are visiting.
+
+📱 The app
+
+Wad Madani Guide is designed to be simple, easy to use, and compatible with smartphones.
+
+Version: 1.0
+City: Wad Madani – Al Jazirah State 🇸🇩
+
+© 2026 Wad Madani Guide
+Your guide to services and businesses in Wad Madani`;
+const PRIVACY_AR = `سياسة الخصوصية
+
+نحن في دليلك ودمدني نحترم خصوصية المستخدمين ونحرص على حماية معلوماتهم.
+
+يتيح الموقع للمستخدم تصفح الأدلة والخدمات والمعلومات المحلية في ود مدني، ولا نطلب من المستخدم إدخال أو إنشاء حساب أو تقديم بيانات شخصية لاستخدام الموقع.
+
+قد يستخدم الموقع خدمات تقنية مثل الاستضافة أو التحليلات أو ملفات تعريف الارتباط لتحسين أداء الموقع وتجربة المستخدم، وفقاً لسياسات مزودي هذه الخدمات.
+
+لا نقوم ببيع أو تأجير أو مشاركة أي بيانات شخصية مع أطراف أخرى.
+
+قد يتم تحديث سياسة الخصوصية من وقت لآخر، وسيتم نشر أي تغييرات على هذه الصفحة.
+
+آخر تحديث: سبتمبر 2026`;
+const PRIVACY_EN = `Privacy Policy
+
+At Wad Madani Guide, we respect our users' privacy and are committed to protecting their information.
+
+The website allows users to browse local directories, services, and information in Wad Madani. We do not require users to create an account, sign in, or provide personal data to use the website.
+
+The website may use technical services such as hosting, analytics, or cookies to improve performance and the user experience, in accordance with the policies of those service providers.
+
+We do not sell, rent, or share personal data with other parties.
+
+This privacy policy may be updated from time to time. Any changes will be published on this page.
+
+Last updated: September 2026`;
+function translateText(value){
+  if(currentLanguage === 'ar' || !value) return value;
+  let out = value;
+  Object.keys(UI_TRANSLATIONS).sort((a,b)=>b.length-a.length).forEach(ar => { out = out.split(ar).join(UI_TRANSLATIONS[ar]); });
+  out = out.replace(/(\d+)\s*منشأة/g,'$1 businesses').replace(/(\d+)\s*نتيجة/g,'$1 results');
+  return out;
+}
+function applyLanguage(){
+  document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'ar';
+  document.documentElement.dir = currentLanguage === 'en' ? 'ltr' : 'rtl';
+  document.documentElement.classList.toggle('lang-en', currentLanguage === 'en');
+  document.title = currentLanguage === 'en' ? 'Wad Madani Guide' : 'دليلك بود مدني';
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = translateText(el.getAttribute('data-i18n')); });
+  const aboutContent = document.getElementById('aboutContent');
+  if(aboutContent && document.getElementById('aboutBackdrop')?.classList.contains('open')) aboutContent.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
+  const privacyContent = document.getElementById('privacyContent');
+  if(privacyContent && document.getElementById('privacyBackdrop')?.classList.contains('open')) privacyContent.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
+  const root = document.getElementById('app');
+  if(!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => { if(node.parentElement && !/^(SCRIPT|STYLE|INPUT|TEXTAREA)$/i.test(node.parentElement.tagName)) node.nodeValue = translateText(node.nodeValue); });
+  root.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el => { el.placeholder = translateText(el.placeholder); });
+}
+function setLanguage(lang){
+  currentLanguage = lang === 'en' ? 'en' : 'ar';
+  localStorage.setItem('wadmadani:language', currentLanguage);
+  applyLanguage();
+  render();
+}
+window.addEventListener('DOMContentLoaded', applyLanguage);
 
 /* ============ PWA INSTALL BUTTON ============ */
 window.deferredInstallPrompt = null;
@@ -709,7 +924,6 @@ function header(activeIsAdmin){
     <div class="header-row">
       <a href="#/" class="logo"><span class="badge"><img src="logo-icon.png" alt="دليلك بود مدني" loading="lazy"></span><span class="display">دليلك بود مدني</span></a>
       <div class="header-links">
-        <a href="#/" class="${!activeIsAdmin?'active':''}">الرئيسية</a>
         <button id="installAppBtn" class="install-btn" style="display:none" type="button">⬇️ تثبيت التطبيق</button>
       </div>
     </div>
@@ -717,11 +931,7 @@ function header(activeIsAdmin){
   </header>`;
 }
 function footer(){
-  return `<footer class="site-footer">
-    <div>دليلك بود مدني — دليلك المحلي الشامل</div>
-    <div style="margin:6px 0"><a href="${WA_BUSINESS_LINK}" target="_blank" rel="noopener noreferrer" style="color:#25D366">💬 أضف نشاطك أو خدمتك معنا</a></div>
-    <div style="opacity:.75;font-size:12px;margin-top:10px">جميع الحقوق محفوظة © 2026م · <a href="#/admin">لوحة التحكم</a></div>
-  </footer>`;
+  return '';
 }
 
 /* ============ HOME ============ */
@@ -731,13 +941,7 @@ function renderHome(app){
   app.innerHTML = `
     ${header(false)}
     <div class="hero">
-      <p class="hero-tagline">دليلك المحلي الشامل في ود مدني، كل ما تحتاجه في مكان واحد: مطاعم، فنادق، أطباء، محلات وخدمات... مع معلومات التواصل والتفاصيل بكل سهولة.</p>
-      <div class="search-wrap">
-        <input id="homeSearch" type="text" placeholder="ابحث عن مطعم، طبيب، فندق، صيدلية...">
-        <span class="icon">🔍</span>
-      </div>
-      <div id="searchLiveResults"></div>
-      <a href="${WA_BUSINESS_LINK}" target="_blank" rel="noopener noreferrer" class="hero-wa-btn">💬 أضف عملك أو خدمتك في الدليل</a>
+      <img class="hero-banner" src="hero-banner.webp" alt="دليلك بود مدني" loading="eager" fetchpriority="high">
     </div>
     <div class="container">
       <div class="section-title"><h2>الأقسام</h2><div class="rule"></div></div>
@@ -755,7 +959,7 @@ function renderHome(app){
       <div class="feat-scroll">
         ${featured.map(b=>`
           <a class="feat-card" href="#/biz/${b.id}">
-            <div class="thumb" style="${b.image?`background-image:url('${b.image}')`:''}">${b.image?'':'✨'}</div>
+            <div class="thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'✨'}</div>
             <div class="body">
               <span class="tag">${esc(b.category||'')}</span>
               <div class="name">${esc(b.name)}</div>
@@ -765,21 +969,8 @@ function renderHome(app){
     </div>
     ${footer()}
   `;
-  const input = document.getElementById('homeSearch');
-  input.addEventListener('input', ()=> liveSearch(input.value));
-  input.addEventListener('keydown', e=>{ if(e.key==='Enter' && input.value.trim()) nav('#/search?q='+encodeURIComponent(input.value.trim())); });
 }
 
-function liveSearch(q){
-  const box = document.getElementById('searchLiveResults');
-  q = q.trim();
-  if(!q){ box.innerHTML=''; return; }
-  const results = searchIndex(q).slice(0,6);
-  if(!results.length){ box.innerHTML = `<div class="search-results"><div class="sr-empty">لا توجد نتائج لـ "${esc(q)}"</div></div>`; return; }
-  box.innerHTML = `<div class="search-results">
-    ${results.map(b=>`<a class="sr-item" href="#/biz/${b.id}"><span>${esc(b.name)}</span><span class="tag-mini">${esc(sectionNameOf(b.sectionId))}</span></a>`).join('')}
-  </div>`;
-}
 function searchIndex(q){
   q = q.toLowerCase();
   return state.index.filter(b => b.active && (
@@ -804,13 +995,20 @@ function renderSearchPage(app){
         <input id="pageSearch" type="text" value="${esc(q)}" placeholder="ابحث...">
         <span class="icon">🔍</span>
       </div>
-      <div class="section-title"><h2>نتائج "${esc(q)}" (${results.length})</h2><div class="rule"></div></div>
-      ${results.length ? bizGridHtml(results) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`}
+      <div class="section-title"><h2 id="searchResultsTitle">نتائج "${esc(q)}" (${results.length})</h2><div class="rule"></div></div>
+      <div id="searchResultsWrap">${results.length ? bizGridHtml(results) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`}</div>
     </div>
     ${footer()}
   `;
   bindBizGridButtons();
   const input = document.getElementById('pageSearch');
+  input.addEventListener('input', ()=>{
+    const val = input.value.trim();
+    const res = val ? searchIndex(val) : [];
+    document.getElementById('searchResultsTitle').textContent = `نتائج "${val}" (${res.length})`;
+    document.getElementById('searchResultsWrap').innerHTML = res.length ? bizGridHtml(res) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`;
+    bindBizGridButtons();
+  });
   input.addEventListener('keydown', e=>{ if(e.key==='Enter') nav('#/search?q='+encodeURIComponent(input.value.trim())); });
 }
 
@@ -852,7 +1050,7 @@ function bizGridHtml(items){
   return `<div class="biz-grid">
     ${items.map(b=>`
       <div class="biz-card">
-        <a href="#/biz/${b.id}" class="thumb" style="${b.image?`background-image:url('${b.image}')`:''}">${b.image?'':'🏷️'}</a>
+        <a href="#/biz/${b.id}" class="thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'🏷️'}</a>
         <div class="body">
           ${b.category?`<span class="tag">${esc(b.category)}</span>`:''}
           <a href="#/biz/${b.id}" class="name">${esc(b.name)}</a>
@@ -889,10 +1087,10 @@ async function renderBizPage(app, id){
       <div class="crumbs"><a href="#/">الرئيسية</a> / <a href="#/section/${sec.id||biz.sectionId}">${esc(sec.name)}</a> / ${esc(biz.name)}</div>
 
       <div class="gallery">
-        <div class="main" id="mainImg" style="${primary?`background-image:url('${primary}')`:''}">${primary?'':esc(sec.icon)}</div>
+        <div class="main" id="mainImg" style="${primary?`background-image:url('${safeImageUrl(primary)}')`:''}">${primary?'':esc(sec.icon)}</div>
       </div>
       ${images.length>1?`<div class="gallery-thumbs">
-        ${images.map((im,i)=>`<img src="${im}" class="${im===primary?'active':''}" data-i="${i}">`).join('')}
+        ${images.map((im,i)=>`<img src="${safeImageUrl(im)}" class="${im===primary?'active':''}" data-i="${i}">`).join('')}
       </div>`:''}
 
       <div class="biz-title-row">
@@ -1321,7 +1519,7 @@ function imgThumbsHtml(biz){
   if(!biz.images.length) return '';
   return biz.images.map((im,i)=>`
     <div class="img-thumb ${i===(biz.primaryImageIndex||0)?'primary':''}" data-i="${i}">
-      <img src="${im}">
+      <img src="${safeImageUrl(im)}">
       <button type="button" class="del" data-deli="${i}">✕</button>
       ${i!==(biz.primaryImageIndex||0)?`<button type="button" class="mk" data-mki="${i}">★</button>`:''}
     </div>`).join('');
@@ -1349,6 +1547,114 @@ if('serviceWorker' in navigator){
     });
   });
 }
+</script>
+
+<!-- سكربت مستقل لتنبيه المستخدم عند انقطاع/عودة الاتصال بالإنترنت — لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع -->
+<script>
+(function(){
+  function onOffline(){
+    if(typeof toast === 'function'){
+      toast(currentLanguage === 'en' ? 'No internet connection' : 'لا يوجد اتصال بالإنترنت');
+    }
+  }
+  function onOnline(){
+    if(typeof toast === 'function'){
+      toast(currentLanguage === 'en' ? 'Back online' : 'تم استعادة الاتصال بالإنترنت');
+    }
+  }
+  window.addEventListener('offline', onOffline);
+  window.addEventListener('online', onOnline);
+  // تنبيه فوري إذا كان المستخدم بلا إنترنت عند فتح الصفحة أصلاً
+  window.addEventListener('load', function(){
+    if(navigator.onLine === false) onOffline();
+  });
+})();
+</script>
+
+<!-- سكربت مستقل لتفعيل الشريط السفلي فقط — لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع -->
+<script>
+(function(){
+  function activeTabFor(hash){
+    hash = hash || '#/';
+    if(hash.startsWith('#/search')) return 'search';
+    if(hash === '#/') return 'home';
+    return '';
+  }
+  function refreshBottomNav(){
+    var tab = activeTabFor(location.hash);
+    document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-tab') === tab);
+    });
+  }
+  window.addEventListener('hashchange', refreshBottomNav);
+  window.addEventListener('DOMContentLoaded', refreshBottomNav);
+  setTimeout(refreshBottomNav, 300);
+
+  var moreBtn = document.getElementById('bnMore');
+  var moreBackdrop = document.getElementById('moreMenuBackdrop');
+  var closeMore = document.getElementById('moreMenuClose');
+  function closeMoreMenu(){ if(moreBackdrop){ moreBackdrop.classList.remove('open'); moreBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openMoreMenu(e){
+    if(e) e.preventDefault();
+    if(moreBackdrop){ moreBackdrop.classList.add('open'); moreBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open'); applyLanguage(); }
+  }
+  if(moreBtn) moreBtn.addEventListener('click', function(e){
+    if(e) e.preventDefault();
+    if(moreBackdrop && moreBackdrop.classList.contains('open')) closeMoreMenu();
+    else openMoreMenu(e);
+  });
+  if(closeMore) closeMore.addEventListener('click', closeMoreMenu);
+  if(moreBackdrop) moreBackdrop.addEventListener('click', function(e){ if(e.target === moreBackdrop) closeMoreMenu(); });
+  document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){ a.addEventListener('click', closeMoreMenu); });
+  var moreAdminLink = document.getElementById('moreAdminLink');
+  if(moreAdminLink) moreAdminLink.addEventListener('click', closeMoreMenu);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMoreMenu(); });
+  var languageItem = document.getElementById('languageMenuItem');
+  if(languageItem) languageItem.addEventListener('click', function(){ closeMoreMenu(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
+  var shareItem = document.getElementById('shareMenuItem');
+  if(shareItem) shareItem.addEventListener('click', function(){
+    var pageUrl = location.href;
+    var appLinks = 'https://dalilak-wad-madani.vercel.app\nhttps://dalilak-wadmadani1.netlify.app';
+    var message = currentLanguage === 'en'
+      ? ('Check this page from Wad Madani Guide or download the app from one of these links:\n' + pageUrl + '\n' + appLinks)
+      : ('شاهد هذه الصفحة من دليلك بودمدني او نزل التطبيق من احد الروابط:\n' + pageUrl + '\n' + appLinks);
+    var whatsappShareUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
+    closeMoreMenu();
+    window.open(whatsappShareUrl, '_blank', 'noopener,noreferrer');
+  });
+  var privacyItem = document.getElementById('privacyMenuItem');
+  var privacyBackdrop = document.getElementById('privacyBackdrop');
+  var privacyClose = document.getElementById('privacyClose');
+  function closePrivacy(){ if(privacyBackdrop){ privacyBackdrop.classList.remove('open'); privacyBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openPrivacy(e){
+    if(e) e.preventDefault();
+    closeMoreMenu();
+    if(privacyBackdrop){
+      var content = document.getElementById('privacyContent');
+      if(content) content.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
+      privacyBackdrop.classList.add('open'); privacyBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+    }
+  }
+  if(privacyItem) privacyItem.addEventListener('click', openPrivacy);
+  if(privacyClose) privacyClose.addEventListener('click', function(){ closePrivacy(); openMoreMenu(); });
+  if(privacyBackdrop) privacyBackdrop.addEventListener('click', function(e){ if(e.target === privacyBackdrop) closePrivacy(); });
+  var aboutItem = document.getElementById('aboutMenuItem');
+  var aboutBackdrop = document.getElementById('aboutBackdrop');
+  var aboutClose = document.getElementById('aboutClose');
+  function closeAbout(){ if(aboutBackdrop){ aboutBackdrop.classList.remove('open'); aboutBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function openAbout(e){
+    if(e) e.preventDefault();
+    closeMoreMenu();
+    if(aboutBackdrop){
+      var content = document.getElementById('aboutContent');
+      if(content) content.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
+      aboutBackdrop.classList.add('open'); aboutBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+    }
+  }
+  if(aboutItem) aboutItem.addEventListener('click', openAbout);
+  if(aboutClose) aboutClose.addEventListener('click', function(){ closeAbout(); openMoreMenu(); });
+  if(aboutBackdrop) aboutBackdrop.addEventListener('click', function(e){ if(e.target === aboutBackdrop) closeAbout(); });
+})();
 </script>
 </body>
 </html>
