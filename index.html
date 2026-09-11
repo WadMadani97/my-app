@@ -52,6 +52,13 @@ img{max-width:100%;display:block}
 .header-row{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;gap:10px}
 .logo{display:flex;align-items:center;gap:14px;font-size:26px;transition:.2s}
 .logo:hover{opacity:.9}
+/* يمنع قائمة السياق الافتراضية (نسخ الرابط/فتح الصورة/حفظ الصورة...) وتحديد النص والسحب على
+   اللوجو، لأنه يستخدم كزر ضغطة مطوّلة لفتح لوحة التحكم، ويجب ألا يتصرف كرابط/صورة عاديين
+   عند الضغط المطوّل عليه في المتصفحات (خصوصاً على الموبايل). */
+.logo, .logo img{
+  -webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+  -webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;
+}
 .logo .badge{
   width:60px;height:60px;border-radius:50%;background:var(--ochre);display:flex;align-items:center;justify-content:center;
   font-family:'Lalezar',sans-serif;color:var(--nile-dark);font-size:30px;flex-shrink:0;
@@ -1814,7 +1821,10 @@ if('serviceWorker' in navigator){
 <!-- سكربت مستقل: ضغطة مطوّلة على اللوجو تفتح لوحة التحكم (#/admin) — مخفية تماماً عن الزوار،
      لا يوجد أي زر أو أيقونة ظاهرة لها. النقرة العادية على اللوجو تعمل كالمعتاد (رجوع للرئيسية).
      لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع. يستخدم event delegation على document
-     كي يستمر بالعمل حتى بعد إعادة رسم الهيدر عند كل تنقل داخل الـ SPA. -->
+     كي يستمر بالعمل حتى بعد إعادة رسم الهيدر عند كل تنقل داخل الـ SPA.
+     ملاحظة: touchstart هنا ليست passive عمداً كي نقدر نستدعي preventDefault ونمنع قائمة
+     السياق الافتراضية للمتصفح (نسخ الرابط / فتح الصورة / حفظ الصورة) التي كانت تظهر بدل
+     تفعيل الضغطة المطوّلة، خصوصاً على الموبايل حيث اللوجو رابط <a> يحتوي <img>. -->
 <script>
 (function(){
   var LONG_PRESS_MS = 700;
@@ -1833,6 +1843,13 @@ if('serviceWorker' in navigator){
       nav('#/admin');
     }, LONG_PRESS_MS);
   }
+  function startPressTouch(e){
+    var logo = e.target.closest('#siteLogo');
+    if(!logo) return;
+    // نمنع السلوك الافتراضي فوراً كي لا يظهر منيو "نسخ الرابط/فتح الصورة" أثناء الانتظار
+    e.preventDefault();
+    startPress(e);
+  }
   function cancelPress(e){
     var logo = e.target.closest('#siteLogo');
     if(!logo){ clearPress(); return; }
@@ -1846,13 +1863,18 @@ if('serviceWorker' in navigator){
       triggered = false;
     }
   }
+  function suppressContextMenu(e){
+    var logo = e.target.closest('#siteLogo');
+    if(logo) e.preventDefault();
+  }
   document.addEventListener('mousedown', startPress);
-  document.addEventListener('touchstart', startPress, {passive:true});
+  document.addEventListener('touchstart', startPressTouch, {passive:false});
   document.addEventListener('mouseup', cancelPress);
   document.addEventListener('mouseleave', cancelPress, true);
   document.addEventListener('touchend', cancelPress);
   document.addEventListener('touchcancel', cancelPress);
   document.addEventListener('click', suppressClickIfTriggered, true);
+  document.addEventListener('contextmenu', suppressContextMenu);
 })();
 </script>
 </body>
