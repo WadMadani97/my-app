@@ -341,7 +341,6 @@ html.lang-en .more-menu-item{text-align:left}
     <button class="more-menu-item" id="shareMenuItem"><span class="mi-icon">↗</span><span data-i18n="مشاركة التطبيق">مشاركة التطبيق</span></button>
     <a class="more-menu-item" href="https://wa.me/249991970907" target="_blank" rel="noopener noreferrer"><span class="mi-icon">💬</span><span data-i18n="تواصل معنا">تواصل معنا</span></a>
     <a class="more-menu-item" href="https://wa.me/249991970907?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D8%A3%D9%88%20%D9%86%D8%B4%D8%A7%D8%B7%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" target="_blank" rel="noopener noreferrer"><span class="mi-icon">🛍️</span><span data-i18n="أضف منتجك أو نشاطك">أضف منتجك أو نشاطك</span></a>
-    <a class="more-menu-item" href="#/admin" id="moreAdminLink"><span class="mi-icon">⚙️</span><span data-i18n="لوحة التحكم">لوحة التحكم</span></a>
     <button class="more-menu-item" id="aboutMenuItem"><span class="mi-icon">ⓘ</span><span data-i18n="عن التطبيق">عن التطبيق</span></button>
     <button class="more-menu-item" id="privacyMenuItem"><span class="mi-icon">🛡️</span><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span></button>
   </section>
@@ -956,7 +955,7 @@ function header(activeIsAdmin, showBack){
   return `
   <header class="site-header">
     <div class="header-row">
-      <a href="#/" class="logo"><span class="badge"><img src="logo-icon.png" alt="دليلك بود مدني" loading="lazy"></span><span class="display">دليلك بود مدني</span></a>
+      <a href="#/" class="logo" id="siteLogo"><span class="badge"><img src="logo-icon.png" alt="دليلك بود مدني" loading="lazy"></span><span class="display">دليلك بود مدني</span></a>
       <div class="header-links">
         ${showBack ? `<button class="back-btn" type="button" onclick="goBack()"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button>` : ''}
         <button id="installAppBtn" class="install-btn" style="display:none" type="button">⬇️ تثبيت التطبيق</button>
@@ -1763,8 +1762,6 @@ if('serviceWorker' in navigator){
   if(closeMore) closeMore.addEventListener('click', closeMoreMenu);
   if(moreBackdrop) moreBackdrop.addEventListener('click', function(e){ if(e.target === moreBackdrop) closeMoreMenu(); });
   document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){ a.addEventListener('click', closeMoreMenu); });
-  var moreAdminLink = document.getElementById('moreAdminLink');
-  if(moreAdminLink) moreAdminLink.addEventListener('click', closeMoreMenu);
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMoreMenu(); });
   var languageItem = document.getElementById('languageMenuItem');
   if(languageItem) languageItem.addEventListener('click', function(){ closeMoreMenu(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
@@ -1811,6 +1808,51 @@ if('serviceWorker' in navigator){
   if(aboutItem) aboutItem.addEventListener('click', openAbout);
   if(aboutClose) aboutClose.addEventListener('click', function(){ closeAbout(); openMoreMenu(); });
   if(aboutBackdrop) aboutBackdrop.addEventListener('click', function(e){ if(e.target === aboutBackdrop) closeAbout(); });
+})();
+</script>
+
+<!-- سكربت مستقل: ضغطة مطوّلة على اللوجو تفتح لوحة التحكم (#/admin) — مخفية تماماً عن الزوار،
+     لا يوجد أي زر أو أيقونة ظاهرة لها. النقرة العادية على اللوجو تعمل كالمعتاد (رجوع للرئيسية).
+     لا يعدّل أي دالة أو منطق موجود مسبقاً بالموقع. يستخدم event delegation على document
+     كي يستمر بالعمل حتى بعد إعادة رسم الهيدر عند كل تنقل داخل الـ SPA. -->
+<script>
+(function(){
+  var LONG_PRESS_MS = 700;
+  var pressTimer = null;
+  var triggered = false;
+  function clearPress(){
+    if(pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+  }
+  function startPress(e){
+    var logo = e.target.closest('#siteLogo');
+    if(!logo) return;
+    triggered = false;
+    clearPress();
+    pressTimer = setTimeout(function(){
+      triggered = true;
+      nav('#/admin');
+    }, LONG_PRESS_MS);
+  }
+  function cancelPress(e){
+    var logo = e.target.closest('#siteLogo');
+    if(!logo){ clearPress(); return; }
+    clearPress();
+  }
+  function suppressClickIfTriggered(e){
+    var logo = e.target.closest('#siteLogo');
+    if(!logo) return;
+    if(triggered){
+      e.preventDefault();
+      triggered = false;
+    }
+  }
+  document.addEventListener('mousedown', startPress);
+  document.addEventListener('touchstart', startPress, {passive:true});
+  document.addEventListener('mouseup', cancelPress);
+  document.addEventListener('mouseleave', cancelPress, true);
+  document.addEventListener('touchend', cancelPress);
+  document.addEventListener('touchcancel', cancelPress);
+  document.addEventListener('click', suppressClickIfTriggered, true);
 })();
 </script>
 </body>
