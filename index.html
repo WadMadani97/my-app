@@ -653,10 +653,13 @@ window.addEventListener('DOMContentLoaded', () => {
         let resolved = false;
         auth.onAuthStateChanged(user => {
           resolved = true;
-          // الدخول لا يُعتبر مكتملاً إلا إذا كان البريد "مُحقَّقاً" (emailVerified)؛
-          // لو المستخدم مسجّل دخوله لكن بريده غير محقق بعد، نعرض له شاشة التحقق بدل لوحة التحكم مباشرة
-          state.isAdmin = !!user && user.emailVerified;
-          state.unverifiedUser = (user && !user.emailVerified) ? user : null;
+          // الدخول لا يُعتبر مكتملاً إلا إذا كان البريد "مُحقَّقاً" (emailVerified) *و* تم تأكيد
+          // ذلك التحقق خلال هذه الجلسة تحديداً (wadmadani:sessionVerified في sessionStorage).
+          // هذا يضمن طلب تحقق جديد في كل مرة يُفتح فيها الموقع من جديد، حتى لو كان
+          // emailVerified محفوظاً بشكل دائم من قبل على مستوى حساب Firebase نفسه.
+          const sessionVerified = sessionStorage.getItem('wadmadani:sessionVerified') === '1';
+          state.isAdmin = !!user && user.emailVerified && sessionVerified;
+          state.unverifiedUser = (user && !(user.emailVerified && sessionVerified)) ? user : null;
           render();
         });
         setTimeout(() => {
@@ -1207,15 +1210,31 @@ async function renderAdminLogin(app){
       // وليس عبر زر منفصل يقدر أي زائر الضغط عليه بدون معرفة كلمة المرور الصحيحة
       const user = cred.user;
       sendSuccessfulLoginAlert(email); // تنبيه للأدمن بأي دخول ناجح، حتى قبل اكتمال التحقق من البريد
-      if(user && !user.emailVerified){
-        try{ await user.sendEmailVerification(); }
-        catch(e){ console.error('sendEmailVerification failed', e); }
-        state.unverifiedUser = user;
-        state.isAdmin = false;
-        toast('تم إرسال رابط تحقق إلى بريدك، افتحه لإكمال الدخول');
-      }else{
-        toast('تم تسجيل الدخول بنجاح');
+      // نمسح علامة "تم التحقق في هذه الجلسة" في كل دخول جديد، ونطلب تحقق جديد دائماً —
+      // حتى لو كان الحساب emailVerified=true من قبل — لضمان تحقق في كل عملية دخول.
+      sessionStorage.removeItem('wadmadani:sessionVerified');
+      // لا نُعيد إرسال رابط جديد لو كان قد أُرسل رابط خلال آخر 5 دقائق من *نفس هذا الجهاز/المتصفح*
+      // (الرابط السابق لا يزال صالحاً، والمستخدم يقدر يفتحه ويتحقق به مباشرة) — هذا يمنع إزعاج
+      // المستخدم بإيميلات متكررة عند محاولات دخول متتالية سريعة، ويحمي من الوصول لحد Firebase للإرسال.
+      // أما من جهاز/متصفح جديد فمفيش أي أثر لإرسال سابق، فيُرسل رابط فوراً كالمعتاد.
+      const lastSentRaw = sessionStorage.getItem('wadmadani:lastVerifySentAt');
+      const lastSentAt = lastSentRaw ? parseInt(lastSentRaw, 10) : 0;
+      const RESEND_GAP_MS = 5 * 60 * 1000; // 5 دقائق
+      const recentlySent = lastSentAt && (Date.now() - lastSentAt) < RESEND_GAP_MS;
+      if(!recentlySent){
+        try{
+          await user.sendEmailVerification();
+          sessionStorage.setItem('wadmadani:lastVerifySentAt', String(Date.now()));
+        }catch(e){
+          console.error('sendEmailVerification failed', e);
+          if(e && e.code === 'auth/too-many-requests'){
+            toast('تم إرسال عدة روابط تحقق مؤخراً، الرجاء الانتظار قليلاً قبل المحاولة مجدداً');
+          }
+        }
       }
+      state.unverifiedUser = user;
+      state.isAdmin = false;
+      toast(recentlySent ? 'لديك رابط تحقق أُرسل مسبقاً، تحقق من بريدك' : 'تم إرسال رابط تحقق إلى بريدك، افتحه لإكمال الدخول');
       nav('#/admin');
     }catch(e){
       console.error(e);
@@ -1271,6 +1290,7 @@ function renderAdminVerifyEmail(app){
     try{
       await withTimeout(user.reload(), 8000);
       if(user.emailVerified){
+        sessionStorage.setItem('wadmadani:sessionVerified', '1');
         state.isAdmin = true;
         state.unverifiedUser = null;
         toast('تم التحقق، تم تسجيل الدخول بنجاح');
@@ -1287,20 +1307,34 @@ function renderAdminVerifyEmail(app){
     if(!user || resendBtn.disabled) return;
     try{
       await user.sendEmailVerification();
+      sessionStorage.setItem('wadmadani:lastVerifySentAt', String(Date.now()));
       toast('تم إرسال رابط تحقق جديد');
       startCooldown(60);
     }catch(e){
       console.error(e);
-      toast('تعذّر إرسال الرابط، حاول لاحقاً');
+      if(e && e.code === 'auth/too-many-requests'){
+        toast('تم إرسال عدة روابط تحقق مؤخراً، الرجاء الانتظار قليلاً قبل المحاولة مجدداً');
+        startCooldown(60);
+      }else{
+        toast('تعذّر إرسال الرابط، حاول لاحقاً');
+      }
     }
   });
   document.getElementById('cancelVerifyBtn').addEventListener('click', async ()=>{
     if(HAS_AUTH){ try{ await auth.signOut(); }catch(e){ console.error(e); } }
+    sessionStorage.removeItem('wadmadani:sessionVerified');
     state.isAdmin = false;
     state.unverifiedUser = null;
     nav('#/admin');
   });
-  startCooldown(60); // منع إعادة الإرسال فوراً بعد الإرسال التلقائي عند الدخول
+  // نحسب الوقت الفعلي المتبقي على إعادة الإرسال بناءً على آخر إرسال حقيقي (وليس 60 ثانية ثابتة دائماً) —
+  // فلو الدخول الحالي لم يُرسل رابطاً جديداً (لأنه ضمن الـ 5 دقائق من إرسال سابق)، يُحسب الوقت المتبقي
+  // من ذلك الإرسال السابق بدل إعادة تعيين المؤقت من الصفر في كل مرة.
+  const lastSentRaw2 = sessionStorage.getItem('wadmadani:lastVerifySentAt');
+  const lastSentAt2 = lastSentRaw2 ? parseInt(lastSentRaw2, 10) : 0;
+  const elapsedSec = lastSentAt2 ? Math.floor((Date.now() - lastSentAt2) / 1000) : 60;
+  const remaining = Math.max(0, 60 - elapsedSec);
+  if(remaining > 0) startCooldown(remaining);
 }
 
 function adminTopbar(active){
@@ -1318,6 +1352,7 @@ function bindTopbar(){
   const lb = document.getElementById('logoutBtn');
   if(lb) lb.addEventListener('click', async ()=>{
     if(HAS_AUTH){ await auth.signOut(); }
+    sessionStorage.removeItem('wadmadani:sessionVerified');
     state.isAdmin=false;
     nav('#/');
   });
