@@ -68,6 +68,9 @@ img{max-width:100%;display:block}
   display:inline-flex;align-items:center;gap:6px;transition:.2s;font-family:inherit;
 }
 .install-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+/* يمنع تحديد/نسخ النص فقط داخل صفحات القسم وصفحة تفاصيل المنشأة (رادع بسيط، لا يمنع لقطة الشاشة تقنياً) */
+.no-copy{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.no-copy img{-webkit-user-drag:none;pointer-events:auto}
 .back-btn{
   padding:10px 16px;border-radius:24px;font-weight:700;font-size:14px;cursor:pointer;
   background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);
@@ -293,22 +296,22 @@ html.lang-en .back-btn .back-arrow{display:inline-block;transform:scaleX(-1)}
 .bottom-nav a.more{color:#fff}
 .more-menu-backdrop{position:fixed;inset:0;background:var(--cream);z-index:90;display:flex;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .more-menu-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
-.more-menu{position:relative;width:100%;min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.more-menu{position:relative;width:100%;min-height:100vh;background:var(--cream);padding-bottom:calc(140px + env(safe-area-inset-bottom,0))}
 .more-menu-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 680px)/2));background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);color:#fff;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(8,47,47,.16)}
 .more-menu-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px}
-.more-menu-close.mm-back{border-radius:50%;font-size:20px;line-height:1}
-html.lang-en .more-menu-close.mm-back{transform:scaleX(-1)}
+.more-menu-close.mm-back{width:auto;height:auto;border-radius:20px;font-size:14px;font-weight:700;line-height:1;padding:9px 18px}
 .more-menu-item{display:flex;align-items:center;gap:16px;width:min(680px,calc(100% - 28px));margin:12px auto;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font:700 16px/1.4 inherit;text-align:inherit;box-shadow:0 5px 16px rgba(13,79,79,.07)}
 .more-menu-item:hover{background:var(--nile-tint)}
 .more-menu-item .mi-icon{width:34px;text-align:center;font-size:25px;color:var(--nile)}
 .more-menu-item .mi-copy{display:flex;flex-direction:column;gap:2px}
 .more-menu-item small{color:var(--ink-soft);font-size:11px;font-weight:500}
-.about-screen{width:min(760px,100%);min-height:100vh;background:var(--cream);padding-bottom:calc(110px + env(safe-area-inset-bottom,0))}
+.about-screen{width:min(760px,100%);min-height:100vh;background:var(--cream);padding-bottom:calc(40px + env(safe-area-inset-bottom,0))}
 .about-content{width:min(680px,calc(100% - 28px));margin:22px auto 40px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 6px 20px rgba(13,79,79,.08);white-space:pre-line;line-height:2;font-size:15px;color:var(--ink)}
 .about-content h2{margin:0 0 14px;color:var(--nile);font-size:25px}
 .about-content .about-copy{margin:0}
 body.more-open{overflow:hidden}
 body.more-open .bottom-nav{display:flex;z-index:100}
+body.sub-page-open .bottom-nav{display:none}
 html.lang-en body{direction:ltr}
 html.lang-en .more-menu-item{text-align:left}
 @media (min-width:900px){
@@ -333,7 +336,7 @@ html.lang-en .more-menu-item{text-align:left}
 </nav>
 <div class="more-menu-backdrop" id="moreMenuBackdrop" aria-hidden="true">
   <section class="more-menu" role="dialog" aria-label="المزيد">
-    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="more-menu-close" id="moreMenuClose" aria-label="إغلاق">×</button></div>
+    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="more-menu-close mm-back" id="moreMenuClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
     <button class="more-menu-item" id="languageMenuItem"><span class="mi-icon">🌐</span><span class="mi-copy"><span data-i18n="تغيير اللغة">تغيير اللغة</span><small data-i18n="English / العربية">English / العربية</small></span></button>
     <button class="more-menu-item" id="shareMenuItem"><span class="mi-icon">↗</span><span data-i18n="مشاركة التطبيق">مشاركة التطبيق</span></button>
     <a class="more-menu-item" href="https://wa.me/249991970907" target="_blank" rel="noopener noreferrer"><span class="mi-icon">💬</span><span data-i18n="تواصل معنا">تواصل معنا</span></a>
@@ -345,13 +348,13 @@ html.lang-en .more-menu-item{text-align:left}
 </div>
 <div class="more-menu-backdrop" id="aboutBackdrop" aria-hidden="true">
   <section class="about-screen" role="dialog" aria-label="عن التطبيق">
-    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="more-menu-close mm-back" id="aboutClose" aria-label="رجوع">→</button></div>
+    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="more-menu-close mm-back" id="aboutClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
     <article class="about-content" id="aboutContent"></article>
   </section>
 </div>
 <div class="more-menu-backdrop" id="privacyBackdrop" aria-hidden="true">
   <section class="about-screen" role="dialog" aria-label="سياسة الخصوصية">
-    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="more-menu-close mm-back" id="privacyClose" aria-label="رجوع">→</button></div>
+    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="more-menu-close mm-back" id="privacyClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
     <article class="about-content" id="privacyContent"></article>
   </section>
 </div>
@@ -501,6 +504,16 @@ function sendFailedLoginAlert(attemptedEmail){
     attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
   }).catch(err => console.error('emailjs send failed', err));
 }
+// إرسال تنبيه إيميل عند كل دخول ناجح (بريد وكلمة مرور صحيحان) للوحة التحكم، حتى لو لم يكتمل التحقق من البريد بعد.
+// يستخدم نفس خدمة EmailJS الحالية، لكن بقالب (Template) منفصل يجب إنشاؤه من لوحة EmailJS أولاً.
+function sendSuccessfulLoginAlert(loginEmail){
+  if(typeof emailjs === 'undefined') return;
+  emailjs.send('service_bj0zfkp', 'template_login_success', {
+    logged_in_email: loginEmail || '(غير معروف)',
+    login_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' }),
+    device_info: navigator.userAgent
+  }).catch(err => console.error('emailjs send failed', err));
+}
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
   let d = phoneDigits(p);
@@ -558,7 +571,7 @@ async function ensureSeed(){
 }
 
 /* ============ STATE ============ */
-const state = { sections: [], index: [], isAdmin: false };
+const state = { sections: [], index: [], isAdmin: false, unverifiedUser: null };
 
 async function loadState(){
   state.sections = (await sGet('sections')) || [];
@@ -619,21 +632,20 @@ function resizeImage(file, maxDim=640, quality=0.55){
 /* ============ ROUTER ============ */
 window.addEventListener('hashchange', render);
 window.addEventListener('DOMContentLoaded', () => {
-  // إزالة شاشة الترحيب الثابتة بمجرد أن يبدأ التطبيق بالعمل
-  const splash = document.getElementById('initial-splash');
-  if(splash) splash.remove();
-  // عرض الصفحة الرئيسية فوراً بالبيانات الافتراضية، ثم تحديثها بعد اكتمال التحميل.
-  // هذا يمنع شاشة الانتظار الطويلة عند الدخول أو الضغط على زر الرئيسية.
+  // نُبقي شاشة الترحيب ظاهرة حتى تجهز كل الأقسام الحقيقية، بدل عرض الأقسام
+  // الافتراضية فوراً ثم ظهور الباقي متأخراً بعد تحديث الصفحة — هكذا تظهر
+  // كل الأقسام دفعة واحدة عند أول عرض للصفحة الرئيسية.
   state.sections = DEFAULT_SECTIONS.slice();
   state.index = [];
   state.isAdmin = false;
-  render();
-  (async function bootstrapInBackground(){
+  (async function bootstrap(){
     try{
       await ensureSeed();
       await loadState();
-      render();
     }catch(e){ console.error('bootstrap failed', e); }
+    const splash = document.getElementById('initial-splash');
+    if(splash) splash.remove();
+    render();
     try{
       if(HAS_AUTH){
         try{ await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); }
@@ -641,7 +653,10 @@ window.addEventListener('DOMContentLoaded', () => {
         let resolved = false;
         auth.onAuthStateChanged(user => {
           resolved = true;
-          state.isAdmin = !!user;
+          // الدخول لا يُعتبر مكتملاً إلا إذا كان البريد "مُحقَّقاً" (emailVerified)؛
+          // لو المستخدم مسجّل دخوله لكن بريده غير محقق بعد، نعرض له شاشة التحقق بدل لوحة التحكم مباشرة
+          state.isAdmin = !!user && user.emailVerified;
+          state.unverifiedUser = (user && !user.emailVerified) ? user : null;
           render();
         });
         setTimeout(() => {
@@ -663,6 +678,12 @@ document.addEventListener('click', (e) => {
   if(!a) return;
   e.preventDefault();
   nav(a.getAttribute('href'));
+});
+
+// يمنع قائمة النقر بالزر الأيمن (نسخ/حفظ) فقط داخل صفحات القسم وصفحة تفاصيل المنشأة (.no-copy)
+// ملاحظة: هذا رادع بسيط لتقليل النسخ العرضي فقط، ولا يمنع لقطة الشاشة تقنياً لأنها تتم على مستوى نظام التشغيل خارج سيطرة أي موقع ويب.
+document.addEventListener('contextmenu', (e) => {
+  if(e.target.closest('.no-copy')) e.preventDefault();
 });
 
 function nav(hash){
@@ -1031,7 +1052,7 @@ function renderSectionPage(app, sectionId){
   const cats = [...new Set(items.map(b=>b.category).filter(Boolean))];
   app.innerHTML = `
     ${header(false, true)}
-    <div class="container">
+    <div class="container no-copy">
       <div class="crumbs"><a href="#/">الرئيسية</a> / ${esc(sec.name)}</div>
       <div class="section-title"><h2>${esc(sec.icon)} ${esc(sec.name)}</h2><div class="rule"></div></div>
       ${cats.length ? `<div class="filter-row" id="filterRow">
@@ -1094,7 +1115,7 @@ async function renderBizPage(app, id){
 
   app.innerHTML = `
     ${header(false, true)}
-    <div class="container">
+    <div class="container no-copy">
       <div class="crumbs"><a href="#/">الرئيسية</a> / <a href="#/section/${sec.id||biz.sectionId}">${esc(sec.name)}</a> / ${esc(biz.name)}</div>
 
       <div class="gallery">
@@ -1149,7 +1170,10 @@ async function renderBizPage(app, id){
    ================================================================ */
 async function renderAdmin(app, hash){
   const logged = state.isAdmin;
-  if(!logged){ return renderAdminLogin(app); }
+  if(!logged){
+    if(state.unverifiedUser) return renderAdminVerifyEmail(app);
+    return renderAdminLogin(app);
+  }
   const parts = hash.split('/'); // #,admin,tab,arg
   const tab = parts[2] || 'sections';
   if(tab === 'sections') return renderAdminSections(app);
@@ -1178,8 +1202,20 @@ async function renderAdminLogin(app){
     const pass = document.getElementById('loginPass').value;
     if(!email || !pass) return toast('أدخل البريد وكلمة المرور');
     try{
-      await withTimeout(auth.signInWithEmailAndPassword(email, pass), 10000);
-      toast('تم تسجيل الدخول بنجاح');
+      const cred = await withTimeout(auth.signInWithEmailAndPassword(email, pass), 10000);
+      // البريد وكلمة المرور صحيحان هنا فقط — لذلك تنبيه الدخول الناجح ورابط التحقق يُرسلان هنا مباشرة،
+      // وليس عبر زر منفصل يقدر أي زائر الضغط عليه بدون معرفة كلمة المرور الصحيحة
+      const user = cred.user;
+      sendSuccessfulLoginAlert(email); // تنبيه للأدمن بأي دخول ناجح، حتى قبل اكتمال التحقق من البريد
+      if(user && !user.emailVerified){
+        try{ await user.sendEmailVerification(); }
+        catch(e){ console.error('sendEmailVerification failed', e); }
+        state.unverifiedUser = user;
+        state.isAdmin = false;
+        toast('تم إرسال رابط تحقق إلى بريدك، افتحه لإكمال الدخول');
+      }else{
+        toast('تم تسجيل الدخول بنجاح');
+      }
       nav('#/admin');
     }catch(e){
       console.error(e);
@@ -1190,6 +1226,81 @@ async function renderAdminLogin(app){
   };
   document.getElementById('loginBtn').addEventListener('click', doLogin);
   document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+}
+
+/* ---- شاشة انتظار التحقق من البريد: تظهر فقط بعد نجاح البريد وكلمة المرور،
+   وقبل منح أي صلاحية دخول فعلية للوحة التحكم ---- */
+function renderAdminVerifyEmail(app){
+  const user = state.unverifiedUser;
+  const email = user && user.email ? user.email : '';
+  app.innerHTML = `
+    ${header(true, true)}
+    <div class="admin-login">
+      <h2>📩 تحقق من بريدك الإلكتروني</h2>
+      <p class="hint" style="font-size:14.5px;line-height:1.9">
+        أرسلنا رابط تحقق إلى <b>${esc(email)}</b>. افتح البريد واضغط الرابط لإكمال تسجيل الدخول للوحة التحكم،
+        ثم عد هنا واضغط "لقد تحققت من بريدي".
+      </p>
+      <button class="btn" id="checkVerifiedBtn" style="width:100%;margin-bottom:10px">لقد تحققت من بريدي</button>
+      <button class="btn secondary" id="resendVerifyBtn" style="width:100%;margin-bottom:10px">إعادة إرسال رابط التحقق</button>
+      <button class="btn secondary" id="cancelVerifyBtn" style="width:100%">تسجيل الخروج والعودة لتسجيل الدخول</button>
+    </div>
+    ${footer()}
+  `;
+  const resendBtn = document.getElementById('resendVerifyBtn');
+  let cooldown = 0;
+  let cooldownTimer = null;
+  function startCooldown(seconds){
+    cooldown = seconds;
+    resendBtn.disabled = true;
+    resendBtn.textContent = `إعادة الإرسال متاحة بعد ${cooldown} ثانية`;
+    clearInterval(cooldownTimer);
+    cooldownTimer = setInterval(()=>{
+      cooldown--;
+      if(cooldown <= 0){
+        clearInterval(cooldownTimer);
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'إعادة إرسال رابط التحقق';
+      }else{
+        resendBtn.textContent = `إعادة الإرسال متاحة بعد ${cooldown} ثانية`;
+      }
+    }, 1000);
+  }
+  document.getElementById('checkVerifiedBtn').addEventListener('click', async ()=>{
+    if(!user) return nav('#/admin');
+    try{
+      await withTimeout(user.reload(), 8000);
+      if(user.emailVerified){
+        state.isAdmin = true;
+        state.unverifiedUser = null;
+        toast('تم التحقق، تم تسجيل الدخول بنجاح');
+        nav('#/admin');
+      }else{
+        toast('لم يتم التحقق من البريد بعد');
+      }
+    }catch(e){
+      console.error(e);
+      toast('تعذّر التحقق الآن، حاول مجدداً');
+    }
+  });
+  resendBtn.addEventListener('click', async ()=>{
+    if(!user || resendBtn.disabled) return;
+    try{
+      await user.sendEmailVerification();
+      toast('تم إرسال رابط تحقق جديد');
+      startCooldown(60);
+    }catch(e){
+      console.error(e);
+      toast('تعذّر إرسال الرابط، حاول لاحقاً');
+    }
+  });
+  document.getElementById('cancelVerifyBtn').addEventListener('click', async ()=>{
+    if(HAS_AUTH){ try{ await auth.signOut(); }catch(e){ console.error(e); } }
+    state.isAdmin = false;
+    state.unverifiedUser = null;
+    nav('#/admin');
+  });
+  startCooldown(60); // منع إعادة الإرسال فوراً بعد الإرسال التلقائي عند الدخول
 }
 
 function adminTopbar(active){
@@ -1636,14 +1747,14 @@ if('serviceWorker' in navigator){
   var privacyItem = document.getElementById('privacyMenuItem');
   var privacyBackdrop = document.getElementById('privacyBackdrop');
   var privacyClose = document.getElementById('privacyClose');
-  function closePrivacy(){ if(privacyBackdrop){ privacyBackdrop.classList.remove('open'); privacyBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function closePrivacy(){ if(privacyBackdrop){ privacyBackdrop.classList.remove('open'); privacyBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open','sub-page-open'); } }
   function openPrivacy(e){
     if(e) e.preventDefault();
     closeMoreMenu();
     if(privacyBackdrop){
       var content = document.getElementById('privacyContent');
       if(content) content.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
-      privacyBackdrop.classList.add('open'); privacyBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+      privacyBackdrop.classList.add('open'); privacyBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open','sub-page-open');
     }
   }
   if(privacyItem) privacyItem.addEventListener('click', openPrivacy);
@@ -1652,14 +1763,14 @@ if('serviceWorker' in navigator){
   var aboutItem = document.getElementById('aboutMenuItem');
   var aboutBackdrop = document.getElementById('aboutBackdrop');
   var aboutClose = document.getElementById('aboutClose');
-  function closeAbout(){ if(aboutBackdrop){ aboutBackdrop.classList.remove('open'); aboutBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
+  function closeAbout(){ if(aboutBackdrop){ aboutBackdrop.classList.remove('open'); aboutBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open','sub-page-open'); } }
   function openAbout(e){
     if(e) e.preventDefault();
     closeMoreMenu();
     if(aboutBackdrop){
       var content = document.getElementById('aboutContent');
       if(content) content.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
-      aboutBackdrop.classList.add('open'); aboutBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open');
+      aboutBackdrop.classList.add('open'); aboutBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open','sub-page-open');
     }
   }
   if(aboutItem) aboutItem.addEventListener('click', openAbout);
