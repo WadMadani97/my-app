@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://api.emailjs.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>دليلك بود مدني</title>
 <link rel="manifest" href="manifest.json">
@@ -374,15 +374,6 @@ html.lang-en .more-menu-item{text-align:left}
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 
-<!-- EmailJS: تنبيه بالإيميل عند محاولة تسجيل دخول فاشلة للوحة التحكم -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>
-  (function(){
-    try{ emailjs.init({ publicKey: "AVLPvCfiftClMvF7Y" }); }
-    catch(e){ console.error('emailjs init failed', e); }
-  })();
-</script>
-
 <script>
 /* ============ STORAGE HELPERS ============
    ترتيب الأولوية تلقائياً:
@@ -505,24 +496,6 @@ function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toast._h); toast._h = setTimeout(()=> t.classList.remove('show'), 2200);
-}
-// إرسال تنبيه إيميل عند محاولة دخول فاشلة للوحة التحكم (لا علاقة له بـ Firebase نفسه)
-function sendFailedLoginAlert(attemptedEmail){
-  if(typeof emailjs === 'undefined') return;
-  emailjs.send('service_bj0zfkp', 'template_5iy1kf9', {
-    attempted_email: attemptedEmail || '(فارغ)',
-    attempt_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' })
-  }).catch(err => console.error('emailjs send failed', err));
-}
-// إرسال تنبيه إيميل عند كل دخول ناجح (بريد وكلمة مرور صحيحان) للوحة التحكم، حتى لو لم يكتمل التحقق من البريد بعد.
-// يستخدم نفس خدمة EmailJS الحالية، لكن بقالب (Template) منفصل يجب إنشاؤه من لوحة EmailJS أولاً.
-function sendSuccessfulLoginAlert(loginEmail){
-  if(typeof emailjs === 'undefined') return;
-  emailjs.send('service_bj0zfkp', 'template_login_success', {
-    logged_in_email: loginEmail || '(غير معروف)',
-    login_time: new Date().toLocaleString('ar-EG', { dateStyle:'medium', timeStyle:'short' }),
-    device_info: navigator.userAgent
-  }).catch(err => console.error('emailjs send failed', err));
 }
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
@@ -1219,7 +1192,6 @@ async function renderAdminLogin(app){
       // البريد وكلمة المرور صحيحان هنا فقط — لذلك تنبيه الدخول الناجح ورابط التحقق يُرسلان هنا مباشرة،
       // وليس عبر زر منفصل يقدر أي زائر الضغط عليه بدون معرفة كلمة المرور الصحيحة
       const user = cred.user;
-      sendSuccessfulLoginAlert(email); // تنبيه للأدمن بأي دخول ناجح، حتى قبل اكتمال التحقق من البريد
       // نمسح علامة "تم التحقق في هذه الجلسة" في كل دخول جديد، ونطلب تحقق جديد دائماً —
       // حتى لو كان الحساب emailVerified=true من قبل — لضمان تحقق في كل عملية دخول.
       sessionStorage.removeItem('wadmadani:sessionVerified');
@@ -1249,7 +1221,8 @@ async function renderAdminLogin(app){
     }catch(e){
       console.error(e);
       const isTimeout = e && e.message === 'timeout';
-      if(!isTimeout) sendFailedLoginAlert(email); // تنبيه فقط عند بيانات دخول خاطئة، وليس عند مشاكل الإنترنت
+      // لا نرسل البريد المدخل أو بيانات الجهاز إلى خدمة خارجية من المتصفح.
+      if(!isTimeout) console.warn('Login failed');
       toast(isTimeout ? 'انتهت المهلة، تحقق من الإنترنت وحاول مجدداً' : 'البريد أو كلمة المرور غير صحيحة');
     }
   };
@@ -1392,11 +1365,11 @@ function renderAdminSections(app){
               </div>
             </div>
             <div class="row-actions">
-              <button class="btn small secondary" data-manage="${s.id}">إدارة المنشآت</button>
-              <button class="btn small secondary" data-edit="${s.id}">تعديل</button>
-              <button class="icon-btn" data-up="${s.id}" title="تحريك لأعلى">↑</button>
-              <button class="icon-btn" data-down="${s.id}" title="تحريك لأسفل">↓</button>
-              <button class="icon-btn" data-del="${s.id}" title="حذف">🗑</button>
+              <button class="btn small secondary" data-manage="${esc(s.id)}">إدارة المنشآت</button>
+              <button class="btn small secondary" data-edit="${esc(s.id)}">تعديل</button>
+              <button class="icon-btn" data-up="${esc(s.id)}" title="تحريك لأعلى">↑</button>
+              <button class="icon-btn" data-down="${esc(s.id)}" title="تحريك لأسفل">↓</button>
+              <button class="icon-btn" data-del="${esc(s.id)}" title="حذف">🗑</button>
             </div>
           </div>`).join('') || `<div class="empty">لا توجد أقسام. أضف أول قسم.</div>`}
       </div>
@@ -1530,10 +1503,10 @@ function bizAdminRows(items){
         </div>
       </div>
       <div class="row-actions">
-        <button class="btn small secondary" data-edit="${b.id}">تعديل</button>
-        <button class="btn small ${b.active?'secondary':''}" data-toggle="${b.id}">${b.active?'إخفاء':'تفعيل'}</button>
-        <button class="btn small ${b.featured?'secondary':''}" data-feature="${b.id}">${b.featured?'إلغاء التمييز':'تمييز'}</button>
-        <button class="icon-btn" data-del="${b.id}">🗑</button>
+        <button class="btn small secondary" data-edit="${esc(b.id)}">تعديل</button>
+        <button class="btn small ${b.active?'secondary':''}" data-toggle="${esc(b.id)}">${b.active?'إخفاء':'تفعيل'}</button>
+        <button class="btn small ${b.featured?'secondary':''}" data-feature="${esc(b.id)}">${b.featured?'إلغاء التمييز':'تمييز'}</button>
+        <button class="icon-btn" data-del="${esc(b.id)}">🗑</button>
       </div>
     </div>`).join('');
 }
@@ -1577,11 +1550,11 @@ async function renderAdminBusinessForm(app, sectionId, bizId){
       <div class="crumbs"><a href="#/admin/sections" id="backLink1">الأقسام</a> / <a href="#/admin/businesses/${sectionId}" id="backLink2">${esc(sec.name)}</a> / ${isNew?'إضافة':'تعديل'}</div>
 
       <div class="admin-card">
-        <div class="field"><label>اسم المنشأة</label><input type="text" id="fName" value="${esc(biz.name)}"></div>
+        <div class="field"><label>اسم المنشأة</label><input type="text" id="fName" maxlength="160" value="${esc(biz.name)}"></div>
 
-        <div class="field"><label>التصنيف / الوسم</label><input type="text" id="fCategory" value="${esc(biz.category)}" placeholder="مثال: شعبي، مشويات، وجبات سريعة"></div>
+        <div class="field"><label>التصنيف / الوسم</label><input type="text" id="fCategory" maxlength="120" value="${esc(biz.category)}" placeholder="مثال: شعبي، مشويات، وجبات سريعة"></div>
 
-        <div class="field"><label>وصف مختصر</label><textarea id="fDesc">${esc(biz.description)}</textarea></div>
+        <div class="field"><label>وصف مختصر</label><textarea id="fDesc" maxlength="4000">${esc(biz.description)}</textarea></div>
 
         <div class="field"><label>أرقام الهاتف</label>
           <div id="phonesWrap">
@@ -1590,13 +1563,13 @@ async function renderAdminBusinessForm(app, sectionId, bizId){
           <button type="button" class="btn secondary small" id="addPhoneBtn">+ إضافة رقم آخر</button>
         </div>
 
-        <div class="field"><label>العنوان</label><input type="text" id="fAddress" value="${esc(biz.address)}"></div>
+        <div class="field"><label>العنوان</label><input type="text" id="fAddress" maxlength="300" value="${esc(biz.address)}"></div>
         <div class="field"><label>رابط الموقع على خرائط جوجل</label><input type="url" id="fMapUrl" value="${esc(biz.mapUrl)}" placeholder="https://maps.google.com/..."></div>
         <div style="display:flex;gap:10px">
           <div class="field" style="flex:1"><label>خط العرض Lat (اختياري - لعرض خريطة مصغرة)</label><input type="text" id="fLat" value="${esc(biz.lat)}"></div>
           <div class="field" style="flex:1"><label>خط الطول Lng (اختياري)</label><input type="text" id="fLng" value="${esc(biz.lng)}"></div>
         </div>
-        <div class="field"><label>ساعات العمل</label><input type="text" id="fHours" value="${esc(biz.workingHours)}" placeholder="مثال: يومياً 9ص - 12م"></div>
+        <div class="field"><label>ساعات العمل</label><input type="text" id="fHours" maxlength="160" value="${esc(biz.workingHours)}" placeholder="مثال: يومياً 9ص - 12م"></div>
 
         ${fields.map(f=>{
           const v = biz.extra[f.key];
@@ -1639,12 +1612,28 @@ async function renderAdminBusinessForm(app, sectionId, bizId){
   const fileInput = document.getElementById('fileInput');
   uploadBox.addEventListener('click', ()=> fileInput.click());
   fileInput.addEventListener('change', async ()=>{
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    const MAX_IMAGES = 6;
+    const selectedFiles = Array.from(fileInput.files || []);
+    if(biz.images.length + selectedFiles.length > MAX_IMAGES){
+      toast('الحد الأقصى 6 صور لكل منشأة');
+      fileInput.value = '';
+      return;
+    }
     uploadBox.textContent = '⏳ جارٍ رفع الصور...';
-    for(const file of fileInput.files){
+    for(const file of selectedFiles){
+      if(!file.type || !file.type.startsWith('image/')){
+        toast('يسمح برفع الصور فقط');
+        continue;
+      }
+      if(file.size > MAX_FILE_SIZE){
+        toast('حجم الصورة يجب ألا يتجاوز 5 ميجابايت');
+        continue;
+      }
       try{
         const dataUrl = await resizeImage(file);
         biz.images.push(dataUrl);
-      }catch(e){ console.error(e); }
+      }catch(e){ console.error('Image processing failed'); }
     }
     uploadBox.textContent = '📷 اضغط لاختيار صور أو أضف عدة صور دفعة واحدة';
     document.getElementById('imgThumbs').innerHTML = imgThumbsHtml(biz);
