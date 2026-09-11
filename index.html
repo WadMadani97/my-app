@@ -75,9 +75,13 @@ img{max-width:100%;display:block}
   display:inline-flex;align-items:center;gap:6px;transition:.2s;font-family:inherit;
 }
 .install-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-/* يمنع تحديد/نسخ النص فقط داخل صفحات القسم وصفحة تفاصيل المنشأة (رادع بسيط، لا يمنع لقطة الشاشة تقنياً) */
-.no-copy{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-.no-copy img{-webkit-user-drag:none;pointer-events:auto}
+/* يمنع تحديد/نسخ النص وقائمة السياق الافتراضية (نسخ الرابط/فتح الصورة/حفظ الصورة) داخل صفحات
+   القسم وصفحة تفاصيل المنشأة، على الديسكتوب والموبايل معاً (رادع بسيط، لا يمنع لقطة الشاشة تقنياً) */
+.no-copy{
+  -webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+}
+.no-copy img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;user-drag:none;pointer-events:auto}
+.no-copy a{-webkit-touch-callout:none}
 .back-btn{
   padding:10px 16px;border-radius:24px;font-weight:700;font-size:14px;cursor:pointer;
   background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);
@@ -1877,5 +1881,11 @@ if('serviceWorker' in navigator){
   document.addEventListener('contextmenu', suppressContextMenu);
 })();
 </script>
+
+<!-- ملاحظة: منع قائمة السياق (نسخ/حفظ الصورة/فتح الرابط) على الديسكتوب مطبّق مسبقاً عبر
+     مستمع contextmenu في السكربت الرئيسي أعلاه لعناصر .no-copy. على الموبايل، حيث لا يصل
+     حدث contextmenu دائماً عند الضغط المطوّل، تولّت خاصية -webkit-touch-callout:none في
+     تعريف .no-copy بملف الـ CSS منع ظهور تلك القائمة دون التأثير على التمرير أو الضغط العادي
+     على الروابط والأزرار داخل هذه الصفحات (اتصال، خرائط جوجل، مشاركة...). -->
 </body>
 </html>
