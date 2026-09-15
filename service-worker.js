@@ -1,5 +1,7 @@
 // Service worker: يخزن الصفحة الأساسية مؤقتاً ليعمل الموقع (بشكل محدود) بدون إنترنت
-const CACHE_NAME = 'wadmadani-cache-v1';
+// ملاحظة مهمة: غيّر رقم الإصدار (v2, v3, ...) في كل مرة تحدّث فيها index.html
+// حتى يجبر الأجهزة على حذف الكاش القديم بدل خلط نسخة قديمة بأخرى جديدة
+const CACHE_NAME = 'wadmadani-cache-v2';
 const CORE_ASSETS = [
   '/',
   '/index.html',
