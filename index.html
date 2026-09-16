@@ -395,15 +395,43 @@ let HAS_FIRESTORE = false;
 let HAS_AUTH = false;
 let db = null;
 let auth = null;
-try{
-  if(typeof firebase !== 'undefined'){
+let FIREBASE_INIT_ERROR = null;
+
+// تهيئة كل خدمة بشكل مستقل: تعطل خدمة واحدة لا يعطل Authentication أو Firestore.
+try {
+  if (typeof firebase === 'undefined') {
+    throw new Error('Firebase SDK غير محمل؛ تحقق من تحميل ملفات gstatic أو سياسة CSP');
+  }
+
+  if (!firebase.apps || !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
+  }
+
+  try {
     db = firebase.firestore();
     HAS_FIRESTORE = true;
+  } catch (e) {
+    console.error('Firestore initialization failed:', e);
+  }
+
+  try {
     auth = firebase.auth();
     HAS_AUTH = true;
+  } catch (e) {
+    console.error('Authentication initialization failed:', e);
   }
-}catch(e){ console.error('Firebase init failed', e); }
+} catch (e) {
+  FIREBASE_INIT_ERROR = e;
+  console.error('Firebase initialization failed:', e);
+}
+
+// تشخيص واضح في Console بدل إخفاء سبب المشكلة برسالة عامة.
+console.info('Firebase status', {
+  firestore: HAS_FIRESTORE,
+  auth: HAS_AUTH,
+  projectId: firebaseConfig.projectId,
+  initError: FIREBASE_INIT_ERROR ? FIREBASE_INIT_ERROR.message : null
+});
 
 const HAS_CLAUDE_STORAGE = (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function');
 const LS_PREFIX = 'wadmadani:';
@@ -625,7 +653,14 @@ window.addEventListener('DOMContentLoaded', () => {
     try{
       await ensureSeed();
       await loadState();
-    }catch(e){ console.error('bootstrap failed', e); }
+      // إذا فشلت القراءة السحابية ولم توجد بيانات محلية، اعرض الأقسام الافتراضية بدلاً من صفحة فارغة.
+      if(!state.sections.length && !state.index.length){
+        state.sections = DEFAULT_SECTIONS.slice();
+      }
+    }catch(e){
+      console.error('bootstrap failed', e);
+      if(!state.sections.length) state.sections = DEFAULT_SECTIONS.slice();
+    }
     const splash = document.getElementById('initial-splash');
     if(splash) splash.remove();
     render();
@@ -1348,7 +1383,7 @@ function renderAdminSections(app){
     ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
-      <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت). التخزين حالياً محلي في هذا المتصفح فقط كحل مؤقت.')}</div>
+      <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت وقواعد Firebase).')}</div>
       <div class="admin-topbar" style="margin-bottom:10px">
         <h2 style="margin:0;color:var(--nile)">الأقسام (${secs.length})</h2>
         <button class="btn" id="addSecBtn">+ إضافة قسم جديد</button>
