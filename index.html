@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://wad-madani-guide.firebaseapp.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>دليلك بود مدني</title>
 <link rel="manifest" href="manifest.json">
@@ -370,9 +370,9 @@ html.lang-en .more-menu-item{text-align:left}
 </div>
 
 <!-- Firebase (قاعدة بيانات سحابية مجانية - بدون بطاقة ائتمانية) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="firebase/firebase-app-compat.js"></script>
+<script src="firebase/firebase-firestore-compat.js"></script>
+<script src="firebase/firebase-auth-compat.js"></script>
 
 <script>
 /* ============ STORAGE HELPERS ============
@@ -397,35 +397,20 @@ let db = null;
 let auth = null;
 let FIREBASE_INIT_ERROR = null;
 
-// تهيئة كل خدمة بشكل مستقل: تعطل خدمة واحدة لا يعطل Authentication أو Firestore.
+// تهيئة الخدمات بشكل مستقل حتى لا تعطل مشكلة واحدة تسجيل الدخول أو قراءة البيانات.
 try {
   if (typeof firebase === 'undefined') {
-    throw new Error('Firebase SDK غير محمل؛ تحقق من تحميل ملفات gstatic أو سياسة CSP');
+    throw new Error('Firebase SDK غير محمل؛ تحقق من ملفات firebase المحلية');
   }
-
-  if (!firebase.apps || !firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
-  try {
-    db = firebase.firestore();
-    HAS_FIRESTORE = true;
-  } catch (e) {
-    console.error('Firestore initialization failed:', e);
-  }
-
-  try {
-    auth = firebase.auth();
-    HAS_AUTH = true;
-  } catch (e) {
-    console.error('Authentication initialization failed:', e);
-  }
+  if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  try { db = firebase.firestore(); HAS_FIRESTORE = true; }
+  catch (e) { console.error('Firestore initialization failed:', e); }
+  try { auth = firebase.auth(); HAS_AUTH = true; }
+  catch (e) { console.error('Authentication initialization failed:', e); }
 } catch (e) {
   FIREBASE_INIT_ERROR = e;
   console.error('Firebase initialization failed:', e);
 }
-
-// تشخيص واضح في Console بدل إخفاء سبب المشكلة برسالة عامة.
 console.info('Firebase status', {
   firestore: HAS_FIRESTORE,
   auth: HAS_AUTH,
@@ -653,10 +638,7 @@ window.addEventListener('DOMContentLoaded', () => {
     try{
       await ensureSeed();
       await loadState();
-      // إذا فشلت القراءة السحابية ولم توجد بيانات محلية، اعرض الأقسام الافتراضية بدلاً من صفحة فارغة.
-      if(!state.sections.length && !state.index.length){
-        state.sections = DEFAULT_SECTIONS.slice();
-      }
+      if(!state.sections.length && !state.index.length) state.sections = DEFAULT_SECTIONS.slice();
     }catch(e){
       console.error('bootstrap failed', e);
       if(!state.sections.length) state.sections = DEFAULT_SECTIONS.slice();
@@ -1383,7 +1365,7 @@ function renderAdminSections(app){
     ${header(true, true)}
     <div class="admin-shell">
       ${adminTopbar('sections')}
-      <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت وقواعد Firebase).')}</div>
+      <div class="security-note">${HAS_FIRESTORE ? '🌐 البيانات محفوظة سحابياً في قاعدة بيانات Firebase: كل زائر من أي جهاز يرى نفس البيانات فوراً.' : (HAS_CLAUDE_STORAGE ? '💡 التخزين حالياً عبر Claude: أي بيانات تضيفها تظهر لكل من يفتح هذه المعاينة.' : '⚠️ تعذّر الاتصال بقاعدة البيانات السحابية (تحقق من الإنترنت). التخزين حالياً محلي في هذا المتصفح فقط كحل مؤقت.')}</div>
       <div class="admin-topbar" style="margin-bottom:10px">
         <h2 style="margin:0;color:var(--nile)">الأقسام (${secs.length})</h2>
         <button class="btn" id="addSecBtn">+ إضافة قسم جديد</button>
