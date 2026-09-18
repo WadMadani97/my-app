@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://wad-madani-guide.firebaseapp.com https://www.google.com; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://wad-madani-guide.firebaseapp.com https://www.google.com; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'self';">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>دليلك بود مدني</title>
 <link rel="manifest" href="manifest.json">
@@ -452,18 +452,27 @@ async function sSet(key, value){
   }catch(e){ console.error('localStorage set failed', e); return false; }
 }
 async function sDelete(key){
+  // يُرجع true/false حسب نجاح الحذف الفعلي، كي تقدر عمليات الحذف بالجملة (مثل حذف قسم كامل)
+  // تتوقف عند أول فشل بدل المتابعة على بيانات غير متسقة (منشآت محذوفة جزئياً)
   if(HAS_FIRESTORE){
-    try{ await withTimeout(db.collection('kv').doc(key).delete(), 6000); }catch(e){ console.error(e); }
-    return;
+    try{ await withTimeout(db.collection('kv').doc(key).delete(), 6000); return true; }
+    catch(e){ console.error(e); return false; }
   }
   if(HAS_CLAUDE_STORAGE){
-    try{ await window.storage.delete(key, true); }catch(e){}
-    return;
+    try{ await window.storage.delete(key, true); return true; }
+    catch(e){ return false; }
   }
-  try{ localStorage.removeItem(LS_PREFIX + key); }catch(e){}
+  try{ localStorage.removeItem(LS_PREFIX + key); return true; }
+  catch(e){ return false; }
 }
 
 function uid(){ return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+// يؤخر تنفيذ الدالة حتى يتوقف المستخدم عن الكتابة لمدة `wait` مللي ثانية — يمنع إعادة
+// رسم نتائج البحث بالكامل مع كل ضغطة زر، خصوصاً مع فهرس منشآت كبير
+function debounce(fn, wait=200){
+  let t;
+  return function(...args){ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), wait); };
+}
 function esc(s){ return (s||'').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 // يسمح فقط بروابط http/https الآمنة، ويمنع روابط javascript:/data: التي قد تُستخدم لهجمات XSS
 function safeUrl(u){
@@ -564,8 +573,8 @@ async function loadState(){
   state.sections = (await sGet('sections')) || [];
   state.index = (await sGet('businesses-index')) || [];
 }
-async function saveSections(){ await sSet('sections', state.sections); }
-async function saveIndex(){ await sSet('businesses-index', state.index); }
+async function saveSections(){ return await sSet('sections', state.sections); }
+async function saveIndex(){ return await sSet('businesses-index', state.index); }
 async function loadBiz(id){
   // تخزين مؤقت في الذاكرة: إن فُتحت نفس المنشأة سابقاً في هذه الجلسة، لا داعي
   // لطلب Firestore مرة أخرى (يُحدَّث تلقائياً عند أي تعديل عبر saveBiz/deleteBiz)
@@ -576,7 +585,10 @@ async function loadBiz(id){
   return biz;
 }
 async function saveBiz(biz){
-  await sSet('biz:'+biz.id, biz);
+  // يُرجع true/false حسب نجاح الحفظ الفعلي في Firestore، كي تقدر الشاشة المستدعية تعرض
+  // رسالة خطأ صحيحة بدل افتراض النجاح دائماً
+  const ok = await sSet('biz:'+biz.id, biz);
+  if(!ok) return false;
   if(!state.bizCache) state.bizCache = {};
   state.bizCache[biz.id] = biz; // تحديث التخزين المؤقت فوراً بعد الحفظ
   const i = state.index.findIndex(b=>b.id===biz.id);
@@ -585,12 +597,15 @@ async function saveBiz(biz){
     phone: (biz.phones&&biz.phones[0])||'', desc:biz.description||''};
   if(i>=0) state.index[i] = light; else state.index.push(light);
   await saveIndex();
+  return true;
 }
 async function deleteBiz(id){
-  await sDelete('biz:'+id);
+  const ok = await sDelete('biz:'+id);
+  if(!ok) return false; // فشل الحذف الفعلي من Firestore: لا نلمس الفهرس المحلي كي لا يفقد تزامنه
   if(state.bizCache) delete state.bizCache[id]; // إزالة من التخزين المؤقت بعد الحذف
   state.index = state.index.filter(b=>b.id!==id);
   await saveIndex();
+  return true;
 }
 
 /* ============ IMAGE RESIZE ============ */
@@ -1026,13 +1041,13 @@ function renderSearchPage(app){
   `;
   bindBizGridButtons();
   const input = document.getElementById('pageSearch');
-  input.addEventListener('input', ()=>{
+  input.addEventListener('input', debounce(()=>{
     const val = input.value.trim();
     const res = val ? searchIndex(val) : [];
     document.getElementById('searchResultsTitle').textContent = `نتائج "${val}" (${res.length})`;
     document.getElementById('searchResultsWrap').innerHTML = res.length ? bizGridHtml(res) : `<div class="empty"><span class="emoji">🔎</span>لا توجد نتائج مطابقة</div>`;
     bindBizGridButtons();
-  });
+  }, 200));
   input.addEventListener('keydown', e=>{ if(e.key==='Enter') nav('#/search?q='+encodeURIComponent(input.value.trim())); });
 }
 
@@ -1390,9 +1405,21 @@ function renderAdminSections(app){
     if(!confirm('حذف هذا القسم سيؤدي أيضاً لحذف كل المنشآت بداخله. هل أنت متأكد؟')) return;
     const secId = b.dataset.del;
     const toDelete = state.index.filter(x=>x.sectionId===secId);
-    for(const biz of toDelete) await deleteBiz(biz.id);
+    toast('جارٍ حذف المنشآت...');
+    // نتوقف عند أول فشل بدل الاستمرار على بيانات غير متسقة (بعض المنشآت محذوفة من
+    // Firestore وبعضها لا يزال موجوداً بينما القسم نفسه لم يُحذف بعد). القسم لا يُحذف
+    // إلا بعد نجاح حذف كل منشآته فعلياً.
+    for(const biz of toDelete){
+      const ok = await deleteBiz(biz.id);
+      if(!ok){
+        toast('تعذّر حذف بعض المنشآت، تحقق من الإنترنت وحاول مجدداً. لم يُحذف القسم.');
+        renderAdminSections(app);
+        return;
+      }
+    }
     state.sections = state.sections.filter(s=>s.id!==secId);
-    await saveSections();
+    const secOk = await saveSections();
+    if(!secOk){ toast('تم حذف المنشآت لكن تعذّر حذف القسم نفسه، حاول مجدداً'); renderAdminSections(app); return; }
     toast('تم حذف القسم'); renderAdminSections(app);
   }));
 }
@@ -1426,7 +1453,7 @@ function renderAdminSectionForm(app, id){
         <div class="field"><label>اسم القسم</label><input type="text" id="fName" maxlength="120" value="${esc(sec.name)}" placeholder="مثال: المطاعم"></div>
         <div class="field">
           <label>الأيقونة (اختر أو الصق إيموجي)</label>
-          <input type="text" id="fIcon" value="${esc(sec.icon)}" style="width:70px;text-align:center;font-size:20px">
+          <input type="text" id="fIcon" maxlength="4" value="${esc(sec.icon)}" style="width:70px;text-align:center;font-size:20px">
           <div class="emoji-picker">
             ${emojis.map(e=>`<button type="button" data-emoji="${e}" class="${e===sec.icon?'active':''}">${e}</button>`).join('')}
           </div>
@@ -1489,12 +1516,12 @@ function renderAdminBusinesses(app, sectionId){
   document.getElementById('backLink').addEventListener('click', e=>{e.preventDefault(); nav('#/admin/sections');});
   document.getElementById('addBizBtn').addEventListener('click', ()=> nav('#/admin/biz-edit/'+sectionId+'/new'));
   bindBizAdminRows(sectionId, items);
-  document.getElementById('adminSearch').addEventListener('input', e=>{
+  document.getElementById('adminSearch').addEventListener('input', debounce(e=>{
     const q = e.target.value.toLowerCase();
     const filtered = items.filter(b=>b.name.toLowerCase().includes(q) || (b.category||'').toLowerCase().includes(q));
     document.getElementById('listWrap').innerHTML = bizAdminRows(filtered);
     bindBizAdminRows(sectionId, filtered);
-  });
+  }, 200));
 }
 function bizAdminRows(items){
   if(!items.length) return `<div class="empty">لا توجد منشآت. أضف أول منشأة في هذا القسم.</div>`;
@@ -1527,7 +1554,8 @@ function bindBizAdminRows(sectionId, items){
   }));
   document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click', async ()=>{
     if(!confirm('هل تريد حذف هذه المنشأة نهائياً؟')) return;
-    await deleteBiz(b.dataset.del);
+    const ok = await deleteBiz(b.dataset.del);
+    if(!ok){ toast('تعذّر الحذف، تحقق من الإنترنت وحاول مجدداً'); return; }
     toast('تم الحذف'); renderAdminBusinesses(document.getElementById('app'), sectionId);
   }));
 }
@@ -1670,11 +1698,9 @@ async function renderAdminBusinessForm(app, sectionId, bizId){
       if(!el) return;
       biz.extra[f.key] = f.type==='checkbox' ? el.checked : el.value.trim();
     });
-    const savingToast = 'جارٍ الحفظ...';
-    toast(savingToast);
-    const ok = await sSet('biz:'+biz.id, biz);
+    toast('جارٍ الحفظ...');
+    const ok = await saveBiz(biz);
     if(!ok){ toast('حدث خطأ أثناء الحفظ، تحقق من حجم الصور'); return; }
-    await saveBiz(biz);
     toast('تم الحفظ بنجاح');
     nav('#/admin/businesses/'+sectionId);
   });
