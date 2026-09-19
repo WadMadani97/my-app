@@ -154,16 +154,12 @@ html.lang-en .back-btn .back-arrow{display:inline-block;transform:scaleX(-1)}
 .section-title h2{font-size:22px;margin:0;color:var(--nile)}
 .section-title .rule{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--ochre) 0 8px, transparent 8px 14px)}
 
-/* featured */
-.feat-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
-.feat-card{
-  flex:0 0 220px;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
-  border:1px solid var(--line);scroll-snap-align:start;
+/* featured — نفس حجم وشكل حواف بطاقات الأقسام (.cat-card)، فقط صورة مصغّرة دائرية إضافية */
+.feat-thumb{
+  width:36px;height:36px;border-radius:50%;margin:0 auto 4px;
+  background:var(--nile-tint) center/cover no-repeat;display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:var(--nile);
 }
-.feat-card .thumb{height:120px;background:var(--nile-tint) center/cover no-repeat;display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--nile)}
-.feat-card .body{padding:12px}
-.feat-card .tag{display:inline-block;background:var(--ochre);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;margin-bottom:6px}
-.feat-card .name{font-weight:700;font-size:15px}
 
 /* biz grid */
 .biz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin-top:6px}
@@ -687,6 +683,18 @@ document.addEventListener('click', (e) => {
   nav(a.getAttribute('href'));
 });
 
+// معالجة خاصة لروابط الاتصال / واتساب / خرائط جوجل: تطبيقات تحويل الموقع لتطبيق أندرويد
+// (WebView بسيط مثل WebsiteToApp أو WebToApp) غالباً لا تفتح target="_blank" ولا tel:/wa.me
+// بشكل تلقائي كما يفعل المتصفح العادي. استخدام location.href بدل فتح نافذة جديدة يرفع
+// التوافق بشكل كبير مع هذا النوع من التطبيقات، لأنها عادة تعترض التنقل داخل نفس الصفحة
+// وتُمرره لنظام أندرويد ليفتح التطبيق المناسب (الهاتف/واتساب/خرائط جوجل).
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="tel:"], a[href*="wa.me"], a[href*="api.whatsapp.com"], a[href*="maps.google"], a[href*="google.com/maps"]');
+  if(!a) return;
+  e.preventDefault();
+  location.href = a.getAttribute('href');
+});
+
 // يمنع قائمة النقر بالزر الأيمن (نسخ/حفظ) فقط داخل صفحات القسم وصفحة تفاصيل المنشأة (.no-copy)
 // ملاحظة: هذا رادع بسيط لتقليل النسخ العرضي فقط، ولا يمنع لقطة الشاشة تقنياً لأنها تتم على مستوى نظام التشغيل خارج سيطرة أي موقع ويب.
 document.addEventListener('contextmenu', (e) => {
@@ -995,14 +1003,12 @@ function renderHome(app){
 
       ${featured.length ? `
       <div class="section-title"><h2>⭐ مميزة</h2><div class="rule"></div></div>
-      <div class="feat-scroll">
+      <div class="cat-grid feat-grid">
         ${featured.map(b=>`
-          <a class="feat-card" href="#/biz/${b.id}">
-            <div class="thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'✨'}</div>
-            <div class="body">
-              <span class="tag">${esc(b.category||'')}</span>
-              <div class="name">${esc(b.name)}</div>
-            </div>
+          <a class="cat-card feat-card" href="#/biz/${b.id}">
+            <div class="feat-thumb" style="${b.image?`background-image:url('${safeImageUrl(b.image)}')`:''}">${b.image?'':'✨'}</div>
+            <div class="name">${esc(b.name)}</div>
+            <div class="count">${esc(b.category||'')}</div>
           </a>`).join('')}
       </div>` : ''}
     </div>
