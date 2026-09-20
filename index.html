@@ -48,6 +48,8 @@ img{max-width:100%;display:block}
 .site-header{
   background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);
   color:#fff;padding:18px 16px 0;position:sticky;top:0;z-index:50;
+  border:1.5px solid #000;border-radius:0 0 18px 18px;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
 }
 .header-row{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;gap:10px}
 .logo{display:flex;align-items:center;gap:14px;font-size:26px;transition:.2s}
@@ -298,23 +300,26 @@ html.lang-en .back-btn .back-arrow{display:inline-block;transform:scaleX(-1)}
 /* bottom nav bar */
 .bottom-nav{
   position:fixed;right:0;left:0;bottom:0;z-index:70;
-  display:flex;justify-content:space-around;align-items:stretch;
-  background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);border-top:1px solid rgba(255,255,255,.18);
+  display:flex;justify-content:space-around;align-items:stretch;gap:6px;
+  background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);
+  border:1.5px solid #000;border-radius:18px 18px 0 0;
   box-shadow:0 -6px 18px rgba(13,79,79,.10);
-  min-height:88px;padding-bottom:env(safe-area-inset-bottom,0);
+  min-height:88px;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0));
 }
 .bottom-nav a{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  min-height:88px;padding:12px 4px 11px;font-size:13px;font-weight:700;color:#fff;transition:.15s;
+  padding:10px 4px;font-size:13px;font-weight:700;color:#fff;transition:.15s;
+  border:1px solid rgba(0,0,0,.35);border-radius:14px;
 }
+.bottom-nav a:hover{border-color:#000;background:rgba(255,255,255,.08)}
 .bottom-nav a .bn-ic{font-size:25px;line-height:1;margin-bottom:3px}
-.bottom-nav a.active{color:#fff}
+.bottom-nav a.active{color:#fff;border-color:#000;background:rgba(0,0,0,.14)}
 .bottom-nav a.contact{color:#fff}
 .bottom-nav a.more{color:#fff}
 .more-menu-backdrop{position:fixed;inset:0;background:var(--cream);z-index:90;display:flex;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .more-menu-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
 .more-menu{position:relative;width:100%;min-height:100vh;background:var(--cream);padding-bottom:calc(140px + env(safe-area-inset-bottom,0))}
-.more-menu-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 680px)/2));background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);color:#fff;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(8,47,47,.16)}
+.more-menu-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 680px)/2));background:linear-gradient(160deg,var(--nile) 0%,var(--nile-dark) 100%);color:#fff;font-weight:800;font-size:20px;border:1.5px solid #000;border-radius:0 0 18px 18px;box-shadow:0 4px 16px rgba(8,47,47,.16)}
 .more-menu-close{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px}
 .more-menu-close.mm-back{width:auto;height:auto;border-radius:20px;font-size:14px;font-weight:700;line-height:1;padding:9px 18px}
 .more-menu-item{display:flex;align-items:center;gap:16px;width:min(680px,calc(100% - 28px));margin:12px auto;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);font:700 16px/1.4 inherit;text-align:inherit;box-shadow:0 5px 16px rgba(13,79,79,.07)}
@@ -326,6 +331,15 @@ html.lang-en .back-btn .back-arrow{display:inline-block;transform:scaleX(-1)}
 .about-content{width:min(680px,calc(100% - 28px));margin:22px auto 40px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 6px 20px rgba(13,79,79,.08);white-space:pre-line;line-height:2;font-size:15px;color:var(--ink)}
 .about-content h2{margin:0 0 14px;color:var(--nile);font-size:25px}
 .about-content .about-copy{margin:0}
+.addbiz-content{white-space:normal;line-height:1.9}
+.addbiz-content h2{margin:0 0 12px;line-height:1.5}
+.addbiz-content h3{margin:22px 0 6px;color:var(--nile);font-size:18px}
+.addbiz-content p{margin:8px 0}
+.addbiz-content ul{margin:4px 0 0;padding-inline-start:22px}
+.addbiz-content li{margin:2px 0}
+.addbiz-content .ab-wa{display:flex;align-items:center;justify-content:center;width:100%;margin:10px 0 4px;padding:14px 12px;border-radius:14px;background:#128C7E;color:#fff;font-weight:800;font-size:22px;letter-spacing:1px;line-height:1.4;text-decoration:none;box-shadow:0 4px 12px rgba(18,140,126,.25)}
+.addbiz-content .ab-wa:active{transform:scale(.98)}
+.addbiz-content .ab-sign{margin:22px 0 0;text-align:center;color:var(--nile);font-weight:800}
 body.more-open{overflow:hidden}
 body.more-open .bottom-nav{display:flex;z-index:100}
 body.sub-page-open .bottom-nav{display:none}
@@ -347,31 +361,37 @@ html.lang-en .more-menu-item{text-align:left}
 <!-- شريط تنقل سفلي ثابت — إضافة عرض فقط، لا يغيّر أي كود أو أوامر شغّالة بالموقع -->
 <nav class="bottom-nav" id="bottomNav">
   <a href="#/" data-tab="home"><span class="bn-ic">🏠</span><span data-i18n="الرئيسية">الرئيسية</span></a>
-  <a href="https://wa.me/249127985731?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" class="contact" target="_blank" rel="noopener noreferrer"><span class="bn-ic">🛍️</span><span data-i18n="أضف نشاطك">أضف نشاطك</span></a>
   <a href="#/search" data-tab="search"><span class="bn-ic">🔍</span><span data-i18n="البحث">البحث</span></a>
+  <a href="#" id="bnAddBiz" class="contact"><span class="bn-ic">🛍️</span><span data-i18n="أضف نشاطك">أضف نشاطك</span></a>
   <a href="#" id="bnMore" class="more"><span class="bn-ic">☰</span><span data-i18n="المزيد">المزيد</span></a>
 </nav>
 <div class="more-menu-backdrop" id="moreMenuBackdrop" aria-hidden="true">
   <section class="more-menu" role="dialog" aria-label="المزيد">
-    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="more-menu-close mm-back" id="moreMenuClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
+    <div class="more-menu-head"><span data-i18n="المزيد">المزيد</span><button class="back-btn" type="button" id="moreMenuClose" data-action="back" aria-label="رجوع"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button></div>
     <button class="more-menu-item" id="languageMenuItem"><span class="mi-icon">🌐</span><span class="mi-copy"><span data-i18n="تغيير اللغة">تغيير اللغة</span><small data-i18n="English / العربية">English / العربية</small></span></button>
     <button class="more-menu-item" id="shareMenuItem"><span class="mi-icon">↗</span><span data-i18n="مشاركة التطبيق">مشاركة التطبيق</span></button>
-    <a class="more-menu-item" href="https://wa.me/249127985731" target="_blank" rel="noopener noreferrer"><span class="mi-icon">💬</span><span data-i18n="تواصل معنا">تواصل معنا</span></a>
-    <a class="more-menu-item" href="https://wa.me/249127985731?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%85%D9%86%D8%AA%D8%AC%D9%8A%20%D8%A3%D9%88%20%D9%86%D8%B4%D8%A7%D8%B7%D9%8A%20%D9%81%D9%8A%20%D8%AF%D9%84%D9%8A%D9%84%D9%83%20%D8%A8%D9%88%D8%AF%20%D9%85%D8%AF%D9%86%D9%8A" target="_blank" rel="noopener noreferrer"><span class="mi-icon">🛍️</span><span data-i18n="أضف منتجك أو نشاطك">أضف منتجك أو نشاطك</span></a>
+    <button class="more-menu-item" id="addBizMenuItem"><span class="mi-icon">🛍️</span><span data-i18n="أضف منتجك أو نشاطك">أضف منتجك أو نشاطك</span></button>
     <button class="more-menu-item" id="aboutMenuItem"><span class="mi-icon">ⓘ</span><span data-i18n="عن التطبيق">عن التطبيق</span></button>
     <button class="more-menu-item" id="privacyMenuItem"><span class="mi-icon">🛡️</span><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span></button>
+    <button class="more-menu-item" id="exitMenuItem"><span class="mi-icon" style="color:var(--brick)">↪️</span><span data-i18n="الخروج">الخروج</span></button>
   </section>
 </div>
 <div class="more-menu-backdrop" id="aboutBackdrop" aria-hidden="true">
   <section class="about-screen" role="dialog" aria-label="عن التطبيق">
-    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="more-menu-close mm-back" id="aboutClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
+    <div class="more-menu-head"><span data-i18n="عن التطبيق">عن التطبيق</span><button class="back-btn" type="button" id="aboutClose" data-action="back" aria-label="رجوع"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button></div>
     <article class="about-content" id="aboutContent"></article>
   </section>
 </div>
 <div class="more-menu-backdrop" id="privacyBackdrop" aria-hidden="true">
   <section class="about-screen" role="dialog" aria-label="سياسة الخصوصية">
-    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="more-menu-close mm-back" id="privacyClose" aria-label="رجوع" data-i18n="رجوع">رجوع</button></div>
+    <div class="more-menu-head"><span data-i18n="سياسة الخصوصية">سياسة الخصوصية</span><button class="back-btn" type="button" id="privacyClose" data-action="back" aria-label="رجوع"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button></div>
     <article class="about-content" id="privacyContent"></article>
+  </section>
+</div>
+<div class="more-menu-backdrop" id="addBizBackdrop" aria-hidden="true">
+  <section class="about-screen" role="dialog" aria-label="أضف نشاطك">
+    <div class="more-menu-head"><span data-i18n="أضف نشاطك">أضف نشاطك</span><button class="back-btn" type="button" id="addBizClose" data-action="back" aria-label="رجوع"><span class="back-arrow">→</span><span data-i18n="رجوع">رجوع</span></button></div>
+    <article class="about-content addbiz-content" id="addBizContent"></article>
   </section>
 </div>
 
@@ -515,6 +535,41 @@ function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(toast._h); toast._h = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+/* ============ زر «الخروج» بقائمة المزيد ============
+   يحاول إغلاق التطبيق/الصفحة فعلياً بعدة طرق حسب البيئة التي تعمل بها:
+   1) تطبيقات أندرويد الناتجة عن تحويل الموقع إلى تطبيق (WebView) عادة تحقن واجهة
+      جافاسكربت خاصة بها بأسماء شائعة (Android / AndroidInterface / JSInterface / JSBridge...)
+      — نحاول استدعاء أي منها أولاً فتُغلق التطبيق فعلياً من داخل أندرويد.
+   2) تطبيقات كوردوفا/فون جاب المبنية بنفس الطريقة: navigator.app.exitApp().
+   3) نافذة متصفح عادية: window.close() (يعمل داخل أغلب تطبيقات الـWebView حتى لو لم
+      تُفتح النافذة عبر سكربت، ويعمل في المتصفح فقط إذا فتح الموقع نافذة/تبويب جديد عبر سكربت).
+   4) إن تعذّر الإغلاق برمجياً (متصفحات سطح المكتب تمنع إغلاق تبويب فتحه المستخدم يدوياً
+      لأسباب أمنية) نعرض رسالة واضحة للمستخدم بدل ترك الزر بلا أثر. */
+function exitApp(){
+  var confirmMsg = currentLanguage === 'en' ? 'Do you want to exit the app?' : 'هل تريد الخروج من التطبيق؟';
+  if(!window.confirm(confirmMsg)) return;
+  try{
+    if(window.Android){
+      if(typeof window.Android.exitApp === 'function') return void window.Android.exitApp();
+      if(typeof window.Android.closeApp === 'function') return void window.Android.closeApp();
+      if(typeof window.Android.close === 'function') return void window.Android.close();
+    }
+    if(window.AndroidInterface){
+      if(typeof window.AndroidInterface.exitApp === 'function') return void window.AndroidInterface.exitApp();
+      if(typeof window.AndroidInterface.closeApp === 'function') return void window.AndroidInterface.closeApp();
+    }
+    if(window.JSInterface && typeof window.JSInterface.closeApp === 'function') return void window.JSInterface.closeApp();
+    if(window.JSBridge && typeof window.JSBridge.closeApp === 'function') return void window.JSBridge.closeApp();
+    if(window.MobileApp && typeof window.MobileApp.exit === 'function') return void window.MobileApp.exit();
+    if(window.navigator && window.navigator.app && typeof window.navigator.app.exitApp === 'function') return void window.navigator.app.exitApp();
+  }catch(err){ /* نتجاهل الخطأ ونكمل للمحاولة التالية دون إيقاف التنفيذ */ }
+  try{ window.close(); }catch(err){}
+  setTimeout(function(){
+    if(!document.hidden){
+      toast(currentLanguage === 'en' ? 'You can now close this browser tab' : 'يمكنك الآن إغلاق نافذة المتصفح');
+    }
+  }, 350);
 }
 function phoneDigits(p){ return (p||'').replace(/[^\d]/g,''); }
 function waLink(p){
@@ -724,7 +779,7 @@ async function render(){
 
 /* ============ LANGUAGE SYSTEM ============ */
 const UI_TRANSLATIONS = {
-  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','رجوع':'Back','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','تواصل معنا':'Contact us','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
+  'دليلك بود مدني':'Wad Madani Guide','الرئيسية':'Home','رجوع':'Back','الأقسام':'Sections','البحث':'Search','المزيد':'More','أضف نشاطك':'Add your business','أضف منتجك أو نشاطك':'Add your product or business','الخروج':'Exit','تغيير اللغة':'Change language','مشاركة التطبيق':'Share app','واتساب':'WhatsApp','عن التطبيق':'About the app','سياسة الخصوصية':'Privacy policy','إغلاق':'Close','English / العربية':'English / Arabic',
   'دليلك المحلي الشامل بود مدني، كل ما تحتاجه في مكان واحد: متاجر ومحلات وخدمات... مع معلومات التواصل والتفاصيل بكل سهولة.':'Your complete local guide to Wad Madani. Everything you need in one place: shops, stores and services, with contact details and information.',
   'دليلك المحلي الشامل':'Your complete local guide','في ود مدني':'in Wad Madani','كل ما تحتاجه في مكان واحد':'Everything you need in one place','مطاعم':'restaurants','فنادق':'hotels','أطباء':'doctors','محلات وخدمات':'shops and services','مع معلومات التواصل والتفاصيل بكل سهولة':'with contact details and information','أضف نشاطك أو خدمتك معنا':'Add your business or service','أضف عملك أو خدمتك في الدليل':'Add your business or service to the guide','تثبيت التطبيق':'Install app','التثبيت غير متاح حالياً في هذا المتصفح':'Installation is not available in this browser','تم تثبيت التطبيق بنجاح 🎉':'App installed successfully 🎉','منشأة':'businesses','المطاعم':'Restaurants','الفنادق والشقق الفندقية':'Hotels & furnished apartments','الأطباء والأخصائيون':'Doctors & specialists','الصيدليات':'Pharmacies','المستشفيات والمستوصفات':'Hospitals & clinics','الدلفري والتوصيل':'Delivery & courier','المميز':'Featured','مميزة':'Featured','لا توجد نتائج':'No results','لا توجد منشآت':'No businesses found','لا توجد أقسام بعد. أضفها من لوحة التحكم.':'No sections yet. Add them from the admin panel.','القسم غير موجود':'Section not found','المنشأة غير موجودة':'Business not found','ابحث...':'Search...','ابحث داخل هذا القسم...':'Search this section...','الرجاء الانتظار... دليلك بود مدني':'Please wait... Wad Madani Guide','جميع الحقوق محفوظة':'All rights reserved','لوحة التحكم':'Admin panel','إضافة منشأة':'Add business','إضافة':'Add','تعديل':'Edit','حذف':'Delete','حفظ':'Save','إلغاء':'Cancel','اسم المنشأة':'Business name','التصنيف / الوسم':'Category / tag','وصف مختصر':'Short description','أرقام الهاتف':'Phone numbers','العنوان':'Address','ساعات العمل':'Working hours','الصور':'Photos','مفعّلة وظاهرة للزوار':'Active and visible to visitors','منشأة مميزة':'Featured business','كلمة المرور':'Password','البريد الإلكتروني':'Email','تسجيل الدخول':'Log in','تسجيل الخروج':'Log out','تم الحفظ':'Saved','تم الحذف':'Deleted','تم التفعيل':'Activated','تم الإخفاء':'Hidden','الموقع':'Location','الهاتف':'Phone','الوصف':'Description','الخدمات':'Services','معلومات التواصل':'Contact information','مشاركة':'Share','نسخ الرابط':'Copy link','فتح في خرائط جوجل':'Open in Google Maps'
 };
@@ -1783,23 +1838,59 @@ if('serviceWorker' in navigator){
 
   var moreBtn = document.getElementById('bnMore');
   var moreBackdrop = document.getElementById('moreMenuBackdrop');
-  var closeMore = document.getElementById('moreMenuClose');
+  /* ===== مكدّس الشاشات الفرعية (المزيد / عن التطبيق / الخصوصية / أضف نشاطك) =====
+     كل شاشة فرعية تُفتح تدفع خطوة جديدة في تاريخ المتصفح؛ هذا يجعل زر الرجوع
+     الموجود بالهاتف يغلقها تلقائياً بنفس تصرف زر «رجوع» الظاهر على الشاشة،
+     دون الحاجة لضغط الزر — كلاهما يؤديان نفس الإجراء بالضبط (goBack/history.back). */
+  var overlayStack = [];
+  function pushOverlay(name){
+    overlayStack.push(name);
+    history.pushState({mmOverlay:name}, '', location.href);
+  }
   function closeMoreMenu(){ if(moreBackdrop){ moreBackdrop.classList.remove('open'); moreBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open'); } }
-  function openMoreMenu(e){
+  function openMoreMenu(e, push){
     if(e) e.preventDefault();
     if(moreBackdrop){ moreBackdrop.classList.add('open'); moreBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open'); applyLanguage(); }
+    if(push !== false) pushOverlay('more');
   }
+  function handleOverlayPop(){
+    if(!overlayStack.length) return;
+    var closed = overlayStack.pop();
+    var parent = overlayStack[overlayStack.length - 1];
+    if(closed === 'more') closeMoreMenu();
+    else if(closed === 'about'){ closeAbout(); if(parent === 'more') openMoreMenu(null, false); }
+    else if(closed === 'privacy'){ closePrivacy(); if(parent === 'more') openMoreMenu(null, false); }
+    else if(closed === 'addbiz'){ closeAddBiz(); if(parent === 'more') openMoreMenu(null, false); }
+  }
+  /* يغلق الشاشة الفرعية الحالية: يستخدم نفس مسار الرجوع الفعلي بالمتصفح
+     (بالضبط كما يفعل زر رجوع الهاتف) حتى تتطابق كل مسارات الإغلاق. */
+  function closeTopOverlay(){
+    if(!overlayStack.length) return;
+    if(window.history.length > 1) window.history.back();
+    else handleOverlayPop();
+  }
+  /* إغلاق فوري لكل الشاشات الفرعية دون تنقل بالمتصفح — يُستخدم فقط عند تبديل
+     تبويب فعلي من الشريط السفلي، لأن التنقل نفسه يغيّر الصفحة أصلاً. */
+  function silentCloseAllOverlays(){
+    while(overlayStack.length){
+      var top = overlayStack.pop();
+      if(top === 'more') closeMoreMenu();
+      else if(top === 'about') closeAbout();
+      else if(top === 'privacy') closePrivacy();
+      else if(top === 'addbiz') closeAddBiz();
+    }
+  }
+  window.addEventListener('popstate', function(){ if(overlayStack.length) handleOverlayPop(); });
   if(moreBtn) moreBtn.addEventListener('click', function(e){
     if(e) e.preventDefault();
-    if(moreBackdrop && moreBackdrop.classList.contains('open')) closeMoreMenu();
+    if(moreBackdrop && moreBackdrop.classList.contains('open')) closeTopOverlay();
     else openMoreMenu(e);
   });
-  if(closeMore) closeMore.addEventListener('click', closeMoreMenu);
-  if(moreBackdrop) moreBackdrop.addEventListener('click', function(e){ if(e.target === moreBackdrop) closeMoreMenu(); });
-  document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){ a.addEventListener('click', closeMoreMenu); });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMoreMenu(); });
+  if(moreBackdrop) moreBackdrop.addEventListener('click', function(e){ if(e.target === moreBackdrop) closeTopOverlay(); });
+  document.querySelectorAll('.bottom-nav a[data-tab]').forEach(function(a){ a.addEventListener('click', silentCloseAllOverlays); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeTopOverlay(); });
   var languageItem = document.getElementById('languageMenuItem');
-  if(languageItem) languageItem.addEventListener('click', function(){ closeMoreMenu(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
+  if(languageItem) languageItem.addEventListener('click', function(){ closeTopOverlay(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
   var shareItem = document.getElementById('shareMenuItem');
   if(shareItem) shareItem.addEventListener('click', function(){
     var pageUrl = location.href;
@@ -1808,12 +1899,11 @@ if('serviceWorker' in navigator){
       ? ('Check this page from Wad Madani Guide or download the app from one of these links:\n' + pageUrl + '\n' + appLinks)
       : ('شاهد هذه الصفحة من دليلك بودمدني او نزل التطبيق من احد الروابط:\n' + pageUrl + '\n' + appLinks);
     var whatsappShareUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
-    closeMoreMenu();
+    closeTopOverlay();
     window.open(whatsappShareUrl, '_blank', 'noopener,noreferrer');
   });
   var privacyItem = document.getElementById('privacyMenuItem');
   var privacyBackdrop = document.getElementById('privacyBackdrop');
-  var privacyClose = document.getElementById('privacyClose');
   function closePrivacy(){ if(privacyBackdrop){ privacyBackdrop.classList.remove('open'); privacyBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open','sub-page-open'); } }
   function openPrivacy(e){
     if(e) e.preventDefault();
@@ -1822,14 +1912,13 @@ if('serviceWorker' in navigator){
       var content = document.getElementById('privacyContent');
       if(content) content.textContent = currentLanguage === 'en' ? PRIVACY_EN : PRIVACY_AR;
       privacyBackdrop.classList.add('open'); privacyBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open','sub-page-open');
+      pushOverlay('privacy');
     }
   }
   if(privacyItem) privacyItem.addEventListener('click', openPrivacy);
-  if(privacyClose) privacyClose.addEventListener('click', function(){ closePrivacy(); openMoreMenu(); });
-  if(privacyBackdrop) privacyBackdrop.addEventListener('click', function(e){ if(e.target === privacyBackdrop) closePrivacy(); });
+  if(privacyBackdrop) privacyBackdrop.addEventListener('click', function(e){ if(e.target === privacyBackdrop) closeTopOverlay(); });
   var aboutItem = document.getElementById('aboutMenuItem');
   var aboutBackdrop = document.getElementById('aboutBackdrop');
-  var aboutClose = document.getElementById('aboutClose');
   function closeAbout(){ if(aboutBackdrop){ aboutBackdrop.classList.remove('open'); aboutBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open','sub-page-open'); } }
   function openAbout(e){
     if(e) e.preventDefault();
@@ -1838,11 +1927,82 @@ if('serviceWorker' in navigator){
       var content = document.getElementById('aboutContent');
       if(content) content.textContent = currentLanguage === 'en' ? ABOUT_EN : ABOUT_AR;
       aboutBackdrop.classList.add('open'); aboutBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open','sub-page-open');
+      pushOverlay('about');
     }
   }
   if(aboutItem) aboutItem.addEventListener('click', openAbout);
-  if(aboutClose) aboutClose.addEventListener('click', function(){ closeAbout(); openMoreMenu(); });
-  if(aboutBackdrop) aboutBackdrop.addEventListener('click', function(e){ if(e.target === aboutBackdrop) closeAbout(); });
+  if(aboutBackdrop) aboutBackdrop.addEventListener('click', function(e){ if(e.target === aboutBackdrop) closeTopOverlay(); });
+  var exitItem = document.getElementById('exitMenuItem');
+  if(exitItem) exitItem.addEventListener('click', function(){ closeTopOverlay(); exitApp(); });
+
+  /* ===== نافذة «أضف نشاطك»: تُفتح من الشريط السفلي ومن قائمة المزيد ===== */
+  var ADD_BIZ_HTML = {
+    ar: `<h2>أضف نشاطك إلى دليلك بود مدني</h2>
+<p>هل لديك مطعم، متجر، فندق، عيادة، صيدلية أو أي نشاط خدمي داخل ود مدني؟</p>
+<p>📌 لإضافة نشاطك إلى الدليل، تواصل معنا عبر واتساب.</p>
+<p>📱 اضغط على الرقم للتواصل واتساب فقط:</p>
+<a class="ab-wa" dir="ltr" target="_blank" rel="noopener noreferrer">0127985731</a>
+<h3>💬 أرسل لنا:</h3>
+<ul>
+<li>اسم النشاط</li>
+<li>نوع النشاط</li>
+<li>الموقع</li>
+<li>رقم التواصل</li>
+<li>صور النشاط</li>
+<li>وصف مختصر للخدمة</li>
+</ul>
+<h3>📋 شروط القبول:</h3>
+<ul>
+<li>أن يكون النشاط داخل ود مدني أو يخدم سكانها.</li>
+<li>تقديم معلومات صحيحة وواضحة عن النشاط.</li>
+<li>تخضع جميع الطلبات للمراجعة قبل نشرها.</li>
+<li>يحق لإدارة دليلك بود مدني قبول أو رفض أي طلب وفقًا لسياسة الدليل بعد التواصل معك.</li>
+</ul>
+<p class="ab-sign">✨ دليلك الشامل بود مدني</p>`,
+    en: `<h2>Add your business to Wad Madani Guide</h2>
+<p>Do you have a restaurant, shop, hotel, clinic, pharmacy, or any service business in Wad Madani?</p>
+<p>📌 To add your business to the guide, contact us on WhatsApp.</p>
+<p>📱 Tap the number to contact us on WhatsApp only:</p>
+<a class="ab-wa" dir="ltr" target="_blank" rel="noopener noreferrer">0127985731</a>
+<h3>💬 Send us:</h3>
+<ul>
+<li>Business name</li>
+<li>Type of business</li>
+<li>Location</li>
+<li>Contact number</li>
+<li>Photos of the business</li>
+<li>A short description of the service</li>
+</ul>
+<h3>📋 Acceptance terms:</h3>
+<ul>
+<li>The business must be located in Wad Madani or serve its residents.</li>
+<li>Provide accurate and clear information about the business.</li>
+<li>All requests are reviewed before being published.</li>
+<li>The Wad Madani Guide administration may accept or reject any request according to the guide's policy, after contacting you.</li>
+</ul>
+<p class="ab-sign">✨ Your complete guide to Wad Madani</p>`
+  };
+  var addBizBackdrop = document.getElementById('addBizBackdrop');
+  var addBizContent = document.getElementById('addBizContent');
+  function closeAddBiz(){
+    if(addBizBackdrop){ addBizBackdrop.classList.remove('open'); addBizBackdrop.setAttribute('aria-hidden','true'); document.body.classList.remove('more-open','sub-page-open'); }
+  }
+  function openAddBiz(e){
+    if(e) e.preventDefault();
+    if(!addBizBackdrop || !addBizContent) return;
+    closeMoreMenu();
+    addBizContent.innerHTML = ADD_BIZ_HTML[currentLanguage === 'en' ? 'en' : 'ar'];
+    var wa = addBizContent.querySelector('.ab-wa');
+    if(wa) wa.href = WA_BUSINESS_LINK;
+    addBizBackdrop.classList.add('open'); addBizBackdrop.setAttribute('aria-hidden','false'); document.body.classList.add('more-open','sub-page-open');
+    addBizBackdrop.scrollTop = 0;
+    pushOverlay('addbiz');
+  }
+  var bnAddBiz = document.getElementById('bnAddBiz');
+  var addBizMenuItem = document.getElementById('addBizMenuItem');
+  if(bnAddBiz) bnAddBiz.addEventListener('click', openAddBiz);
+  if(addBizMenuItem) addBizMenuItem.addEventListener('click', openAddBiz);
+  if(addBizBackdrop) addBizBackdrop.addEventListener('click', function(e){ if(e.target === addBizBackdrop) closeTopOverlay(); });
 })();
 </script>
 
