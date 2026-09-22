@@ -1,16 +1,15 @@
 // Service worker: تخزين موارد الموقع الثابتة مؤقتاً مع تحديث آمن ودعم محدود للعمل دون إنترنت.
 const CACHE_PREFIX = 'wadmadani-cache-';
-const CACHE_NAME = CACHE_PREFIX + 'v2';
+const CACHE_NAME = CACHE_PREFIX + 'v3';
 const CORE_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/img/favicon.ico',
-  '/img/apple-touch-icon.png',
-  '/img/icon-192.png',
-  '/img/icon-512.png',
-  '/img/logo-icon.png',
-  '/img/hero-banner.webp'
+  './',
+  './index.html',
+  './manifest.json',
+  './img/favicon.ico',
+  './img/apple-touch-icon.png',
+  './img/icon-192.png',
+  './img/icon-512.png',
+  './img/logo-icon.png'
 ];
 
 function isSameOrigin(request) {
@@ -66,7 +65,7 @@ self.addEventListener('fetch', event => {
       const cached = await caches.match(request);
       if (cached) return cached;
       if (request.mode === 'navigate') {
-        const fallback = await caches.match('/index.html');
+        const fallback = await caches.match('./index.html');
         if (fallback) return fallback;
       }
       return Response.error();
