@@ -1882,11 +1882,7 @@ if('serviceWorker' in navigator){
   if(languageItem) languageItem.addEventListener('click', function(){ closeTopOverlay(); setLanguage(currentLanguage === 'ar' ? 'en' : 'ar'); });
   var shareItem = document.getElementById('shareMenuItem');
   if(shareItem) shareItem.addEventListener('click', function(){
-    var pageUrl = location.href;
-    var appLinks = 'https://dalilak-wad-madani.vercel.app\nhttps://dalilak-wadmadani1.netlify.app';
-    var message = currentLanguage === 'en'
-      ? ('Check this page from Wad Madani Guide or download the app from one of these links:\n' + pageUrl + '\n' + appLinks)
-      : ('شاهد هذه الصفحة من دليلك بودمدني او نزل التطبيق من احد الروابط:\n' + pageUrl + '\n' + appLinks);
+    var message = '📱 دليلك بودمدني بين يديك!\n\nحمّل تطبيق دليلك بودمدني واستمتع بخدمات ومعلومات المدينة بكل سهولة.\n\n⬇️ للتحميل اضغط على الرابط:\nhttps://bit.ly/DanlowdDalilak\n\n📍 دليلك لكل ما يهمك في ودمدني';
     var whatsappShareUrl = 'https://wa.me/?text=' + encodeURIComponent(message);
     closeTopOverlay();
     window.open(whatsappShareUrl, '_blank', 'noopener,noreferrer');
