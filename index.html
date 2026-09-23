@@ -444,6 +444,140 @@ try{
 const HAS_CLAUDE_STORAGE = (typeof window.storage !== 'undefined' && window.storage && typeof window.storage.get === 'function');
 const LS_PREFIX = 'wadmadani:';
 
+// Cache محلي طويل المدة + فحص تغيير خفيف مرة كل ساعة.
+// أغلب الزيارات لا تقرأ Firestore بعد أول تحميل؛ فقط قراءة واحدة تقريباً كل ساعة
+// للتحقق من رقم إصدار البيانات. عند تغيّر الإصدار يُمسح الكاش القديم فوراً.
+const CACHE_TTL_INDEX = 12 * 60 * 60 * 1000; // 12 ساعة
+const CACHE_TTL_BIZ = 12 * 60 * 60 * 1000;   // 12 ساعة
+const VERSION_CHECK_TTL = 60 * 60 * 1000;    // فحص واحد كل ساعة
+const VERSION_DOC = '__meta_data_version';
+const VERSION_CACHE_KEY = LS_PREFIX + 'data-version-meta';
+let versionCheckPromise = null;
+let lastKnownDataVersion = null;
+
+
+// ===== عداد الزيارات: زيارة واحدة فقط لكل جهاز في اليوم =====
+// لا يؤثر على كاش البيانات أو فحص الإصدار. يستخدم LocalStorage لمنع التكرار
+// ويرسل كتابة Firestore واحدة فقط عند أول زيارة مسجلة في اليوم.
+const VISIT_LOCAL_KEY = LS_PREFIX + 'daily-visit-date';
+const VISIT_COLLECTION = 'dailyStats';
+function localVisitDate(){
+  try{
+    // تاريخ محلي بصيغة YYYY-MM-DD حسب جهاز الزائر.
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }catch(e){ return ''; }
+}
+function hasVisitedToday(){
+  try{ return localStorage.getItem(VISIT_LOCAL_KEY) === localVisitDate(); }
+  catch(e){ return false; }
+}
+function markVisitedToday(){
+  try{ localStorage.setItem(VISIT_LOCAL_KEY, localVisitDate()); }catch(e){}
+}
+async function recordDailyVisit(){
+  if(!HAS_FIRESTORE || hasVisitedToday()) return false;
+  const day = localVisitDate();
+  if(!day) return false;
+  // نضع علامة محلية أولاً لمنع التكرار حتى لو فتح الزائر الصفحة عدة مرات بسرعة.
+  markVisitedToday();
+  try{
+    const ref = db.collection(VISIT_COLLECTION).doc('day_' + day);
+    await withTimeout(ref.set({total: firebase.firestore.FieldValue.increment(1)}, {merge:true}), 6000);
+    return true;
+  }catch(e){
+    // إذا فشلت الكتابة نزيل العلامة حتى يمكن إعادة المحاولة لاحقاً في نفس اليوم.
+    try{ localStorage.removeItem(VISIT_LOCAL_KEY); }catch(_e){}
+    console.warn('daily visit record failed', e);
+    return false;
+  }
+}
+
+function cacheTTL(key){ return key.startsWith('biz:') ? CACHE_TTL_BIZ : CACHE_TTL_INDEX; }
+function cacheGet(key){
+  try{
+    const raw = localStorage.getItem(LS_PREFIX + 'cache:' + key);
+    if(!raw) return null;
+    const item = JSON.parse(raw);
+    if(!item || !item.savedAt || Date.now() - item.savedAt > cacheTTL(key)){
+      localStorage.removeItem(LS_PREFIX + 'cache:' + key);
+      return null;
+    }
+    return {hit:true, value:item.value};
+  }catch(e){ return null; }
+}
+function cacheSet(key,value){
+  try{
+    localStorage.setItem(LS_PREFIX + 'cache:' + key, JSON.stringify({savedAt:Date.now(), value:value}));
+  }catch(e){}
+}
+function cacheDelete(key){
+  try{ localStorage.removeItem(LS_PREFIX + 'cache:' + key); }catch(e){}
+}
+function clearAllDataCache(){
+  try{
+    const remove = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith(LS_PREFIX + 'cache:')) remove.push(k);
+    }
+    remove.forEach(k => localStorage.removeItem(k));
+  }catch(e){}
+  if(state && state.bizCache) state.bizCache = {};
+}
+function readLocalVersionMeta(){
+  try{
+    const raw = localStorage.getItem(VERSION_CACHE_KEY);
+    if(!raw) return null;
+    const item = JSON.parse(raw);
+    return item && item.checkedAt ? item : null;
+  }catch(e){ return null; }
+}
+function writeLocalVersionMeta(version){
+  try{
+    localStorage.setItem(VERSION_CACHE_KEY, JSON.stringify({checkedAt:Date.now(), version:version}));
+  }catch(e){}
+}
+async function checkDataVersion(force=false){
+  if(!HAS_FIRESTORE) return true;
+  if(versionCheckPromise) return versionCheckPromise;
+  const meta = readLocalVersionMeta();
+  if(!force && meta && Date.now() - meta.checkedAt < VERSION_CHECK_TTL){
+    lastKnownDataVersion = meta.version;
+    return true;
+  }
+  versionCheckPromise = (async()=>{
+    try{
+      const doc = await withTimeout(db.collection('kv').doc(VERSION_DOC).get(), 6000);
+      const version = doc.exists ? (doc.data().version || doc.data().updatedAt || null) : null;
+      if(lastKnownDataVersion !== null && version !== null && String(version) !== String(lastKnownDataVersion)){
+        clearAllDataCache();
+      }
+      lastKnownDataVersion = version;
+      writeLocalVersionMeta(version);
+      return true;
+    }catch(e){
+      // لا نعطل التطبيق إذا تعذر فحص الإصدار؛ نستخدم الكاش الموجود.
+      console.warn('data version check failed', e);
+      return false;
+    }finally{ versionCheckPromise = null; }
+  })();
+  return versionCheckPromise;
+}
+async function touchDataVersion(){
+  if(!HAS_FIRESTORE) return true;
+  try{
+    const version = Date.now().toString();
+    await withTimeout(db.collection('kv').doc(VERSION_DOC).set({version, updatedAt: firebase.firestore.FieldValue.serverTimestamp()}), 6000);
+    lastKnownDataVersion = version;
+    writeLocalVersionMeta(version);
+    return true;
+  }catch(e){
+    console.error('data version update failed', e);
+    return false;
+  }
+}
+
 function withTimeout(promise, ms){
   return Promise.race([
     promise,
@@ -452,10 +586,18 @@ function withTimeout(promise, ms){
 }
 
 async function sGet(key){
+  // فحص خفيف مرة كل ساعة فقط لمعرفة هل تغيّرت البيانات.
+  await checkDataVersion();
+  // اقرأ من الذاكرة المحلية أولاً؛ الكاش صالح حتى 12 ساعة إذا لم يتغير الإصدار.
+  const cached = cacheGet(key);
+  if(cached && cached.hit) return cached.value;
+
   if(HAS_FIRESTORE){
     try{
       const doc = await withTimeout(db.collection('kv').doc(key).get(), 6000);
-      return doc.exists ? JSON.parse(doc.data().value) : null;
+      const value = doc.exists ? JSON.parse(doc.data().value) : null;
+      cacheSet(key,value);
+      return value;
     }catch(e){ console.error('firestore get failed/timeout', e); /* fall through to backups below */ }
   }
   if(HAS_CLAUDE_STORAGE){
@@ -467,10 +609,12 @@ async function sGet(key){
     return raw ? JSON.parse(raw) : null;
   }catch(e){ return null; }
 }
-async function sSet(key, value){
+async function sSet(key, value, touchVersion=true){
   if(HAS_FIRESTORE){
     try{
       await withTimeout(db.collection('kv').doc(key).set({value: JSON.stringify(value), updatedAt: Date.now()}), 8000);
+      cacheSet(key,value);
+      if(touchVersion && key !== VERSION_DOC) await touchDataVersion();
       return true;
     }catch(e){
       console.error('firestore set failed/timeout', e);
@@ -487,18 +631,18 @@ async function sSet(key, value){
     return true;
   }catch(e){ console.error('localStorage set failed', e); return false; }
 }
-async function sDelete(key){
+async function sDelete(key, touchVersion=true){
   // يُرجع true/false حسب نجاح الحذف الفعلي، كي تقدر عمليات الحذف بالجملة (مثل حذف قسم كامل)
   // تتوقف عند أول فشل بدل المتابعة على بيانات غير متسقة (منشآت محذوفة جزئياً)
   if(HAS_FIRESTORE){
-    try{ await withTimeout(db.collection('kv').doc(key).delete(), 6000); return true; }
+    try{ await withTimeout(db.collection('kv').doc(key).delete(), 6000); cacheDelete(key); if(touchVersion && key !== VERSION_DOC) await touchDataVersion(); return true; }
     catch(e){ console.error(e); return false; }
   }
   if(HAS_CLAUDE_STORAGE){
     try{ await window.storage.delete(key, true); return true; }
     catch(e){ return false; }
   }
-  try{ localStorage.removeItem(LS_PREFIX + key); return true; }
+  try{ localStorage.removeItem(LS_PREFIX + key); cacheDelete(key); return true; }
   catch(e){ return false; }
 }
 
@@ -600,6 +744,8 @@ async function ensureSeed(){
     index = [];
     await sSet('businesses-index', index);
   }
+  // نعيد البيانات حتى لا نضطر لإجراء قراءات Firestore ثانية داخل loadState().
+  return {sections, index};
 }
 
 /* ============ STATE ============ */
@@ -623,7 +769,7 @@ async function loadBiz(id){
 async function saveBiz(biz){
   // يُرجع true/false حسب نجاح الحفظ الفعلي في Firestore، كي تقدر الشاشة المستدعية تعرض
   // رسالة خطأ صحيحة بدل افتراض النجاح دائماً
-  const ok = await sSet('biz:'+biz.id, biz);
+  const ok = await sSet('biz:'+biz.id, biz, false);
   if(!ok) return false;
   if(!state.bizCache) state.bizCache = {};
   state.bizCache[biz.id] = biz; // تحديث التخزين المؤقت فوراً بعد الحفظ
@@ -632,20 +778,24 @@ async function saveBiz(biz){
     image: (biz.images&&biz.images[biz.primaryImageIndex||0]) || '', active:biz.active!==false, featured:!!biz.featured,
     phone: (biz.phones&&biz.phones[0])||'', desc:biz.description||''};
   if(i>=0) state.index[i] = light; else state.index.push(light);
-  await saveIndex();
+  const indexOk = await sSet('businesses-index', state.index, false);
+  if(!indexOk) return false;
+  await touchDataVersion();
   return true;
 }
 async function deleteBiz(id){
-  const ok = await sDelete('biz:'+id);
+  const ok = await sDelete('biz:'+id, false);
   if(!ok) return false; // فشل الحذف الفعلي من Firestore: لا نلمس الفهرس المحلي كي لا يفقد تزامنه
   if(state.bizCache) delete state.bizCache[id]; // إزالة من التخزين المؤقت بعد الحذف
   state.index = state.index.filter(b=>b.id!==id);
-  await saveIndex();
+  const indexOk = await sSet('businesses-index', state.index, false);
+  if(!indexOk) return false;
+  await touchDataVersion();
   return true;
 }
 
 /* ============ IMAGE RESIZE ============ */
-function resizeImage(file, maxDim=640, quality=0.55){
+function resizeImage(file, maxDim=560, quality=0.50){
   return new Promise((resolve,reject)=>{
     const reader = new FileReader();
     reader.onload = e => {
@@ -669,6 +819,10 @@ function resizeImage(file, maxDim=640, quality=0.55){
 
 /* ============ ROUTER ============ */
 window.addEventListener('hashchange', render);
+// يبقى التطبيق متابعاً للتغييرات حتى لو بقيت الصفحة مفتوحة لساعات.
+// كل تبويب يجري قراءة إصدار واحدة تقريباً كل ساعة فقط.
+setInterval(() => { checkDataVersion(true); }, VERSION_CHECK_TTL);
+
 window.addEventListener('DOMContentLoaded', () => {
   // نُبقي شاشة الترحيب ظاهرة حتى تجهز كل الأقسام الحقيقية، بدل عرض الأقسام
   // الافتراضية فوراً ثم ظهور الباقي متأخراً بعد تحديث الصفحة — هكذا تظهر
@@ -678,26 +832,36 @@ window.addEventListener('DOMContentLoaded', () => {
   state.isAdmin = false;
   (async function bootstrap(){
     try{
-      await ensureSeed();
-      await loadState();
+      const initialState = await ensureSeed();
+      state.sections = initialState.sections || [];
+      state.index = initialState.index || [];
     }catch(e){ console.error('bootstrap failed', e); }
     const splash = document.getElementById('initial-splash');
     if(splash) splash.remove();
     render();
+    // تسجيل الزيارة مستقل تماماً عن تحديث البيانات والكاش.
+    recordDailyVisit();
     try{
       if(HAS_AUTH){
         try{ await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION); }
         catch(e){ console.error('setPersistence failed', e); }
         let resolved = false;
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(async user => {
           resolved = true;
-          // الدخول لا يُعتبر مكتملاً إلا إذا كان البريد "مُحقَّقاً" (emailVerified) *و* تم تأكيد
-          // ذلك التحقق خلال هذه الجلسة تحديداً (wadmadani:sessionVerified في sessionStorage).
-          // هذا يضمن طلب تحقق جديد في كل مرة يُفتح فيها الموقع من جديد، حتى لو كان
-          // emailVerified محفوظاً بشكل دائم من قبل على مستوى حساب Firebase نفسه.
+          // لا نعتبر الحساب إدارياً بمجرد معرفة كلمة المرور أو تحقق البريد.
+          // صلاحية الكتابة الحقيقية يحكمها Firestore Rules عبر custom claim: admin=true.
           const sessionVerified = sessionStorage.getItem('wadmadani:sessionVerified') === '1';
-          state.isAdmin = !!user && user.emailVerified && sessionVerified;
+          let hasAdminClaim = false;
+          if(user && user.emailVerified && sessionVerified){
+            try{
+              const tokenResult = await user.getIdTokenResult();
+              hasAdminClaim = tokenResult && tokenResult.claims && tokenResult.claims.admin === true;
+            }catch(e){ console.error('admin claim check failed', e); }
+          }
+          state.isAdmin = !!user && user.emailVerified && sessionVerified && hasAdminClaim;
           state.unverifiedUser = (user && !(user.emailVerified && sessionVerified)) ? user : null;
+          state.authenticatedButNotAdmin = !!user && user.emailVerified && sessionVerified && !hasAdminClaim;
+          if(state.isAdmin){ await touchDataVersion(); }
           render();
         });
         setTimeout(() => {
@@ -1236,7 +1400,7 @@ async function renderAdminLogin(app){
     ${header(true, true)}
     <div class="admin-login">
       <h2>🔐 لوحة تحكم دليلك بود مدني</h2>
-      <p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">لا يمكنك الدخول، محمي خاص للإدارة فقط.</p>
+      ${state.authenticatedButNotAdmin ? '<p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">هذا الحساب موثّق لكنه غير مصرح له كأدمن.</p>' : '<p class="hint" style="color:var(--brick);font-weight:700;font-size:14px">الدخول للوحة التحكم مخصص للأدمن فقط.</p>'}
       <div class="field"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" autocomplete="username" maxlength=254 placeholder="admin@example.com"></div>
       <div class="field"><label>كلمة المرور</label><input type="password" id="loginPass" autocomplete="current-password" maxlength=128 placeholder="كلمة المرور"></div>
       <button class="btn" id="loginBtn" style="width:100%">دخول</button>
@@ -1336,9 +1500,15 @@ function renderAdminVerifyEmail(app){
       await withTimeout(user.reload(), 8000);
       if(user.emailVerified){
         sessionStorage.setItem('wadmadani:sessionVerified', '1');
-        state.isAdmin = true;
+        let isAdminClaim = false;
+        try{
+          const tokenResult = await user.getIdTokenResult(true);
+          isAdminClaim = tokenResult && tokenResult.claims && tokenResult.claims.admin === true;
+        }catch(e){ console.error('admin claim refresh failed', e); }
+        state.isAdmin = isAdminClaim;
+        state.authenticatedButNotAdmin = !isAdminClaim;
         state.unverifiedUser = null;
-        toast('تم التحقق، تم تسجيل الدخول بنجاح');
+        toast(isAdminClaim ? 'تم التحقق، تم تسجيل الدخول بنجاح' : 'تم التحقق من البريد، لكن الحساب غير مصرح له كأدمن');
         nav('#/admin');
       }else{
         toast('لم يتم التحقق من البريد بعد');

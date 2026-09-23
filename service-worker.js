@@ -1,7 +1,6 @@
-// Service worker: تخزين موارد الموقع الثابتة مؤقتاً مع تحديث آمن ودعم محدود للعمل دون إنترنت.
-const CACHE_PREFIX = 'wadmadani-cache-';
-const CACHE_NAME = CACHE_PREFIX + 'v3';
-const CORE_ASSETS = [
+/* دليلك بود مدني - Service Worker for GitHub Pages */
+const CACHE_NAME = 'dalil-wad-madani-v2';
+const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
@@ -12,63 +11,50 @@ const CORE_ASSETS = [
   './img/logo-icon.png'
 ];
 
-function isSameOrigin(request) {
-  try {
-    return new URL(request.url).origin === self.location.origin;
-  } catch (e) {
-    return false;
-  }
-}
-
-// لا نعترض طلبات Firebase أو أي API/نطاق خارجي، ولا نخزن إلا موارد الموقع الثابتة.
-function isCacheableRequest(request) {
-  if (request.method !== 'GET' || !isSameOrigin(request)) return false;
-  return ['document', 'script', 'style', 'image', 'font', 'manifest'].includes(request.destination);
-}
-
-async function cacheCoreAssets() {
-  const cache = await caches.open(CACHE_NAME);
-  // لا نفشل عملية تثبيت العامل بالكامل إذا كان ملف اختياري غير موجود.
-  await Promise.all(CORE_ASSETS.map(asset => cache.add(asset).catch(() => undefined)));
-}
-
 self.addEventListener('install', event => {
-  event.waitUntil(cacheCoreAssets().then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => Promise.all(
-      keys
-        .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
-        .map(key => caches.delete(key))
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
     )).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   const request = event.request;
-  if (!isCacheableRequest(request)) return;
+  if (request.method !== 'GET') return;
 
-  event.respondWith(
-    fetch(request).then(response => {
-      if (response && response.ok && response.type === 'basic') {
+  const url = new URL(request.url);
+  // Do not cache Firebase, Google Fonts, or other cross-origin requests.
+  if (url.origin !== self.location.origin) return;
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).then(response => {
         const copy = response.clone();
-        event.waitUntil(
-          caches.open(CACHE_NAME)
-            .then(cache => cache.put(request, copy))
-            .catch(() => undefined)
-        );
-      }
-      return response;
-    }).catch(async () => {
-      const cached = await caches.match(request);
+        caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy)).catch(() => {});
+        return response;
+      }).catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Cache-first for local static assets. New versions are picked up after SW update.
+  event.respondWith(
+    caches.match(request).then(cached => {
       if (cached) return cached;
-      if (request.mode === 'navigate') {
-        const fallback = await caches.match('./index.html');
-        if (fallback) return fallback;
-      }
-      return Response.error();
+      return fetch(request).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy)).catch(() => {});
+        }
+        return response;
+      });
     })
   );
 });
