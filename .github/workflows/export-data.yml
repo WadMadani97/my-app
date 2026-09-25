@@ -1,1 +1,41 @@
+name: تصدير بيانات الدليل إلى ملفات ثابتة
 
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: تحميل المستودع
+        uses: actions/checkout@v4
+
+      - name: إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: تثبيت firebase-admin
+        run: npm install firebase-admin
+
+      - name: تشغيل سكربت التصدير
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: node scripts/export-data.js
+
+      - name: حفظ ورفع التغييرات (لو وُجدت)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "لا يوجد تغيير بالبيانات — لن يتم أي commit."
+          else
+            git commit -m "تحديث تلقائي لبيانات الدليل"
+            git push
+          fi
