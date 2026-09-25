@@ -37,5 +37,6 @@ jobs:
             echo "لا يوجد تغيير بالبيانات — لن يتم أي commit."
           else
             git commit -m "تحديث تلقائي لبيانات الدليل"
+            git pull --rebase origin main
             git push
           fi
