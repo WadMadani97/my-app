@@ -409,6 +409,7 @@ html.lang-en .more-menu-item{text-align:left}
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-check-compat.js"></script>
 
 <script>
 /* ============ STORAGE HELPERS ============
@@ -434,6 +435,21 @@ let auth = null;
 try{
   if(typeof firebase !== 'undefined'){
     firebase.initializeApp(firebaseConfig);
+
+    // ===== App Check: يمنع أي استدعاء لـ Firestore من خارج هذه الصفحة الشرعية =====
+    // 1) روح لـ https://www.google.com/recaptcha/admin/create وسجّل موقع جديد بنوع "reCAPTCHA v3"،
+    //    وأضف نطاق GitHub Pages (و/أو نطاقك الخاص إن وجد) في قائمة النطاقات.
+    // 2) خذ "Site Key" (المفتاح العام، مش السري) وحطه بدل النص أدناه.
+    // 3) في Firebase Console: Build > App Check > سجّل التطبيق واختر reCAPTCHA v3 وحط نفس المفتاح.
+    // 4) اتركه أول أسبوع على وضع "Monitor" فقط (مو Enforce) في تبويب APIs > Firestore،
+    //    راقب نسبة الطلبات الموثقة، وبعدين فعّل Enforce.
+    try{
+      firebase.appCheck().activate(
+        'PASTE_YOUR_RECAPTCHA_V3_SITE_KEY_HERE',
+        true // تجديد التوكن تلقائياً
+      );
+    }catch(e){ console.error('App Check init failed', e); }
+
     db = firebase.firestore();
     HAS_FIRESTORE = true;
     auth = firebase.auth();
@@ -540,6 +556,9 @@ function writeLocalVersionMeta(version){
 }
 async function checkDataVersion(force=false){
   if(!HAS_FIRESTORE) return true;
+  // الزوار العاديين يقرؤون من الملفات الثابتة المُصدَّرة مباشرة (انظر sGet)، فما يحتاجون
+  // فحص Firestore إطلاقاً — هذا يوفّر آخر قراءة متكررة كانت تصير كل ساعة لكل زائر.
+  if(!state.isAdmin) return true;
   if(versionCheckPromise) return versionCheckPromise;
   const meta = readLocalVersionMeta();
   if(!force && meta && Date.now() - meta.checkedAt < VERSION_CHECK_TTL){
@@ -585,12 +604,38 @@ function withTimeout(promise, ms){
   ]);
 }
 
+// يحدد اسم الملف الثابت المقابل لمفتاح بيانات معيّن، أو null لو ما له ملف ثابت.
+// هذي الملفات تُنشأ تلقائياً بواسطة scripts/export-data.js عبر GitHub Actions.
+function staticPathFor(key){
+  if(key === 'sections') return './data/sections.json';
+  if(key === 'businesses-index') return './data/businesses-index.json';
+  if(key.startsWith('biz:')) return './data/biz/' + encodeURIComponent(key.slice(4)) + '.json';
+  return null;
+}
+
 async function sGet(key){
-  // فحص خفيف مرة كل ساعة فقط لمعرفة هل تغيّرت البيانات.
+  // فحص خفيف مرة كل ساعة فقط لمعرفة هل تغيّرت البيانات (يُتخطى تلقائياً للزوار العاديين، انظر checkDataVersion).
   await checkDataVersion();
   // اقرأ من الذاكرة المحلية أولاً؛ الكاش صالح حتى 12 ساعة إذا لم يتغير الإصدار.
   const cached = cacheGet(key);
   if(cached && cached.hit) return cached.value;
+
+  // للزوار العاديين (غير المسؤول): جرّب أولاً الملف الثابت المُصدَّر مسبقاً على GitHub Pages —
+  // هذا لا يستهلك أي شيء من حصة Firestore المجانية مهما كان عدد الزوار. المسؤول دايماً
+  // يقرأ من Firestore مباشرة عشان يشوف أحدث تعديلاته فوراً بدون انتظار عملية التصدير.
+  if(!state.isAdmin){
+    const staticPath = staticPathFor(key);
+    if(staticPath){
+      try{
+        const res = await fetch(staticPath, {cache:'no-store'});
+        if(res.ok){
+          const value = await res.json();
+          cacheSet(key, value);
+          return value;
+        }
+      }catch(e){ /* الملف الثابت غير متوفر بعد (مثلاً قبل أول عملية تصدير) — نكمل لـ Firestore كاحتياطي */ }
+    }
+  }
 
   if(HAS_FIRESTORE){
     try{
@@ -1552,6 +1597,10 @@ function renderAdminVerifyEmail(app){
   if(remaining > 0) startCooldown(remaining);
 }
 
+// رابط تشغيل GitHub Action لتصدير البيانات كملفات JSON ثابتة (راجع .github/workflows/export-data.yml).
+// عدّل اسم المستخدم/المستودع أدناه لو يختلف عن هذا.
+const PUBLISH_WORKFLOW_URL = 'https://github.com/wadmadani97/my-app/actions/workflows/export-data.yml';
+
 function adminTopbar(active){
   return `
   <div class="admin-topbar">
@@ -1559,11 +1608,21 @@ function adminTopbar(active){
       <button data-go="#/admin/sections" class="${active==='sections'?'active':''}">الأقسام</button>
       <button data-go="#/" class="">عرض الموقع</button>
     </div>
-    <button class="btn secondary small" id="logoutBtn">تسجيل الخروج</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn small" id="publishBtn" title="ينشر آخر تعديلاتك للزوار عبر GitHub Actions">🚀 نشر التحديثات</button>
+      <button class="btn secondary small" id="logoutBtn">تسجيل الخروج</button>
+    </div>
   </div>`;
 }
 function bindTopbar(){
   document.querySelectorAll('.admin-tabs [data-go]').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.go)));
+  const pb = document.getElementById('publishBtn');
+  if(pb) pb.addEventListener('click', ()=>{
+    // يفتح صفحة تشغيل الـ GitHub Action في تبويب جديد؛ اضغط "Run workflow" هناك بعد تسجيل دخولك بحساب GitHub.
+    // لا يوجد أي رمز دخول (token) داخل هذا الملف نفسه لأسباب أمنية — التشغيل يتم من حسابك أنت مباشرة.
+    window.open(PUBLISH_WORKFLOW_URL, '_blank');
+    toast('افتح تبويب GitHub ثم اضغط "Run workflow" لنشر آخر تعديلاتك للزوار.');
+  });
   const lb = document.getElementById('logoutBtn');
   if(lb) lb.addEventListener('click', async ()=>{
     if(HAS_AUTH){ await auth.signOut(); }
