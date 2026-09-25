@@ -1494,7 +1494,8 @@ async function renderAdminLogin(app){
       const isTimeout = e && e.message === 'timeout';
       // لا نرسل البريد المدخل أو بيانات الجهاز إلى خدمة خارجية من المتصفح.
       if(!isTimeout) console.warn('Login failed');
-      toast(isTimeout ? 'انتهت المهلة، تحقق من الإنترنت وحاول مجدداً' : 'البريد أو كلمة المرور غير صحيحة');
+      // === وضع تشخيص مؤقت: يعرض كود/رسالة الخطأ الحقيقية بدل الرسالة العامة — احذف هذا السطر واستبدله بالسطر الأصلي بعد التشخيص ===
+      toast('خطأ تشخيصي: ' + (e && (e.code || e.message) || 'غير معروف') + (isTimeout ? ' (مهلة 10 ثوانٍ)' : ''));
     }
   };
   document.getElementById('loginBtn').addEventListener('click', doLogin);
