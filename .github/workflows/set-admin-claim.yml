@@ -1,1 +1,30 @@
+name: منح صلاحية أدمن لحساب معيّن (مرة واحدة)
 
+on:
+  workflow_dispatch:
+    inputs:
+      admin_email:
+        description: 'البريد الإلكتروني للحساب اللي تبي تمنحه صلاحية admin:true'
+        required: true
+        type: string
+
+jobs:
+  set-claim:
+    runs-on: ubuntu-latest
+    steps:
+      - name: تحميل المستودع
+        uses: actions/checkout@v4
+
+      - name: إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: تثبيت firebase-admin
+        run: npm install firebase-admin
+
+      - name: تشغيل سكربت منح الصلاحية
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+          ADMIN_EMAIL: ${{ inputs.admin_email }}
+        run: node scripts/set-admin-claim.js
